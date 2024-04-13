@@ -1,26 +1,20 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-import { TableModule } from 'primeng/table';
-
 @Component({
   selector: 'gg-members-table',
   standalone: true,
-  imports: [TableModule],
+  imports: [],
   template: `
-    <p-table [value]="members()">
-      <ng-template pTemplate="header">
+    <table class="max-w-20rem">
+      <body>
+        @for (member of members(); track member.id) {
         <tr>
-          <th>Legajo</th>
-          <th>Apellido y Nombre</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-member>
-        <tr>
-          <td>{{ member.id }}</td>
+          <td class="pr-3">{{ member.id }}</td>
           <td>{{ member.name }}</td>
         </tr>
-      </ng-template>
-    </p-table>
+        }
+      </body>
+    </table>
   `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
