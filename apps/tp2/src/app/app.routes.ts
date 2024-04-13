@@ -9,7 +9,11 @@ export const ROUTES: Route[] = [
     children: [
       {
         path: '',
-        loadComponent: () => import('@grupog/libs/home/feature').then((m) => m.HomeComponent),
+        loadComponent: () => import('@grupog/libs/home/feature').then((c) => c.HomeComponent),
+      },
+      {
+        path: 'simulacion',
+        loadComponent: () => import('@grupog/libs/simulation/feature').then((c) => c.SimulationComponent),
       },
     ],
   },
