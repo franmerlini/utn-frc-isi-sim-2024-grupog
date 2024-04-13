@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@grupog/libs/assignment/feature": ["libs/assignment/feature/src/index.ts"],
       "@grupog/libs/home/feature": ["libs/home/feature/src/index.ts"],
       "@grupog/libs/home/ui/members-table": ["libs/home/ui/members-table/src/index.ts"],
       "@grupog/libs/shell/ui/header": ["libs/shell/ui/header/src/index.ts"],
