@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@grupog/libs/shell/ui/header": ["libs/shell/ui/header/src/index.ts"],
       "@grupog/libs/shell/ui/layout": ["libs/shell/ui/layout/src/index.ts"]
     }
   },
