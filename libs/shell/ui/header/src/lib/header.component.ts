@@ -11,10 +11,7 @@ import { ToolbarModule } from 'primeng/toolbar';
   template: `
     <p-toolbar>
       <div class="p-toolbar-group-start">
-        <p-button label="TP2" routerLink="/"></p-button>
-      </div>
-
-      <div class="p-toolbar-group-center">
+        <p-button label="Inicio" [link]="true" routerLink="/"></p-button>
         <p-button label="Enunciado" [link]="true" routerLink="enunciado"></p-button>
         <p-button label="Simulación" [link]="true" routerLink="simulacion"></p-button>
       </div>
