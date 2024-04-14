@@ -12,6 +12,10 @@ export const ROUTES: Route[] = [
         loadComponent: () => import('@grupog/libs/home/feature').then((c) => c.HomeComponent),
       },
       {
+        path: 'enunciado',
+        loadComponent: () => import('@grupog/libs/assignment/feature').then((c) => c.AssignmentComponent),
+      },
+      {
         path: 'simulacion',
         loadComponent: () => import('@grupog/libs/simulation/feature').then((c) => c.SimulationComponent),
       },
