@@ -4,7 +4,7 @@
   "sourceRoot": "libs/home/feature/src",
   "prefix": "gg",
   "projectType": "library",
-  "tags": ["type:ui"],
+  "tags": ["type:feature"],
   "targets": {
     "test": {
       "executor": "@nx/jest:jest",
