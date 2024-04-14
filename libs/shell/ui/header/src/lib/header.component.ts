@@ -17,7 +17,9 @@ import { ToolbarModule } from 'primeng/toolbar';
       </div>
 
       <div class="p-toolbar-group-end">
-        <p-button label="Github" icon="pi pi-github"></p-button>
+        <a href="https://github.com/franmerlini/utn-frc-isi-sim-2024-grupog" target="_blank">
+          <p-button label="Github" icon="pi pi-github"></p-button>
+        </a>
       </div>
     </p-toolbar>
   `,
