@@ -8,11 +8,13 @@ import { HeaderComponent } from '@grupog/libs/shell/ui/header';
   standalone: true,
   imports: [HeaderComponent, RouterOutlet],
   template: `
-    <div class="h-screen flex flex-column">
+    <div class="h-screen flex flex-col">
       <gg-header />
 
-      <main class="flex-1 flex justify-content-center py-8 px-4">
-        <router-outlet />
+      <main class="flex-1 flex justify-center px-2 pt-8">
+        <div class="container">
+          <router-outlet />
+        </div>
       </main>
     </div>
   `,
