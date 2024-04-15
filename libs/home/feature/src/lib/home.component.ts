@@ -14,8 +14,8 @@ type Member = {
   standalone: true,
   imports: [MembersTableComponent, CardModule],
   template: `
-    <div class="flex flex-column align-items-center gap-6">
-      <div class="flex flex-column align-items-center gap-2">
+    <div class="flex flex-col items-center gap-6">
+      <div class="flex flex-col items-center gap-2">
         <span>Universidad Tecnológica Nacional</span>
         <span>Facultad Regional Córdoba</span>
         <span>Ingeniería en Sistemas de Información</span>
@@ -25,11 +25,11 @@ type Member = {
 
       <span><b>Curso</b>: 4K2</span>
 
-      <span>Trabajo Práctico N°2: Generadores de números aleatorios</span>
+      <span class="text-center">Trabajo Práctico N°2: Generadores de números aleatorios</span>
 
       <span><b>Grupo</b>: G</span>
 
-      <div class="flex flex-column align-items-center gap-2">
+      <div class="flex flex-col items-center gap-2">
         <span><b>Integrantes</b>:</span>
         <gg-members-table [members]="members" />
       </div>
