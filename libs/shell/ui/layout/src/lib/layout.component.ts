@@ -16,7 +16,7 @@ import { SidebarComponent } from '@grupog/libs/shell/ui/sidebar';
 
       <gg-sidebar [navItems]="navItems()" [(openSidebar)]="openSidebar" />
 
-      <main class="flex-1 flex justify-center px-2 pt-8">
+      <main class="flex-1 flex justify-center px-4 md:px-12 lg:px-24 pt-8">
         <div class="container">
           <router-outlet />
         </div>
