@@ -1,4 +1,9 @@
+@layer tw-base, primeng, tw-components, tw-utilities, tw-variants;
+
+@import 'tailwindcss/base.css' layer(tw-base);
 @import 'primeng/resources/themes/lara-dark-teal/theme.css';
 @import 'primeng/resources/primeng.css';
 @import 'primeicons/primeicons.css';
-@import 'primeflex/primeflex.css';
+@import 'tailwindcss/components.css' layer(tw-components);
+@import 'tailwindcss/utilities.css' layer(tw-utilities);
+@import 'tailwindcss/variants.css' layer(tw-variants);
