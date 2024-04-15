@@ -1,23 +1,31 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 
+import { MenuItem } from 'primeng/api';
+import { MenuModule } from 'primeng/menu';
 import { SidebarModule } from 'primeng/sidebar';
 
 @Component({
   selector: 'gg-sidebar',
   standalone: true,
-  imports: [SidebarModule],
+  imports: [SidebarModule, MenuModule],
   template: `
-    <p-sidebar [(visible)]="openSidebar()">
-      <h3>Sidebar</h3>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-        magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat.
-      </p>
+    <p-sidebar [(visible)]="openSidebar">
+      <p-menu [model]="navItems()" (click)="openSidebar.set(false)"></p-menu>
     </p-sidebar>
   `,
+  styles: [
+    `
+      ::ng-deep p-menu {
+        width: 100%;
+        .p-menu {
+          width: 100%;
+        }
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarComponent {
-  openSidebar = input(false);
+  openSidebar = model(false);
+  navItems = input.required<MenuItem[]>();
 }
