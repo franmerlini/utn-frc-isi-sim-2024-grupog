@@ -24,7 +24,7 @@ Este proyecto contiene todos los trabajos prácticos desarrollados durante el cu
 1. Clonar este repositorio. Para ello abrir una terminal en la carpeta donde desee ser clonado y ejecutar el comando:
 
    ```sh
-     git clone https://github.com/franmerlini/utn-frc-isi-sim-2024-grupog.git
+   git clone https://github.com/franmerlini/utn-frc-isi-sim-2024-grupog.git
    ```
 
 2. Una vez clonado el repositorio, ubicarse en la carpeta raíz del proyecto. Para ello, sobre la misma terminal ejecutar el comando:
