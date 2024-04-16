@@ -18,6 +18,7 @@
       "@grupog/libs/assignment/feature": ["libs/assignment/feature/src/index.ts"],
       "@grupog/libs/home/feature": ["libs/home/feature/src/index.ts"],
       "@grupog/libs/home/ui/members-table": ["libs/home/ui/members-table/src/index.ts"],
+      "@grupog/libs/shared/ui/form-controls": ["libs/shared/ui/form-controls/src/index.ts"],
       "@grupog/libs/shell/ui/header": ["libs/shell/ui/header/src/index.ts"],
       "@grupog/libs/shell/ui/layout": ["libs/shell/ui/layout/src/index.ts"],
       "@grupog/libs/shell/ui/sidebar": ["libs/shell/ui/sidebar/src/index.ts"],
