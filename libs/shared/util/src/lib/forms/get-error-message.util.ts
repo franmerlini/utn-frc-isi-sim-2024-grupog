@@ -5,6 +5,7 @@ const createErrorMessage = (errorKey: string, validationErrors: ValidationErrors
     required: 'El campo es requerido.',
     min: `El campo debe ser mayor a ${validationErrors['min']}.`,
     max: `El campo debe ser menor a ${validationErrors['max']}.`,
+    number: 'El campo debe ser de tipo numérico.',
   };
   return ERROR_MESSAGES[errorKey];
 };
