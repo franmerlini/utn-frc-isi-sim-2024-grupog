@@ -1,5 +1,7 @@
+import { Distribution } from './distribution.model';
+
 export type Simulation = {
-  distribution: number;
+  distribution: Distribution;
   sampleSize: number;
   a: number;
   b: number;
