@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Simulation } from '@grupog/libs/shared/models';
 
 import { ParametersFormComponent } from '@grupog/libs/simulation/ui/parameters-form';
 
@@ -10,8 +11,8 @@ import { ParametersFormComponent } from '@grupog/libs/simulation/ui/parameters-f
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SimulationComponent {
-  onSimulate(simulationParameters: any): void {
-    console.log(simulationParameters);
+  onSimulate(simulation: Simulation): void {
+    console.log(simulation);
   }
 
   onFormError(message: string): void {

@@ -12,11 +12,12 @@ import { distinctUntilChanged, filter, merge, tap } from 'rxjs';
 
 import { ButtonModule } from 'primeng/button';
 
+import { Distribution, Simulation } from '@grupog/libs/shared/models';
 import { InputTextComponent, RadioButtonGroupComponent } from '@grupog/libs/shared/ui/form-controls';
 import { CustomValidators } from '@grupog/libs/shared/util';
 
 type ParametersForm = {
-  distribution: FormControl<number>;
+  distribution: FormControl<Distribution>;
   sampleSize: FormControl<string>;
   a: FormControl<string>;
   b: FormControl<string>;
@@ -86,7 +87,7 @@ type ParametersForm = {
 export class ParametersFormComponent implements OnInit {
   formGroupDirective = viewChild.required(FormGroupDirective);
 
-  simulate = output<any>();
+  simulate = output<Simulation>();
   formError = output<string>();
 
   distributionList = [
@@ -172,7 +173,19 @@ export class ParametersFormComponent implements OnInit {
       return;
     }
 
-    this.simulate.emit(this.form.getRawValue());
+    const { distribution, sampleSize, a, b, mean, standardDeviation, lambda } = this.form.getRawValue();
+
+    const payload: Simulation = {
+      distribution,
+      sampleSize: +sampleSize,
+      a: +a,
+      b: +b,
+      mean: +mean,
+      standardDeviation: +standardDeviation,
+      lambda: +lambda,
+    };
+
+    this.simulate.emit(payload);
   }
 
   get distribution(): FormControl<number> {
