@@ -8,11 +8,11 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { distinctUntilChanged, filter, merge, tap } from 'rxjs';
+import { distinctUntilChanged, filter, merge, startWith, tap } from 'rxjs';
 
 import { ButtonModule } from 'primeng/button';
 
-import { Distribution, Simulation } from '@grupog/libs/shared/models';
+import { Distribution, DistributionEnum, Simulation } from '@grupog/libs/shared/models';
 import { InputTextComponent, RadioButtonGroupComponent } from '@grupog/libs/shared/ui/form-controls';
 import { CustomValidators } from '@grupog/libs/shared/util';
 
@@ -53,11 +53,11 @@ type ParametersForm = {
         ngDefaultControl
       />
 
-      @switch(distribution.value) { @case (1) {
+      @switch(distribution.value) { @case (distributionEnum.UNIFORM) {
       <gg-input-text [label]="'Extremo inferior (a)'" [formControlName]="'a'" [formControl]="a" ngDefaultControl />
 
       <gg-input-text [label]="'Extremo superior (b)'" [formControlName]="'b'" [formControl]="b" ngDefaultControl />
-      } @case (2) {
+      } @case (distributionEnum.NORMAL) {
       <gg-input-text [label]="'Media (µ)'" [formControlName]="'mean'" [formControl]="mean" ngDefaultControl />
 
       <gg-input-text
@@ -66,7 +66,7 @@ type ParametersForm = {
         [formControl]="standardDeviation"
         ngDefaultControl
       />
-      } @case (3) {
+      } @case (distributionEnum.EXPONENTIAL) {
       <gg-input-text [label]="'Frecuencia (λ)'" [formControlName]="'lambda'" [formControl]="lambda" ngDefaultControl />
       } }
 
@@ -104,23 +104,24 @@ export class ParametersFormComponent implements OnInit {
       label: 'Exponencial',
     },
   ];
+  distributionEnum = DistributionEnum;
 
   #fb = inject(NonNullableFormBuilder);
   #destroyRef = inject(DestroyRef);
 
   form = this.#fb.group<ParametersForm>({
-    distribution: this.#fb.control(1),
+    distribution: this.#fb.control(DistributionEnum.UNIFORM),
     sampleSize: this.#fb.control('', [
       Validators.required,
       Validators.min(1),
       Validators.max(1000000),
       CustomValidators.number,
     ]),
-    a: this.#fb.control('', [Validators.required, CustomValidators.number]),
-    b: this.#fb.control('', [Validators.required, CustomValidators.number]),
-    mean: this.#fb.control('', [Validators.required, CustomValidators.number]),
-    standardDeviation: this.#fb.control('', [Validators.required, CustomValidators.number]),
-    lambda: this.#fb.control('', [Validators.required, CustomValidators.number, Validators.min(0.0001)]),
+    a: this.#fb.control(''),
+    b: this.#fb.control(''),
+    mean: this.#fb.control(''),
+    standardDeviation: this.#fb.control(''),
+    lambda: this.#fb.control(''),
   });
 
   ngOnInit(): void {
@@ -128,9 +129,37 @@ export class ParametersFormComponent implements OnInit {
     this.subscribeABValueChanges();
   }
 
-  // TODO: implementar logica para quitar validadores segun la distribucion seleccionada
   private subscribeDistributionValueChanges(): void {
-    return;
+    this.distribution.valueChanges
+      .pipe(takeUntilDestroyed(this.#destroyRef), startWith(DistributionEnum.UNIFORM))
+      .subscribe((value) => {
+        switch (value) {
+          case DistributionEnum.UNIFORM: {
+            this.a.setValidators([Validators.required, CustomValidators.number]);
+            this.b.setValidators([Validators.required, CustomValidators.number]);
+            this.mean.clearValidators();
+            this.standardDeviation.clearValidators();
+            this.lambda.clearValidators();
+            break;
+          }
+          case DistributionEnum.NORMAL: {
+            this.a.clearValidators();
+            this.b.clearValidators();
+            this.mean.setValidators([Validators.required, CustomValidators.number]);
+            this.standardDeviation.setValidators([Validators.required, CustomValidators.number]);
+            this.lambda.clearValidators();
+            break;
+          }
+          case DistributionEnum.EXPONENTIAL: {
+            this.a.clearValidators();
+            this.b.clearValidators();
+            this.mean.clearValidators();
+            this.standardDeviation.clearValidators();
+            this.lambda.setValidators([Validators.required, CustomValidators.number, Validators.min(0.0001)]);
+            break;
+          }
+        }
+      });
   }
 
   private subscribeABValueChanges(): void {
