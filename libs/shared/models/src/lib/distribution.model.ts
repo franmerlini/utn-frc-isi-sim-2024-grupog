@@ -1,4 +1,4 @@
-const DistributionEnum = {
+export const DistributionEnum = {
   UNIFORM: 1,
   NORMAL: 2,
   EXPONENTIAL: 3,
