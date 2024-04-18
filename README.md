@@ -8,7 +8,7 @@ Este proyecto contiene todos los trabajos prácticos desarrollados durante el cu
 | ------ | ------------------------------------------- |
 | 68719  | Albarracin, Gonzalo                         |
 | 81907  | Amormino, Julieta                           |
-| 72165  | Del Valle Álvarez Achaval, Carolina Soledad |
+| 72165  | Alvarez Achaval, Carolina Soledad del Valle |
 | 79708  | Fasoletti, Candelaria                       |
 | 81211  | Merlini Bravo, Francisco                    |
 | 77523  | Talavera, Azul                              |
