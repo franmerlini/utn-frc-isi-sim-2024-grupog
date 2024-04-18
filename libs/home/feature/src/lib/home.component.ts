@@ -52,7 +52,7 @@ export class HomeComponent {
     },
     {
       id: 72165,
-      name: 'Del Valle Álvarez Achaval, Carolina Soledad',
+      name: 'Alvarez Achaval, Carolina Soledad del Valle',
     },
     {
       id: 79708,
@@ -68,7 +68,7 @@ export class HomeComponent {
     },
     {
       id: 75865,
-      name: 'Vela Rodriguez, Mariel Azul ',
+      name: 'Vela Rodriguez, Mariel Azul',
     },
   ];
 }
