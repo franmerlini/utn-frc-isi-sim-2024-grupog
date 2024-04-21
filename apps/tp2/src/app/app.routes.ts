@@ -1,5 +1,6 @@
 import { Route } from '@angular/router';
 
+import { SimulationService } from '@grupog/libs/shared/util';
 import { LayoutComponent } from '@grupog/libs/shell/ui/layout';
 
 export const ROUTES: Route[] = [
@@ -18,6 +19,7 @@ export const ROUTES: Route[] = [
       {
         path: 'simulacion',
         loadComponent: () => import('@grupog/libs/simulation/feature').then((c) => c.SimulationComponent),
+        providers: [SimulationService],
       },
     ],
   },
