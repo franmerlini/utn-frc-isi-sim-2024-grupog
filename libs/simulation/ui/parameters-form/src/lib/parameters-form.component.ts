@@ -12,8 +12,8 @@ import { distinctUntilChanged, filter, merge, startWith, tap } from 'rxjs';
 
 import { ButtonModule } from 'primeng/button';
 
-import { Distribution, DistributionEnum, Simulation } from '@grupog/libs/shared/models';
-import { InputTextComponent, RadioButtonGroupComponent } from '@grupog/libs/shared/ui/form-controls';
+import { Distribution, DistributionEnum, ListItem, Simulation } from '@grupog/libs/shared/models';
+import { DropdownComponent, InputTextComponent, RadioButtonGroupComponent } from '@grupog/libs/shared/ui/form-controls';
 import { CustomValidators } from '@grupog/libs/shared/util';
 
 type ParametersForm = {
@@ -24,12 +24,13 @@ type ParametersForm = {
   mean: FormControl<string>;
   standardDeviation: FormControl<string>;
   lambda: FormControl<string>;
+  intervalQuantity: FormControl<number>;
 };
 
 @Component({
   selector: 'gg-parameters-form',
   standalone: true,
-  imports: [ReactiveFormsModule, RadioButtonGroupComponent, InputTextComponent, ButtonModule],
+  imports: [ReactiveFormsModule, RadioButtonGroupComponent, InputTextComponent, ButtonModule, DropdownComponent],
   template: `
     <form
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
@@ -70,6 +71,14 @@ type ParametersForm = {
       <gg-input-text [label]="'Frecuencia (λ)'" [formControlName]="'lambda'" [formControl]="lambda" ngDefaultControl />
       } }
 
+      <gg-dropdown
+        [label]="'Cantidad de intervalos'"
+        [list]="intervalQuantityList"
+        [formControlName]="'intervalQuantity'"
+        [formControl]="intervalQuantity"
+        ngDefaultControl
+      />
+
       <div class="sm:col-span-2 md:col-span-3 lg:col-span-3 flex justify-end gap-2">
         <p-button
           type="button"
@@ -90,21 +99,39 @@ export class ParametersFormComponent implements OnInit {
   simulate = output<Simulation>();
   formError = output<string>();
 
-  distributionList = [
+  distributionList: ListItem[] = [
     {
-      id: 1,
+      value: 1,
       label: 'Uniforme',
     },
     {
-      id: 2,
+      value: 2,
       label: 'Normal',
     },
     {
-      id: 3,
+      value: 3,
       label: 'Exponencial',
     },
   ];
   distributionEnum = DistributionEnum;
+  intervalQuantityList: ListItem[] = [
+    {
+      value: 10,
+      label: '10',
+    },
+    {
+      value: 12,
+      label: '12',
+    },
+    {
+      value: 16,
+      label: '16',
+    },
+    {
+      value: 23,
+      label: '23',
+    },
+  ];
 
   #fb = inject(NonNullableFormBuilder);
   #destroyRef = inject(DestroyRef);
@@ -122,6 +149,7 @@ export class ParametersFormComponent implements OnInit {
     mean: this.#fb.control(''),
     standardDeviation: this.#fb.control(''),
     lambda: this.#fb.control(''),
+    intervalQuantity: this.#fb.control(0, [CustomValidators.requiredSelectValidator]),
   });
 
   ngOnInit(): void {
@@ -191,18 +219,20 @@ export class ParametersFormComponent implements OnInit {
   }
 
   onResetClick(): void {
-    [this.sampleSize, this.a, this.b, this.mean, this.standardDeviation, this.lambda].forEach((control) =>
-      control.reset()
+    [this.sampleSize, this.a, this.b, this.mean, this.standardDeviation, this.lambda, this.intervalQuantity].forEach(
+      (control) => control.reset()
     );
   }
 
   onSubmit(): void {
     if (this.form.invalid) {
+      this.form.markAllAsTouched();
       this.formError.emit('Formulario inválido.');
       return;
     }
 
-    const { distribution, sampleSize, a, b, mean, standardDeviation, lambda } = this.form.getRawValue();
+    const { distribution, sampleSize, a, b, mean, standardDeviation, lambda, intervalQuantity } =
+      this.form.getRawValue();
 
     const payload: Simulation = {
       distribution,
@@ -212,7 +242,7 @@ export class ParametersFormComponent implements OnInit {
       mean: +mean,
       standardDeviation: +standardDeviation,
       lambda: +lambda,
-      intervalQuantity: 10,
+      intervalQuantity,
     };
 
     this.simulate.emit(payload);
@@ -244,5 +274,9 @@ export class ParametersFormComponent implements OnInit {
 
   get lambda(): FormControl<string> {
     return this.form.get('lambda') as FormControl<string>;
+  }
+
+  get intervalQuantity(): FormControl<number> {
+    return this.form.get('intervalQuantity') as FormControl<number>;
   }
 }
