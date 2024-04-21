@@ -9,6 +9,7 @@ const simulationFeatureKey = 'simulation';
 type State = Simulation & {
   randomNumbers: number[];
   intervals: Interval[];
+  graph: any;
 };
 
 const initialState: State = {
@@ -22,6 +23,7 @@ const initialState: State = {
   intervalQuantity: 10,
   randomNumbers: [],
   intervals: [],
+  graph: {},
 };
 
 export const reducer = createReducer(
@@ -31,15 +33,17 @@ export const reducer = createReducer(
     ...state,
     ...parameters,
   })),
-  on(SimulationActions.runSimulationSuccess, (state, { randomNumbers, intervals }) => ({
+  on(SimulationActions.runSimulationSuccess, (state, { randomNumbers, intervals, graph }) => ({
     ...state,
     randomNumbers,
     intervals,
+    graph,
   })),
   on(SimulationActions.runSimulationFailure, (state) => ({
     ...state,
     randomNumbers: [],
     intervals: [],
+    graph: {},
   })),
 
   on(SimulationActions.resetSimulation, (state, { distribution }) => ({
