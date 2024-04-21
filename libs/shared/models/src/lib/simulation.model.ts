@@ -8,4 +8,5 @@ export type Simulation = {
   mean: number;
   standardDeviation: number;
   lambda: number;
+  intervalQuantity: number;
 };
