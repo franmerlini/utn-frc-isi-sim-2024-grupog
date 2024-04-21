@@ -3,6 +3,7 @@ import { ControlContainer, FormControl, ReactiveFormsModule } from '@angular/for
 
 import { RadioButtonModule } from 'primeng/radiobutton';
 
+import { ListItem } from '@grupog/libs/shared/models';
 import { getErrorMessage } from '@grupog/libs/shared/util';
 
 @Component({
@@ -19,15 +20,15 @@ import { getErrorMessage } from '@grupog/libs/shared/util';
     <div class="flex flex-col gap-2">
       <label>{{ label() }}</label>
 
-      @for(item of list(); track item.id) {
+      @for(item of list(); track item.value) {
       <div class="pl-4 flex items-center">
         <p-radioButton
           [name]="formControlName()"
-          [value]="item.id"
-          [inputId]="item.id"
+          [value]="item.value"
+          [inputId]="item.value.toString()"
           [formControlName]="formControlName()"
         ></p-radioButton>
-        <label [for]="item.id" class="ml-2 cursor-pointer">{{ item.label }}</label>
+        <label [for]="item.value" class="ml-2 cursor-pointer">{{ item.label }}</label>
       </div>
       } @if (hasError && errorMessage) {
       <small class="text-red-400">{{ errorMessage }}</small>
@@ -38,7 +39,7 @@ import { getErrorMessage } from '@grupog/libs/shared/util';
 })
 export class RadioButtonGroupComponent implements DoCheck {
   label = input.required<string>();
-  list = input.required<any[]>();
+  list = input.required<ListItem[]>();
   formControlName = input.required<string>();
   formControl = input.required<FormControl>();
 
