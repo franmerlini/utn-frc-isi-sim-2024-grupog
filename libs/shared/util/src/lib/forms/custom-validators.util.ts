@@ -1,4 +1,4 @@
-import { FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export class CustomValidators {
   static number(control: FormControl<string>): ValidationErrors | null {
@@ -27,5 +27,9 @@ export class CustomValidators {
 
       return null;
     };
+  }
+
+  static requiredSelectValidator(control: AbstractControl): ValidationErrors | null {
+    return !control?.value ? { required: true } : null;
   }
 }
