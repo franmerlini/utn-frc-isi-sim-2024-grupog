@@ -1,21 +1,23 @@
 import { Injectable } from '@angular/core';
 
+import { Observable, of } from 'rxjs';
+
 import { DistributionEnum, Simulation } from '@grupog/libs/shared/models';
 
 import { generateExponentialRandom, generateNormalRandom, generateUniformRandom } from '../random-generators';
 
 @Injectable()
 export class SimulationService {
-  simulate(parameters: Simulation): number[] {
+  simulate(parameters: Simulation): Observable<number[]> {
     const { distribution } = parameters;
 
     switch (distribution) {
       case DistributionEnum.UNIFORM:
-        return this.simulateUniform(parameters.sampleSize, parameters.a, parameters.b);
+        return of(this.simulateUniform(parameters.sampleSize, parameters.a, parameters.b));
       case DistributionEnum.NORMAL:
-        return this.simulateNormal(parameters.sampleSize, parameters.mean, parameters.standardDeviation);
+        return of(this.simulateNormal(parameters.sampleSize, parameters.mean, parameters.standardDeviation));
       case DistributionEnum.EXPONENTIAL:
-        return this.simulateExponential(parameters.sampleSize, parameters.lambda);
+        return of(this.simulateExponential(parameters.sampleSize, parameters.lambda));
       default:
         throw new Error('Invalid distribution.');
     }
