@@ -28,18 +28,30 @@ export class SimulationService {
     }
   }
 
+  private simulateUniform(sampleSize: number, a: number, b: number): number[] {
+    return Array.from({ length: sampleSize }, () => generateUniformRandom(a, b));
+  }
+
+  private simulateNormal(sampleSize: number, mean: number, standardDeviation: number): number[] {
+    return Array.from({ length: sampleSize }, () => generateNormalRandom(mean, standardDeviation));
+  }
+
+  private simulateExponential(sampleSize: number, lambda: number): number[] {
+    return Array.from({ length: sampleSize }, () => generateExponentialRandom(lambda));
+  }
+
   generateIntervals(parameters: Simulation, randomNumbers: number[]): Observable<Interval[]> {
-    const intervalsQuantity = 10;
     const orderedRandomNumbers = [...randomNumbers].sort((a, b) => a - b);
     const lowerBound = orderedRandomNumbers[0];
     const upperBound = orderedRandomNumbers[randomNumbers.length - 1];
-    const step = truncateDecimals((upperBound - lowerBound) / intervalsQuantity, 4);
+    const { intervalQuantity } = parameters;
+    const step = truncateDecimals((upperBound - lowerBound) / intervalQuantity, 4);
 
     let currentLowerBound = lowerBound;
     let currentUpperBound = lowerBound + step;
 
     return of(
-      Array.from({ length: intervalsQuantity }, () => {
+      Array.from({ length: intervalQuantity }, () => {
         const classMark = truncateDecimals((currentLowerBound + currentUpperBound) / 2, 4);
 
         const interval: Interval = {
@@ -57,7 +69,7 @@ export class SimulationService {
         };
 
         currentLowerBound = truncateDecimals(currentUpperBound, 4);
-        currentUpperBound = truncateDecimals(currentUpperBound + step, 4);
+        currentUpperBound = truncateDecimals(currentUpperBound + step - 0.0001, 4);
 
         return interval;
       })
@@ -84,6 +96,10 @@ export class SimulationService {
       default:
         throw new Error('Invalid distribution.');
     }
+  }
+
+  private calculateObservedFrequency(randomNumbers: number[], lowerBound: number, upperBound: number): number {
+    return randomNumbers.filter((number) => number >= lowerBound && number < upperBound).length;
   }
 
   private calculateUniformExpectedFrequency(randomNumbers: number[], intervalQuantity: number): number {
@@ -113,21 +129,5 @@ export class SimulationService {
     const density = lambda * Math.exp(-lambda * classMark);
     const width = upperBound - lowerBound;
     return density * width * randomNumbers.length;
-  }
-
-  private calculateObservedFrequency(randomNumbers: number[], lowerBound: number, upperBound: number): number {
-    return randomNumbers.filter((number) => number >= lowerBound && number < upperBound).length;
-  }
-
-  private simulateUniform(sampleSize: number, a: number, b: number): number[] {
-    return Array.from({ length: sampleSize }, () => generateUniformRandom(a, b));
-  }
-
-  private simulateNormal(sampleSize: number, mean: number, standardDeviation: number): number[] {
-    return Array.from({ length: sampleSize }, () => generateNormalRandom(mean, standardDeviation));
-  }
-
-  private simulateExponential(sampleSize: number, lambda: number): number[] {
-    return Array.from({ length: sampleSize }, () => generateExponentialRandom(lambda));
   }
 }
