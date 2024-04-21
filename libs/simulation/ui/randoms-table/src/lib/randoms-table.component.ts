@@ -1,15 +1,14 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'gg-randoms-table',
   standalone: true,
-  imports: [TableModule, ButtonModule],
+  imports: [TableModule],
   template: `
     <p-table
-      [value]="randoms()"
+      [value]="randomNumbers()"
       [paginator]="true"
       [rows]="10"
       [showCurrentPageReport]="true"
@@ -35,5 +34,5 @@ import { TableModule } from 'primeng/table';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RandomsTableComponent {
-  randoms = input.required<number[]>();
+  randomNumbers = input.required<number[]>();
 }
