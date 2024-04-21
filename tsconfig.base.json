@@ -25,6 +25,7 @@
       "@grupog/libs/shell/ui/header": ["libs/shell/ui/header/src/index.ts"],
       "@grupog/libs/shell/ui/layout": ["libs/shell/ui/layout/src/index.ts"],
       "@grupog/libs/shell/ui/sidebar": ["libs/shell/ui/sidebar/src/index.ts"],
+      "@grupog/libs/simulation/data-access/store": ["libs/simulation/data-access/store/src/index.ts"],
       "@grupog/libs/simulation/feature": ["libs/simulation/feature/src/index.ts"],
       "@grupog/libs/simulation/ui/parameters-form": ["libs/simulation/ui/parameters-form/src/index.ts"]
     }
