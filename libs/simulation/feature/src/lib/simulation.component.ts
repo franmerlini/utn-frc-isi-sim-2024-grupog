@@ -1,6 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Simulation } from '@grupog/libs/shared/models';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
+import { Store } from '@ngrx/store';
+
+import { ToastActions } from '@grupog/libs/shared/data-access/store';
+import { Simulation } from '@grupog/libs/shared/models';
 import { ParametersFormComponent } from '@grupog/libs/simulation/ui/parameters-form';
 
 @Component({
@@ -11,11 +14,13 @@ import { ParametersFormComponent } from '@grupog/libs/simulation/ui/parameters-f
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SimulationComponent {
+  #store = inject(Store);
+
   onSimulate(simulation: Simulation): void {
     console.log(simulation);
   }
 
   onFormError(message: string): void {
-    console.log(message);
+    this.#store.dispatch(ToastActions.toastError({ summary: 'Error', detail: message }));
   }
 }
