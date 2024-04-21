@@ -19,6 +19,7 @@ const initialState: State = {
   mean: 0,
   standardDeviation: 0,
   lambda: 0,
+  intervalQuantity: 10,
   randomNumbers: [],
   intervals: [],
 };
