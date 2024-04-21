@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
-import { catchError, exhaustMap, map, of } from 'rxjs';
+import { catchError, concatMap, exhaustMap, map, of } from 'rxjs';
 
 import { SimulationService } from '@grupog/libs/shared/util';
 
@@ -14,12 +14,16 @@ const runSimulation$ = createEffect(
       ofType(SimulationActions.runSimulation),
       exhaustMap(({ parameters }) =>
         simulationService.simulate(parameters).pipe(
-          map((randomNumbers) => SimulationActions.runSimulationSuccess({ randomNumbers })),
-          catchError(() =>
-            of(
-              SimulationActions.runSimulationFailure({
-                error: 'Failed to simulate.',
-              })
+          concatMap((randomNumbers) =>
+            simulationService.generateIntervals(parameters, randomNumbers).pipe(
+              map((intervals) => SimulationActions.runSimulationSuccess({ randomNumbers, intervals })),
+              catchError(() =>
+                of(
+                  SimulationActions.runSimulationFailure({
+                    error: 'Failed to simulate.',
+                  })
+                )
+              )
             )
           )
         )

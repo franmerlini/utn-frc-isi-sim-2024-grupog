@@ -1,6 +1,6 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 
-import { DistributionEnum, Simulation } from '@grupog/libs/shared/models';
+import { DistributionEnum, Interval, Simulation } from '@grupog/libs/shared/models';
 
 import { SimulationActions } from './simulation.actions';
 
@@ -8,6 +8,7 @@ const simulationFeatureKey = 'simulation';
 
 type State = Simulation & {
   randomNumbers: number[];
+  intervals: Interval[];
 };
 
 const initialState: State = {
@@ -19,6 +20,7 @@ const initialState: State = {
   standardDeviation: 0,
   lambda: 0,
   randomNumbers: [],
+  intervals: [],
 };
 
 export const reducer = createReducer(
@@ -28,13 +30,15 @@ export const reducer = createReducer(
     ...state,
     ...parameters,
   })),
-  on(SimulationActions.runSimulationSuccess, (state, { randomNumbers }) => ({
+  on(SimulationActions.runSimulationSuccess, (state, { randomNumbers, intervals }) => ({
     ...state,
     randomNumbers,
+    intervals,
   })),
   on(SimulationActions.runSimulationFailure, (state) => ({
     ...state,
     randomNumbers: [],
+    intervals: [],
   })),
 
   on(SimulationActions.resetSimulation, (state, { distribution }) => ({
