@@ -45,31 +45,31 @@ export class SimulationService {
     const lowerBound = orderedRandomNumbers[0];
     const upperBound = orderedRandomNumbers[randomNumbers.length - 1];
     const { intervalQuantity } = parameters;
-    const step = truncateDecimals((upperBound - lowerBound) / intervalQuantity, 4);
+    const step = (upperBound - lowerBound) / intervalQuantity;
 
     let currentLowerBound = lowerBound;
     let currentUpperBound = lowerBound + step;
 
     return of(
       Array.from({ length: intervalQuantity }, () => {
-        const classMark = truncateDecimals((currentLowerBound + currentUpperBound) / 2, 4);
+        const classMark = (currentLowerBound + currentUpperBound) / 2;
 
         const interval: Interval = {
-          lowerBound: currentLowerBound,
-          upperBound: currentUpperBound,
-          classMark,
-          expectedFrequency: this.calculateExpectedFrequency(
-            parameters,
-            classMark,
-            randomNumbers,
-            currentLowerBound,
-            currentUpperBound
+          lowerBound: truncateDecimals(currentLowerBound, 4),
+          upperBound: truncateDecimals(currentUpperBound, 4),
+          classMark: truncateDecimals(classMark, 4),
+          expectedFrequency: truncateDecimals(
+            this.calculateExpectedFrequency(parameters, classMark, randomNumbers, currentLowerBound, currentUpperBound),
+            4
           ),
-          observedFrequency: this.calculateObservedFrequency(randomNumbers, currentLowerBound, currentUpperBound),
+          observedFrequency: truncateDecimals(
+            this.calculateObservedFrequency(randomNumbers, currentLowerBound, currentUpperBound),
+            4
+          ),
         };
 
-        currentLowerBound = truncateDecimals(currentUpperBound, 4);
-        currentUpperBound = truncateDecimals(currentUpperBound + step - 0.0001, 4);
+        (currentLowerBound = currentUpperBound), 4;
+        (currentUpperBound = currentUpperBound + step - 0.0001), 4;
 
         return interval;
       })
@@ -83,8 +83,7 @@ export class SimulationService {
     lowerBound: number,
     upperBound: number
   ): number {
-    const { distribution, mean, standardDeviation, lambda } = parameters;
-    const intervalQuantity = 10;
+    const { distribution, mean, standardDeviation, lambda, intervalQuantity } = parameters;
 
     switch (distribution) {
       case DistributionEnum.UNIFORM:
