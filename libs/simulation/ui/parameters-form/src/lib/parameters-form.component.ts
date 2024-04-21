@@ -212,6 +212,7 @@ export class ParametersFormComponent implements OnInit {
       mean: +mean,
       standardDeviation: +standardDeviation,
       lambda: +lambda,
+      intervalQuantity: 10,
     };
 
     this.simulate.emit(payload);
