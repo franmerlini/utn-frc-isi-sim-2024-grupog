@@ -8,7 +8,7 @@ import * as PlotlyJS from 'plotly.js-dist-min';
 PlotlyModule.plotlyjs = PlotlyJS;
 
 import { ToastActions } from '@grupog/libs/shared/data-access/store';
-import { Simulation } from '@grupog/libs/shared/models';
+import { Distribution, Simulation } from '@grupog/libs/shared/models';
 import { SimulationActions, SimulationFeature } from '@grupog/libs/simulation/data-access/store';
 import { IntervalsTableComponent } from '@grupog/libs/simulation/ui/intervals-table';
 import { ParametersFormComponent } from '@grupog/libs/simulation/ui/parameters-form';
@@ -20,7 +20,7 @@ import { RandomsTableComponent } from '@grupog/libs/simulation/ui/randoms-table'
   imports: [ParametersFormComponent, AsyncPipe, RandomsTableComponent, IntervalsTableComponent, PlotlyModule, JsonPipe],
   template: `
     <div class="flex flex-col gap-8">
-      <gg-parameters-form (simulate)="onSimulate($event)" (formError)="onFormError($event)" />
+      <gg-parameters-form (simulate)="onSimulate($event)" (reset)="onReset($event)" (formError)="onFormError($event)" />
 
       @if(randomNumbers$ | async; as randomNumbers) { @if(randomNumbers.length) {
       <gg-randoms-table [randomNumbers]="randomNumbers" />
@@ -42,6 +42,10 @@ export class SimulationComponent {
 
   onSimulate(parameters: Simulation): void {
     this.#store.dispatch(SimulationActions.runSimulation({ parameters }));
+  }
+
+  onReset(distribution: Distribution): void {
+    this.#store.dispatch(SimulationActions.resetSimulation({ distribution }));
   }
 
   onFormError(message: string): void {

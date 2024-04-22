@@ -97,6 +97,7 @@ export class ParametersFormComponent implements OnInit {
   formGroupDirective = viewChild.required(FormGroupDirective);
 
   simulate = output<Simulation>();
+  reset = output<Distribution>();
   formError = output<string>();
 
   distributionList: ListItem[] = [
@@ -222,6 +223,7 @@ export class ParametersFormComponent implements OnInit {
     [this.sampleSize, this.a, this.b, this.mean, this.standardDeviation, this.lambda, this.intervalQuantity].forEach(
       (control) => control.reset()
     );
+    this.reset.emit(this.distribution.value as Distribution);
   }
 
   onSubmit(): void {
