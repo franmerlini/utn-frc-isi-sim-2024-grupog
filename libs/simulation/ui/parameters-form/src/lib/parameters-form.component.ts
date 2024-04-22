@@ -188,6 +188,10 @@ export class ParametersFormComponent implements OnInit {
             break;
           }
         }
+
+        [this.a, this.b, this.mean, this.standardDeviation, this.lambda].forEach((control) => {
+          control.updateValueAndValidity();
+        });
       });
   }
 
