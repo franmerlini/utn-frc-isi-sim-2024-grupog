@@ -22,8 +22,8 @@ import { ChiSquareTestInterval } from '@grupog/libs/shared/models';
         <tr>
           <th>Límite inferior</th>
           <th>Límite superior</th>
-          <th>Frecuencia esperada</th>
           <th>Frecuencia observada</th>
+          <th>Frecuencia esperada</th>
           <th>C</th>
           <th>C acumulado</th>
         </tr>
@@ -33,8 +33,8 @@ import { ChiSquareTestInterval } from '@grupog/libs/shared/models';
         <tr>
           <td>{{ interval.lowerBound }}</td>
           <td>{{ interval.upperBound }}</td>
-          <td>{{ interval.expectedFrequency }}</td>
           <td>{{ interval.observedFrequency }}</td>
+          <td>{{ interval.expectedFrequency }}</td>
           <td>{{ interval.c }}</td>
           <td>{{ interval.accumulatedC }}</td>
         </tr>
