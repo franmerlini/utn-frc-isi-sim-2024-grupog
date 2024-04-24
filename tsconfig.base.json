@@ -29,6 +29,7 @@
       "@grupog/libs/simulation/feature": ["libs/simulation/feature/src/index.ts"],
       "@grupog/libs/simulation/ui/chi-square-test-table": ["libs/simulation/ui/chi-square-test-table/src/index.ts"],
       "@grupog/libs/simulation/ui/intervals-table": ["libs/simulation/ui/intervals-table/src/index.ts"],
+      "@grupog/libs/simulation/ui/ks-test-table": ["libs/simulation/ui/ks-test-table/src/index.ts"],
       "@grupog/libs/simulation/ui/parameters-form": ["libs/simulation/ui/parameters-form/src/index.ts"],
       "@grupog/libs/simulation/ui/randoms-table": ["libs/simulation/ui/randoms-table/src/index.ts"]
     }
