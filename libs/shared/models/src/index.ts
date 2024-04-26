@@ -1,3 +1,4 @@
+export * from './lib/chi-square-probabilities.model';
 export * from './lib/chi-square-test-interval.model';
 export * from './lib/distribution.model';
 export * from './lib/interval.model';
