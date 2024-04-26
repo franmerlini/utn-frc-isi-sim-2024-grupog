@@ -1,6 +1,6 @@
-import { ChiSquareProbabilities } from '@grupog/libs/shared/models';
+import { Probabilities } from '@grupog/libs/shared/models';
 
-export const CHI_SQUARE_PROBABILITIES: ChiSquareProbabilities = {
+export const CHI_SQUARE_PROBABILITIES: Probabilities = {
   1: {
     0.995: 0,
     0.99: 0,
