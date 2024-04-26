@@ -68,8 +68,8 @@ export class SimulationService {
           ),
         };
 
-        (currentLowerBound = currentUpperBound), 4;
-        (currentUpperBound = currentUpperBound + step - 0.0001), 4;
+        currentLowerBound = truncateDecimals(currentUpperBound, 4);
+        currentUpperBound = truncateDecimals(currentUpperBound + step + 0.0001, 4);
 
         return interval;
       })
