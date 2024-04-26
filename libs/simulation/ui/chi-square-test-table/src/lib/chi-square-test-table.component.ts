@@ -53,7 +53,7 @@ export class ChiSquareTestTableComponent {
   criticalValue = input.required<number>();
   hypothesisTestResult = computed(() => {
     const isLower = this.calculatedC() < this.criticalValue();
-    return `Para los grados de libertad especificados (${this.degreesOfFreedom()}) y el nivel de significancia seleccionado
+    return `Para los grados de libertad especificados (${this.degreesOfFreedom()}) y el nivel de significancia utilizado
   (${this.significantLevel()}), el valor crítico es ${this.criticalValue()}. Como el estadístico de prueba calculado (${this.calculatedC()})
   es ${isLower ? 'menor' : 'mayor'} al valor crítico, se concluye que ${
       isLower ? 'no se puede rechazar la hipótesis nula' : 'se rechaza la hipótesis nula'
