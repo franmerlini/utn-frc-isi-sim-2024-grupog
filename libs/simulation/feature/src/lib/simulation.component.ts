@@ -14,6 +14,7 @@ import { Distribution, Simulation } from '@grupog/libs/shared/models';
 import { SimulationActions, SimulationFeature } from '@grupog/libs/simulation/data-access/store';
 import { ChiSquareTestTableComponent } from '@grupog/libs/simulation/ui/chi-square-test-table';
 import { IntervalsTableComponent } from '@grupog/libs/simulation/ui/intervals-table';
+import { KsTestTableComponent } from '@grupog/libs/simulation/ui/ks-test-table';
 import { ParametersFormComponent } from '@grupog/libs/simulation/ui/parameters-form';
 import { RandomsTableComponent } from '@grupog/libs/simulation/ui/randoms-table';
 
@@ -26,6 +27,7 @@ import { RandomsTableComponent } from '@grupog/libs/simulation/ui/randoms-table'
     RandomsTableComponent,
     IntervalsTableComponent,
     ChiSquareTestTableComponent,
+    KsTestTableComponent,
     PlotlyModule,
     JsonPipe,
   ],
@@ -43,12 +45,21 @@ import { RandomsTableComponent } from '@grupog/libs/simulation/ui/randoms-table'
       <h2 class="text-xl font-bold">Prueba de Chi Cuadrado</h2>
       <gg-chi-square-test-table
         [intervals]="chiSquareTestData.intervals"
-        [degreesOfFreedom]="chiSquareTestData.degreesOfFreedom"
+        [degreesOfFreedom]="chiSquareTestData.chiSquareDegreesOfFreedom"
         [significantLevel]="chiSquareTestData.significanceLevel"
-        [calculatedC]="chiSquareTestData.calculatedC"
+        [calculatedC]="chiSquareTestData.calculatedChiSquare"
         [criticalValue]="chiSquareTestData.criticalValue"
       />
-      } } } @if(graph$ | async; as graph) { @if( graph?.data && graph?.layout) {
+      } } } @if(ksTestData$ | async; as ksTestData) { @if(ksTestData.intervals.length) {
+      <h2 class="text-xl font-bold">Prueba de Kolmogorov-Smirnov</h2>
+      <gg-ks-test-table
+        [intervals]="ksTestData.intervals"
+        [degreesOfFreedom]="ksTestData.ksDegreesOfFreedom"
+        [significantLevel]="ksTestData.significanceLevel"
+        [calculatedKs]="ksTestData.calculatedKs"
+        [criticalValue]="ksTestData.criticalValue"
+      />
+      }} @if(graph$ | async; as graph) { @if( graph?.data && graph?.layout) {
       <h2 class="text-xl font-bold">Gráfico de distribución</h2>
       <plotly-plot [data]="getStructuredClone(graph.data)" [layout]="getStructuredClone(graph.layout)"></plotly-plot>
       } }
@@ -63,10 +74,17 @@ export class SimulationComponent {
   intervals$ = this.#store.select(SimulationFeature.selectIntervals);
   chiSquareTestData$ = combineLatest({
     intervals: this.#store.select(SimulationFeature.selectChiSquareTestIntervals),
-    degreesOfFreedom: this.#store.select(SimulationFeature.selectDegreesOfFreedom),
+    chiSquareDegreesOfFreedom: this.#store.select(SimulationFeature.selectChiSquareDegreesOfFreedom),
     significanceLevel: this.#store.select(SimulationFeature.selectSignificanceLevel),
-    calculatedC: this.#store.select(SimulationFeature.selectCalculatedC),
-    criticalValue: this.#store.select(SimulationFeature.selectCriticalValue),
+    calculatedChiSquare: this.#store.select(SimulationFeature.selectCalculatedChiSquare),
+    criticalValue: this.#store.select(SimulationFeature.selectChiSquareCriticalValue),
+  });
+  ksTestData$ = combineLatest({
+    intervals: this.#store.select(SimulationFeature.selectKsTestIntervals),
+    ksDegreesOfFreedom: this.#store.select(SimulationFeature.selectKsDegreesOfFreedom),
+    significanceLevel: this.#store.select(SimulationFeature.selectSignificanceLevel),
+    calculatedKs: this.#store.select(SimulationFeature.selectCalculatedKs),
+    criticalValue: this.#store.select(SimulationFeature.selectKsCriticalValue),
   });
 
   graph$ = this.#store.select(SimulationFeature.selectGraph);

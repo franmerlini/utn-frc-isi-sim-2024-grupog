@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 import { TableModule } from 'primeng/table';
 
@@ -39,16 +39,32 @@ import { KsTestInterval } from '@grupog/libs/shared/models';
           <td>{{ interval.upperBound }}</td>
           <td>{{ interval.observedFrequency }}</td>
           <td>{{ interval.expectedFrequency }}</td>
-          <td>{{ interval.accumulatedExpectedFrequency }}</td>
-          <td>{{ interval.accumulatedObservedFrequency }}</td>
+          <td>{{ interval.observedProbability }}</td>
+          <td>{{ interval.expectedProbability }}</td>
+          <td>{{ interval.accumulatedObservedProbability }}</td>
+          <td>{{ interval.accumulatedExpectedProbability }}</td>
           <td>{{ interval.deviation }}</td>
           <td>{{ interval.maxDeviation }}</td>
         </tr>
       </ng-template>
     </p-table>
+
+    <p class="mt-3">{{ hypothesisTestResult() }}</p>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KsTestTableComponent {
   intervals = input.required<KsTestInterval[]>();
+  degreesOfFreedom = input.required<number>();
+  significantLevel = input.required<number>();
+  calculatedKs = input.required<number>();
+  criticalValue = input.required<number>();
+  hypothesisTestResult = computed(() => {
+    const isLower = this.calculatedKs() < this.criticalValue();
+    return `Para los grados de libertad especificados (${this.degreesOfFreedom()}) y el nivel de significancia utilizado
+  (${this.significantLevel()}), el valor crítico es ${this.criticalValue()}. Como el estadístico de prueba calculado (${this.calculatedKs()})
+  es ${isLower ? 'menor' : 'mayor'} al valor crítico, se concluye que ${
+      isLower ? 'no se puede rechazar la hipótesis nula' : 'se rechaza la hipótesis nula'
+    }.`;
+  });
 }

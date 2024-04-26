@@ -3,10 +3,10 @@ import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 
-import { catchError, concatMap, exhaustMap, map, of, withLatestFrom } from 'rxjs';
+import { catchError, concatMap, exhaustMap, forkJoin, map, of, withLatestFrom } from 'rxjs';
 
 import { DistributionEnum } from '@grupog/libs/shared/models';
-import { ChiSquareTestService, SimulationService } from '@grupog/libs/shared/util';
+import { ChiSquareTestService, KsTestService, SimulationService } from '@grupog/libs/shared/util';
 
 import { SimulationActions } from './simulation.actions';
 import { SimulationFeature } from './simulation.state';
@@ -16,7 +16,8 @@ const runSimulation$ = createEffect(
     actions$ = inject(Actions),
     store = inject(Store),
     simulationService = inject(SimulationService),
-    chiSquareTestService = inject(ChiSquareTestService)
+    chiSquareTestService = inject(ChiSquareTestService),
+    ksTestService = inject(KsTestService)
   ) =>
     actions$.pipe(
       ofType(SimulationActions.runSimulation),
@@ -29,8 +30,11 @@ const runSimulation$ = createEffect(
           concatMap((randomNumbers) =>
             simulationService.generateIntervals(parameters, randomNumbers).pipe(
               concatMap((intervals) =>
-                chiSquareTestService.generateIntervals(intervals).pipe(
-                  map((chiSquareTestIntervals) => {
+                forkJoin([
+                  chiSquareTestService.generateIntervals(intervals),
+                  ksTestService.generateIntervals(intervals),
+                ]).pipe(
+                  map(([chiSquareTestIntervals, ksTestIntervals]) => {
                     const graph = {
                       data: [
                         {
@@ -69,6 +73,7 @@ const runSimulation$ = createEffect(
                       randomNumbers,
                       intervals,
                       chiSquareTestIntervals,
+                      ksTestIntervals,
                       graph,
                     });
                   }),
