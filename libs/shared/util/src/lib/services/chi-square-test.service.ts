@@ -55,8 +55,8 @@ export class ChiSquareTestService {
       if (groupedIntervals.length > 0) {
         const lastGroup = groupedIntervals[groupedIntervals.length - 1];
         lastGroup.upperBound = currentGroup[currentGroup.length - 1].upperBound;
-        lastGroup.expectedFrequency += currentExpectedFrequency;
-        lastGroup.observedFrequency += currentObservedFrequency;
+        lastGroup.expectedFrequency = truncateDecimals(lastGroup.expectedFrequency + currentExpectedFrequency, 4);
+        lastGroup.observedFrequency = truncateDecimals(lastGroup.observedFrequency + currentObservedFrequency, 4);
 
         const c = (lastGroup.expectedFrequency - lastGroup.observedFrequency) ** 2 / lastGroup.expectedFrequency;
         accumulatedC += c;
