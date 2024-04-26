@@ -1,6 +1,6 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 
-import { DistributionEnum, Interval, Simulation } from '@grupog/libs/shared/models';
+import { ChiSquareTestInterval, DistributionEnum, Interval, Simulation } from '@grupog/libs/shared/models';
 
 import { SimulationActions } from './simulation.actions';
 
@@ -9,6 +9,7 @@ const simulationFeatureKey = 'simulation';
 type State = Simulation & {
   randomNumbers: number[];
   intervals: Interval[];
+  chiSquareTestIntervals: ChiSquareTestInterval[];
   graph: any;
 };
 
@@ -23,6 +24,7 @@ const initialState: State = {
   intervalQuantity: 10,
   randomNumbers: [],
   intervals: [],
+  chiSquareTestIntervals: [],
   graph: {},
 };
 
@@ -33,16 +35,18 @@ export const reducer = createReducer(
     ...state,
     ...parameters,
   })),
-  on(SimulationActions.runSimulationSuccess, (state, { randomNumbers, intervals, graph }) => ({
+  on(SimulationActions.runSimulationSuccess, (state, { randomNumbers, intervals, chiSquareTestIntervals, graph }) => ({
     ...state,
     randomNumbers,
     intervals,
+    chiSquareTestIntervals,
     graph,
   })),
   on(SimulationActions.runSimulationFailure, (state) => ({
     ...state,
     randomNumbers: [],
     intervals: [],
+    chiSquareTestIntervals: [],
     graph: {},
   })),
 

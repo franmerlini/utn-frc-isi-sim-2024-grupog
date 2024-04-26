@@ -1,6 +1,6 @@
 import { createActionGroup, props } from '@ngrx/store';
 
-import { Distribution, Interval, Simulation } from '@grupog/libs/shared/models';
+import { ChiSquareTestInterval, Distribution, Interval, Simulation } from '@grupog/libs/shared/models';
 
 export const SimulationActions = createActionGroup({
   source: 'Simulation',
@@ -9,6 +9,7 @@ export const SimulationActions = createActionGroup({
     'Run simulation success': props<{
       randomNumbers: number[];
       intervals: Interval[];
+      chiSquareTestIntervals: ChiSquareTestInterval[];
       graph: any;
     }>(),
     'Run simulation failure': props<{ error: string }>(),

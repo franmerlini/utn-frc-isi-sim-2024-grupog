@@ -10,6 +10,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
 import { ToastActions } from '@grupog/libs/shared/data-access/store';
 import { Distribution, Simulation } from '@grupog/libs/shared/models';
 import { SimulationActions, SimulationFeature } from '@grupog/libs/simulation/data-access/store';
+import { ChiSquareTestTableComponent } from '@grupog/libs/simulation/ui/chi-square-test-table';
 import { IntervalsTableComponent } from '@grupog/libs/simulation/ui/intervals-table';
 import { ParametersFormComponent } from '@grupog/libs/simulation/ui/parameters-form';
 import { RandomsTableComponent } from '@grupog/libs/simulation/ui/randoms-table';
@@ -17,16 +18,30 @@ import { RandomsTableComponent } from '@grupog/libs/simulation/ui/randoms-table'
 @Component({
   selector: 'gg-simulation',
   standalone: true,
-  imports: [ParametersFormComponent, AsyncPipe, RandomsTableComponent, IntervalsTableComponent, PlotlyModule, JsonPipe],
+  imports: [
+    ParametersFormComponent,
+    AsyncPipe,
+    RandomsTableComponent,
+    IntervalsTableComponent,
+    ChiSquareTestTableComponent,
+    PlotlyModule,
+    JsonPipe,
+  ],
   template: `
     <div class="flex flex-col gap-8">
       <gg-parameters-form (simulate)="onSimulate($event)" (reset)="onReset($event)" (formError)="onFormError($event)" />
 
       @if(randomNumbers$ | async; as randomNumbers) { @if(randomNumbers.length) {
+      <h2 class="text-xl font-bold">Números aleatorios</h2>
       <gg-randoms-table [randomNumbers]="randomNumbers" />
       } } @if(intervals$ | async; as intervals) { @if(intervals.length) {
+      <h2 class="text-xl font-bold">Frecuencias y probabilidades</h2>
       <gg-intervals-table [intervals]="intervals" />
-      } } @if(graph$ | async; as graph) { @if( graph?.data && graph?.layout) {
+      } } @if (chiSquareTestIntervals$ | async; as chiSquareTestIntervals) { @if(chiSquareTestIntervals.length) {
+      <h2 class="text-xl font-bold">Prueba de Chi Cuadrado</h2>
+      <gg-chi-square-test-table [intervals]="chiSquareTestIntervals" />
+      }} @if(graph$ | async; as graph) { @if( graph?.data && graph?.layout) {
+      <h2 class="text-xl font-bold">Gráfico de distribución</h2>
       <plotly-plot [data]="getStructuredClone(graph.data)" [layout]="getStructuredClone(graph.layout)"></plotly-plot>
       } }
     </div>
@@ -38,6 +53,7 @@ export class SimulationComponent {
 
   randomNumbers$ = this.#store.select(SimulationFeature.selectRandomNumbers);
   intervals$ = this.#store.select(SimulationFeature.selectIntervals);
+  chiSquareTestIntervals$ = this.#store.select(SimulationFeature.selectChiSquareTestIntervals);
   graph$ = this.#store.select(SimulationFeature.selectGraph);
 
   onSimulate(parameters: Simulation): void {
