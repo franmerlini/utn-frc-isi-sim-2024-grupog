@@ -27,7 +27,7 @@ export class ChiSquareTestService {
       currentExpectedFrequency += interval.expectedFrequency;
       currentObservedFrequency += interval.observedFrequency;
 
-      if (currentObservedFrequency >= this.MIN_OBSERVED_FREQUENCY) {
+      if (currentExpectedFrequency >= this.MIN_OBSERVED_FREQUENCY) {
         const upperBound = currentGroup[currentGroup.length - 1].upperBound;
 
         const c = (currentExpectedFrequency - currentObservedFrequency) ** 2 / currentExpectedFrequency;
