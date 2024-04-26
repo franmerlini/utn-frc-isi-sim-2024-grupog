@@ -3,7 +3,7 @@ import { Route } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
 
-import { ChiSquareTestService, SimulationService } from '@grupog/libs/shared/util';
+import { ChiSquareTestService, KsTestService, SimulationService } from '@grupog/libs/shared/util';
 import { LayoutComponent } from '@grupog/libs/shell/ui/layout';
 import { SimulationEffects, SimulationFeature } from '@grupog/libs/simulation/data-access/store';
 
@@ -26,6 +26,7 @@ export const ROUTES: Route[] = [
         providers: [
           SimulationService,
           ChiSquareTestService,
+          KsTestService,
           provideState(SimulationFeature),
           provideEffects(SimulationEffects),
         ],
