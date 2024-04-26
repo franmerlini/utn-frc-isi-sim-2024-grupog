@@ -13,6 +13,7 @@ import {
 
 @Injectable()
 export class SimulationService {
+  // Tabla de numeros aleatorios
   simulate(parameters: Simulation): Observable<number[]> {
     const { distribution } = parameters;
 
@@ -40,6 +41,7 @@ export class SimulationService {
     return Array.from({ length: sampleSize }, () => generateExponentialRandom(lambda));
   }
 
+  // Tabla de probabilidades y frecuencias
   generateIntervals(parameters: Simulation, randomNumbers: number[]): Observable<Interval[]> {
     const orderedRandomNumbers = [...randomNumbers].sort((a, b) => a - b);
     const lowerBound = orderedRandomNumbers[0];
@@ -59,14 +61,7 @@ export class SimulationService {
           upperBound: truncateDecimals(currentUpperBound, 4),
           classMark: truncateDecimals(classMark, 4),
           expectedFrequency: truncateDecimals(
-            this.calculateExpectedFrequency(
-              parameters,
-              classMark,
-              randomNumbers,
-              currentLowerBound,
-              currentUpperBound,
-              sampleSize
-            ),
+            this.calculateExpectedFrequency(parameters, classMark, currentLowerBound, currentUpperBound, sampleSize),
             4
           ),
           observedFrequency: truncateDecimals(
@@ -83,10 +78,13 @@ export class SimulationService {
     );
   }
 
+  private calculateObservedFrequency(randomNumbers: number[], lowerBound: number, upperBound: number): number {
+    return randomNumbers.filter((number) => number >= lowerBound && number < upperBound).length;
+  }
+
   private calculateExpectedFrequency(
     parameters: Simulation,
     classMark: number,
-    randomNumbers: number[],
     lowerBound: number,
     upperBound: number,
     sampleSize: number
@@ -95,7 +93,7 @@ export class SimulationService {
 
     switch (distribution) {
       case DistributionEnum.UNIFORM:
-        return this.calculateUniformExpectedFrequency(randomNumbers, intervalQuantity);
+        return this.calculateUniformExpectedFrequency(sampleSize, intervalQuantity);
       case DistributionEnum.NORMAL:
         return this.calculateNormalExpectedFrequency(
           classMark,
@@ -106,18 +104,14 @@ export class SimulationService {
           sampleSize
         );
       case DistributionEnum.EXPONENTIAL:
-        return this.calculateExponentialExpectedFrequency(randomNumbers, lambda, classMark, lowerBound, upperBound);
+        return this.calculateExponentialExpectedFrequency(sampleSize, lambda, classMark, lowerBound, upperBound);
       default:
         throw new Error('Invalid distribution.');
     }
   }
 
-  private calculateObservedFrequency(randomNumbers: number[], lowerBound: number, upperBound: number): number {
-    return randomNumbers.filter((number) => number >= lowerBound && number < upperBound).length;
-  }
-
-  private calculateUniformExpectedFrequency(randomNumbers: number[], intervalQuantity: number): number {
-    return randomNumbers.length / intervalQuantity;
+  private calculateUniformExpectedFrequency(sampleSize: number, intervalQuantity: number): number {
+    return sampleSize / intervalQuantity;
   }
 
   private calculateNormalExpectedFrequency(
@@ -128,15 +122,14 @@ export class SimulationService {
     upperBound: number,
     sampleSize: number
   ): number {
-    return (
-      (Math.exp(-0.5 * ((classMark - mean) / standardDeviation) ** 2) / (standardDeviation * Math.sqrt(2 * Math.PI))) *
-      (upperBound - lowerBound) *
-      sampleSize
-    );
+    const density =
+      Math.exp(-0.5 * ((classMark - mean) / standardDeviation) ** 2) / (standardDeviation * Math.sqrt(2 * Math.PI));
+    const width = upperBound - lowerBound;
+    return density * width * sampleSize;
   }
 
   private calculateExponentialExpectedFrequency(
-    randomNumbers: number[],
+    sampleSize: number,
     lambda: number,
     classMark: number,
     lowerBound: number,
@@ -144,6 +137,6 @@ export class SimulationService {
   ): number {
     const density = lambda * Math.exp(-lambda * classMark);
     const width = upperBound - lowerBound;
-    return density * width * randomNumbers.length;
+    return density * width * sampleSize;
   }
 }
