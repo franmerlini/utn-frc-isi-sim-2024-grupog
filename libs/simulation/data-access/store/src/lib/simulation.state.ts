@@ -7,8 +7,13 @@ import {
   KsTestInterval,
   Simulation,
 } from '@grupog/libs/shared/models';
+import {
+  CHI_SQUARE_PROBABILITIES,
+  KS_PROBABILITIES,
+  KS_PROBABILITIES_GREATER_THAN_35,
+  truncateDecimals,
+} from '@grupog/libs/shared/util';
 
-import { CHI_SQUARE_PROBABILITIES, KS_PROBABILITIES, KS_PROBABILITIES_GREATER_THAN_35 } from '@grupog/libs/shared/util';
 import { SimulationActions } from './simulation.actions';
 
 const simulationFeatureKey = 'simulation';
@@ -124,7 +129,7 @@ export const SimulationFeature = createFeature({
           return 0;
         }
         if (ksDegreesOfFreedom >= 35) {
-          return KS_PROBABILITIES_GREATER_THAN_35[state.significanceLevel](ksDegreesOfFreedom);
+          return truncateDecimals(KS_PROBABILITIES_GREATER_THAN_35[state.significanceLevel](ksDegreesOfFreedom), 4);
         }
         return KS_PROBABILITIES[ksDegreesOfFreedom][state.significanceLevel];
       }
