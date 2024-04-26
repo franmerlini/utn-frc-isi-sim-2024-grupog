@@ -83,17 +83,19 @@ export const SimulationFeature = createFeature({
     );
 
     const selectChiSquareDegreesOfFreedom = createSelector(selectSimulationState, (state) => {
-      if (!state.chiSquareTestIntervals?.length) {
+      const intervalsQuantity = state.chiSquareTestIntervals?.length;
+
+      if (!intervalsQuantity) {
         return 0;
       }
 
       switch (state.distribution) {
         case DistributionEnum.UNIFORM:
-          return state.chiSquareTestIntervals.length - 1 - 0;
+          return intervalsQuantity - 1 - 0;
         case DistributionEnum.NORMAL:
-          return state.chiSquareTestIntervals.length - 1 - 2;
+          return intervalsQuantity - 1 - 2;
         case DistributionEnum.EXPONENTIAL:
-          return state.chiSquareTestIntervals.length - 1 - 1;
+          return intervalsQuantity - 1 - 1;
       }
     });
 
