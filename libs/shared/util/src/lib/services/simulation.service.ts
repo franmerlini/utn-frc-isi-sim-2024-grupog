@@ -34,7 +34,13 @@ export class SimulationService {
   }
 
   private simulateNormal(sampleSize: number, mean: number, standardDeviation: number): number[] {
-    return Array.from({ length: sampleSize }, () => generateNormalRandom(mean, standardDeviation));
+    return Array.from({ length: sampleSize }, (_, index) => {
+      if (index % 2 === 0) {
+        return generateNormalRandom(mean, standardDeviation)[0];
+      } else {
+        return generateNormalRandom(mean, standardDeviation)[1];
+      }
+    });
   }
 
   private simulateExponential(sampleSize: number, lambda: number): number[] {
