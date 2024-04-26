@@ -3,6 +3,8 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { Store } from '@ngrx/store';
 
+import { combineLatest } from 'rxjs';
+
 import { PlotlyModule } from 'angular-plotly.js';
 import * as PlotlyJS from 'plotly.js-dist-min';
 PlotlyModule.plotlyjs = PlotlyJS;
@@ -37,10 +39,16 @@ import { RandomsTableComponent } from '@grupog/libs/simulation/ui/randoms-table'
       } } @if(intervals$ | async; as intervals) { @if(intervals.length) {
       <h2 class="text-xl font-bold">Frecuencias y probabilidades</h2>
       <gg-intervals-table [intervals]="intervals" />
-      } } @if (chiSquareTestIntervals$ | async; as chiSquareTestIntervals) { @if(chiSquareTestIntervals.length) {
+      @if (chiSquareTestData$ | async; as chiSquareTestData) {
       <h2 class="text-xl font-bold">Prueba de Chi Cuadrado</h2>
-      <gg-chi-square-test-table [intervals]="chiSquareTestIntervals" />
-      }} @if(graph$ | async; as graph) { @if( graph?.data && graph?.layout) {
+      <gg-chi-square-test-table
+        [intervals]="chiSquareTestData.intervals"
+        [degreesOfFreedom]="chiSquareTestData.degreesOfFreedom"
+        [significantLevel]="chiSquareTestData.significanceLevel"
+        [calculatedC]="chiSquareTestData.calculatedC"
+        [criticalValue]="chiSquareTestData.criticalValue"
+      />
+      } } } @if(graph$ | async; as graph) { @if( graph?.data && graph?.layout) {
       <h2 class="text-xl font-bold">Gráfico de distribución</h2>
       <plotly-plot [data]="getStructuredClone(graph.data)" [layout]="getStructuredClone(graph.layout)"></plotly-plot>
       } }
@@ -53,7 +61,14 @@ export class SimulationComponent {
 
   randomNumbers$ = this.#store.select(SimulationFeature.selectRandomNumbers);
   intervals$ = this.#store.select(SimulationFeature.selectIntervals);
-  chiSquareTestIntervals$ = this.#store.select(SimulationFeature.selectChiSquareTestIntervals);
+  chiSquareTestData$ = combineLatest({
+    intervals: this.#store.select(SimulationFeature.selectChiSquareTestIntervals),
+    degreesOfFreedom: this.#store.select(SimulationFeature.selectDegreesOfFreedom),
+    significanceLevel: this.#store.select(SimulationFeature.selectSignificanceLevel),
+    calculatedC: this.#store.select(SimulationFeature.selectCalculatedC),
+    criticalValue: this.#store.select(SimulationFeature.selectCriticalValue),
+  });
+
   graph$ = this.#store.select(SimulationFeature.selectGraph);
 
   onSimulate(parameters: Simulation): void {
