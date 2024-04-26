@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
 import { Interval, KsTestInterval } from '@grupog/libs/shared/models';
+import { truncateDecimals } from '../random-generators';
 
 @Injectable()
 export class KsTestService {
@@ -27,12 +28,12 @@ export class KsTestService {
         upperBound: interval.upperBound,
         expectedFrequency: interval.expectedFrequency,
         observedFrequency: interval.observedFrequency,
-        expectedProbability,
-        observedProbability,
-        accumulatedExpectedProbability,
-        accumulatedObservedProbability,
-        deviation,
-        maxDeviation,
+        expectedProbability: truncateDecimals(expectedProbability, 4),
+        observedProbability: truncateDecimals(observedProbability, 4),
+        accumulatedExpectedProbability: truncateDecimals(accumulatedExpectedProbability, 4),
+        accumulatedObservedProbability: truncateDecimals(accumulatedObservedProbability, 4),
+        deviation: truncateDecimals(deviation, 4),
+        maxDeviation: truncateDecimals(maxDeviation, 4),
       };
 
       ksTestIntervals.push(ksTestInterval);
