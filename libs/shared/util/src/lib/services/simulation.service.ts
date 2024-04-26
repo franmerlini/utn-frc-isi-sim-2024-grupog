@@ -44,7 +44,7 @@ export class SimulationService {
     const orderedRandomNumbers = [...randomNumbers].sort((a, b) => a - b);
     const lowerBound = orderedRandomNumbers[0];
     const upperBound = orderedRandomNumbers[randomNumbers.length - 1];
-    const { intervalQuantity } = parameters;
+    const { intervalQuantity, sampleSize } = parameters;
     const step = (upperBound - lowerBound) / intervalQuantity;
 
     let currentLowerBound = lowerBound;
@@ -59,7 +59,14 @@ export class SimulationService {
           upperBound: truncateDecimals(currentUpperBound, 4),
           classMark: truncateDecimals(classMark, 4),
           expectedFrequency: truncateDecimals(
-            this.calculateExpectedFrequency(parameters, classMark, randomNumbers, currentLowerBound, currentUpperBound),
+            this.calculateExpectedFrequency(
+              parameters,
+              classMark,
+              randomNumbers,
+              currentLowerBound,
+              currentUpperBound,
+              sampleSize
+            ),
             4
           ),
           observedFrequency: truncateDecimals(
@@ -81,7 +88,8 @@ export class SimulationService {
     classMark: number,
     randomNumbers: number[],
     lowerBound: number,
-    upperBound: number
+    upperBound: number,
+    sampleSize: number
   ): number {
     const { distribution, mean, standardDeviation, lambda, intervalQuantity } = parameters;
 
@@ -89,7 +97,14 @@ export class SimulationService {
       case DistributionEnum.UNIFORM:
         return this.calculateUniformExpectedFrequency(randomNumbers, intervalQuantity);
       case DistributionEnum.NORMAL:
-        return this.calculateNormalExpectedFrequency(classMark, mean, standardDeviation, lowerBound, upperBound);
+        return this.calculateNormalExpectedFrequency(
+          classMark,
+          mean,
+          standardDeviation,
+          lowerBound,
+          upperBound,
+          sampleSize
+        );
       case DistributionEnum.EXPONENTIAL:
         return this.calculateExponentialExpectedFrequency(randomNumbers, lambda, classMark, lowerBound, upperBound);
       default:
@@ -110,11 +125,13 @@ export class SimulationService {
     mean: number,
     standardDeviation: number,
     lowerBound: number,
-    upperBound: number
+    upperBound: number,
+    sampleSize: number
   ): number {
     return (
       (Math.exp(-0.5 * ((classMark - mean) / standardDeviation) ** 2) / (standardDeviation * Math.sqrt(2 * Math.PI))) *
-      (lowerBound - upperBound)
+      (upperBound - lowerBound) *
+      sampleSize
     );
   }
 
