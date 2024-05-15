@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import { CardModule } from 'primeng/card';
 
@@ -12,7 +13,7 @@ type Member = {
 @Component({
   selector: 'gg-home',
   standalone: true,
-  imports: [MembersTableComponent, CardModule],
+  imports: [MembersTableComponent, CardModule, DatePipe],
   template: `
     <div class="flex flex-col items-center gap-6">
       <div class="flex flex-col items-center gap-2">
@@ -25,7 +26,7 @@ type Member = {
 
       <span><b>Curso</b>: 4K2</span>
 
-      <span class="text-center">Trabajo Práctico N°2: Generadores de números aleatorios</span>
+      <span class="text-center">{{ theme() }}</span>
 
       <span><b>Grupo</b>: G</span>
 
@@ -34,13 +35,16 @@ type Member = {
         <gg-members-table [members]="members" />
       </div>
 
-      <span><b>Fecha de presentación</b>: 26/04/2024</span>
+      <span><b>Fecha de presentación</b>: {{ dueDate() | date : 'dd/MM/yyyy' }}</span>
     </div>
   `,
 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
+  theme = input.required<string>();
+  dueDate = input.required<Date>();
+
   members: Member[] = [
     {
       id: 68719,
