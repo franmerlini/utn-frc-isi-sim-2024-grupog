@@ -1,6 +1,6 @@
 import { ApplicationConfig, isDevMode } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 
 import { provideEffects } from '@ngrx/effects';
 import { provideRouterStore } from '@ngrx/router-store';
@@ -15,7 +15,7 @@ import { ROUTES } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(ROUTES),
+    provideRouter(ROUTES, withComponentInputBinding()),
     provideAnimationsAsync(),
     provideStore(ROOT_REDUCERS),
     provideEffects(ROOT_EFFECTS),
