@@ -16,6 +16,11 @@ export const ROUTES: Route[] = [
         path: 'enunciado',
         loadComponent: () => import('@grupog/libs/assignment/feature').then((c) => c.AssignmentComponent),
       },
+      {
+        path: 'simulacion',
+        loadComponent: () =>
+          import('@grupog/libs/monte-carlo-simulation/feature').then((c) => c.MonteCarloSimulationComponent),
+      },
     ],
   },
   {
