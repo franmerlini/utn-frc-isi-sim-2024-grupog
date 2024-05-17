@@ -39,14 +39,10 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
             </tr>
             <tr>
               <td>34</td>
-              <td>0.05</td>
-            </tr>
-            <tr>
-              <td>35</td>
               <td>0.14</td>
             </tr>
             <tr>
-              <td>36</td>
+              <td>35</td>
               <td>0.06</td>
             </tr>
           </tbody>
