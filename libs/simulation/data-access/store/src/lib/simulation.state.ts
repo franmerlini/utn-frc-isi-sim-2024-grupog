@@ -47,10 +47,6 @@ const initialState: State = {
 export const reducer = createReducer(
   initialState,
 
-  on(SimulationActions.runSimulation, (state, { parameters }) => ({
-    ...state,
-    ...parameters,
-  })),
   on(
     SimulationActions.runSimulationSuccess,
     (state, { randomNumbers, intervals, chiSquareTestIntervals, ksTestIntervals, graph }) => ({
