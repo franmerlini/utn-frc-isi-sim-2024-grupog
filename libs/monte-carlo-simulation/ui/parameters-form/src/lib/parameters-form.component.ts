@@ -205,7 +205,6 @@ export class ParametersFormComponent {
 
   onLoadDefaultValues(): void {
     this.buildDemandDistributionForms(6);
-
     this.form.patchValue({
       n: '120',
       purchasePrice: '1',
@@ -225,9 +224,7 @@ export class ParametersFormComponent {
   }
 
   private buildDemandDistributionForms(formQuantity = 1): void {
-    for (let i = 0; i < this.demandDistribution.length; i++) {
-      this.demandDistribution.removeAt(i);
-    }
+    this.demandDistribution.clear();
 
     for (let i = 0; i < formQuantity; i++) {
       this.demandDistribution.push(
