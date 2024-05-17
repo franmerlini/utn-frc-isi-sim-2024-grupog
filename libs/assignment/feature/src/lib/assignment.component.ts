@@ -8,37 +8,76 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       <h1 class="text-2xl font-bold underline">Enunciado</h1>
 
       <p class="text-justify">
-        Crear un aplicativo que genere una serie de números aleatorios (4 dígitos decimales) de variables aleatorias
-        para las siguientes distribuciones:
+        Un vendedor de periódicos trata de maximizar sus ganancias. El número de periódicos que vende cada día es una
+        variable aleatoria. Sin embargo, el análisis de los datos del mes pasado muestra la distribución de la demanda
+        diaria que figura a continuación:
       </p>
 
-      <ul class="list-disc pl-8">
-        <li>Uniforme [a, b]</li>
-        <li>Exponencial (lambda)</li>
-        <li>Normal (media y desviación)</li>
-      </ul>
+      <div class="flex justify-center">
+        <table class="table">
+          <thead>
+            <th>Demanda</th>
+            <th>Probabilidad</th>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>30</td>
+              <td>0.05</td>
+            </tr>
+            <tr>
+              <td>31</td>
+              <td>0.15</td>
+            </tr>
+            <tr>
+              <td>32</td>
+              <td>0.22</td>
+            </tr>
+            <tr>
+              <td>33</td>
+              <td>0.38</td>
+            </tr>
+            <tr>
+              <td>34</td>
+              <td>0.05</td>
+            </tr>
+            <tr>
+              <td>35</td>
+              <td>0.14</td>
+            </tr>
+            <tr>
+              <td>36</td>
+              <td>0.06</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <p class="text-justify">
-        Para generar los números aleatorios uniforme entre 0 y 1 utilizar la función nativa del lenguaje.
+        Cada periódico le cuesta $1.00 al vendedor y lo vende a $1.20. Los periódicos que no vende los devuelve a la
+        editorial y recibe $0.40 por cada uno. Para toda la demanda no satisfecha se estima un costo de $0.60 en
+        clientela y ganancia perdida.
       </p>
 
       <p class="text-justify">
-        El usuario deberá poder ingresar el tamaño de muestra deseado N (hasta 1.000.000), y los parámetros que son
-        requeridos según la distribución seleccionada. La serie de números generados se debe poder visualizar.
+        Si la política es pedir una cantidad igual a la demanda del día anterior, determíne la ganancia diaria promedio
+        del vendedor mediante la simulación del sistema para un período de 120 días. Suponga que la demanda para el día
+        0 es de 22 periódicos.
       </p>
 
-      <p class="text-justify">
-        Sobre esta serie generada se debe realizar y mostrar el histograma de frecuencias para 10, 12, 16 ó 23
-        intervalos (a seleccionar) donde se muestren las frecuencias. Graficar el histograma con los rótulos debidos en
-        cada eje.
-      </p>
-
-      <p class="text-justify">
-        Realizar las pruebas de bondad de Chi-Cuadrado y Kolmogorov-Smirnov, sobre la serie generada y determinar si se
-        acepta la hipótesis nula.
-      </p>
+      <p class="text-justify">¿Cuál será su ganancia diaria promedio?</p>
     </div>
   `,
+  styles: [
+    `
+      th,
+      td {
+        padding-inline: 0.5rem;
+        text-align: center;
+        border: 1px solid;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AssignmentComponent {}
