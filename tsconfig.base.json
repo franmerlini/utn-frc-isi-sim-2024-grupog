@@ -18,6 +18,9 @@
       "@grupog/libs/assignment/feature": ["libs/assignment/feature/src/index.ts"],
       "@grupog/libs/home/feature": ["libs/home/feature/src/index.ts"],
       "@grupog/libs/home/ui/members-table": ["libs/home/ui/members-table/src/index.ts"],
+      "@grupog/libs/monte-carlo-simulation/data-access/store": [
+        "libs/monte-carlo-simulation/data-access/store/src/index.ts"
+      ],
       "@grupog/libs/monte-carlo-simulation/feature": ["libs/monte-carlo-simulation/feature/src/index.ts"],
       "@grupog/libs/monte-carlo-simulation/ui/parameters-form": [
         "libs/monte-carlo-simulation/ui/parameters-form/src/index.ts"
