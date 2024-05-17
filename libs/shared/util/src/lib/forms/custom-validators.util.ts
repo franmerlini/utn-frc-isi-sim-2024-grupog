@@ -1,5 +1,7 @@
 import { AbstractControl, FormArray, FormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
+import { truncateDecimals } from '../random-generators';
+
 export class CustomValidators {
   static number(control: FormControl<string>): ValidationErrors | null {
     if (isNaN(+control.value)) {
@@ -43,7 +45,9 @@ export class CustomValidators {
 
   static sumOfProbabilities(): ValidatorFn {
     return (control) => {
-      const probabilities = (control as FormArray).controls.map((c) => Number(c.get('probability')?.value));
+      const probabilities = (control as FormArray).controls.map((c) =>
+        truncateDecimals(Number(c.get('probability')?.value), 2)
+      );
 
       if (probabilities.reduce((acc, curr) => acc + curr, 0) !== 1) {
         return { sumOfProbabilities: true };
