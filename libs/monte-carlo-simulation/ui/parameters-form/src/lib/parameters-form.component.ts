@@ -126,22 +126,21 @@ type ParametersForm = {
           }
         </div>
 
-        <div class="sm:col-span-2 md:col-span-3 lg:col-span-3 flex justify-end gap-2">
-          <p-button
-            type="button"
-            label="Reiniciar"
-            [outlined]="true"
-            severity="secondary"
-            (click)="onResetClick()"
-          ></p-button>
+        <div class="sm:col-span-2 md:col-span-3 lg:col-span-3 flex flex-col sm:flex-row sm:justify-end gap-2">
+          <p-button type="button" [outlined]="true" severity="secondary" styleClass="w-full" (click)="onResetClick()">
+            <div class="flex justify-center items-center gap-2 font-bold w-full">
+              <i class="pi pi-refresh"></i>
+              <span>Reiniciar</span>
+            </div>
+          </p-button>
           <p-button
             type="button"
             label="Cargar valores por defecto"
-            [outlined]="true"
             severity="secondary"
+            styleClass="w-full"
             (click)="onLoadDefaultValues()"
-          ></p-button>
-          <p-button type="submit" label="Simular"></p-button>
+          />
+          <p-button type="submit" label="Simular" styleClass="w-full" />
         </div>
       </form>
     </div>
