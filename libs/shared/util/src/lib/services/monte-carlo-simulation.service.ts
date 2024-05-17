@@ -2,14 +2,29 @@ import { Injectable } from '@angular/core';
 
 import { Observable, of } from 'rxjs';
 
-import { DemandDistributionItem, MonteCarloSimulation, MonteCarloSimulationRow } from '@grupog/libs/shared/models';
+import {
+  DemandDistributionItem,
+  MonteCarloSimulation,
+  MonteCarloSimulationRow,
+  PolicyEnum,
+} from '@grupog/libs/shared/models';
 
 import { truncateDecimals } from '../random-generators';
 
 @Injectable()
 export class MonteCarloSimulationService {
   simulate(parameters: MonteCarloSimulation): Observable<MonteCarloSimulationRow[]> {
-    const { n, purchasePrice, sellingPrice, stockOutCost, returnPrice, initialDemand, demandDistribution } = parameters;
+    const {
+      policy,
+      orderAmount,
+      n,
+      purchasePrice,
+      sellingPrice,
+      stockOutCost,
+      returnPrice,
+      initialDemand,
+      demandDistribution,
+    } = parameters;
     const accumulatedProbabilities = this.generateAccumulatedProbabilities(demandDistribution);
 
     const previousState: MonteCarloSimulationRow = {
@@ -51,7 +66,11 @@ export class MonteCarloSimulationService {
       currentDay = i;
 
       if (i === 0) {
-        currentDemand = initialDemand;
+        if (policy === PolicyEnum.FIXED_ORDER_AMOUNT) {
+          currentDemand = orderAmount;
+        } else {
+          currentDemand = initialDemand;
+        }
 
         previousState.day = currentDay;
         previousState.demand = currentDemand;
@@ -63,7 +82,12 @@ export class MonteCarloSimulationService {
 
       currentRnd = truncateDecimals(Math.random(), 2);
       currentDemand = accumulatedProbabilities.find(({ accProb }) => currentRnd < accProb)?.demand || 0;
-      currentAvailable = previousState.demand;
+
+      if (policy === PolicyEnum.FIXED_ORDER_AMOUNT) {
+        currentAvailable = orderAmount;
+      } else {
+        currentAvailable = previousState.demand;
+      }
 
       const disponibleMenosDemanda = currentAvailable - currentDemand;
       if (disponibleMenosDemanda < 0) {
