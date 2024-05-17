@@ -133,9 +133,9 @@ export class MonteCarloSimulationService {
     demandDistribution: DemandDistributionItem[]
   ): { demand: number; accProb: number }[] {
     let acc = 0;
-    return demandDistribution.map(({ demand }) => ({
+    return demandDistribution.map(({ demand, probability }) => ({
       demand,
-      accProb: (acc += demand),
+      accProb: (acc = truncateDecimals(acc + probability, 2)),
     }));
   }
 }
