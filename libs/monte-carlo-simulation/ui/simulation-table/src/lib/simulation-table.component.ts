@@ -12,7 +12,15 @@ import { MonteCarloSimulationRow } from '@grupog/libs/shared/models';
     <div class="flex flex-col gap-4">
       <h1 class="text-2xl font-bold underline">Resultados de simulación</h1>
 
-      <p-table [value]="monteCarloSimulationRows()">
+      <p-table
+        [value]="monteCarloSimulationRows()"
+        [paginator]="true"
+        [rows]="10"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
+        [rowsPerPageOptions]="[10, 15, 20]"
+        styleClass="p-datatable-sm p-datatable-striped"
+      >
         <ng-template pTemplate="header">
           <tr>
             <th>Día</th>
