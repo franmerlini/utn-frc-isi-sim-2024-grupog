@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, output, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, output, viewChild } from '@angular/core';
 import {
   FormArray,
   FormControl,
@@ -13,8 +13,11 @@ import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { MonteCarloSimulation } from '@grupog/libs/shared/models';
-import { InputTextComponent } from '@grupog/libs/shared/ui/form-controls';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { startWith } from 'rxjs';
+
+import { ListItem, MonteCarloSimulation, Policy, PolicyEnum } from '@grupog/libs/shared/models';
+import { InputTextComponent, RadioButtonGroupComponent } from '@grupog/libs/shared/ui/form-controls';
 import { CustomValidators, getErrorMessage } from '@grupog/libs/shared/util';
 
 type DemandDistributionForm = FormGroup<{
@@ -23,6 +26,8 @@ type DemandDistributionForm = FormGroup<{
 }>;
 
 type ParametersForm = {
+  policy: FormControl<Policy>;
+  orderAmount: FormControl<string>;
   n: FormControl<string>;
   purchasePrice: FormControl<string>;
   sellingPrice: FormControl<string>;
@@ -35,7 +40,14 @@ type ParametersForm = {
 @Component({
   selector: 'gg-parameters-form',
   standalone: true,
-  imports: [ReactiveFormsModule, InputTextComponent, TableModule, ButtonModule, TooltipModule],
+  imports: [
+    ReactiveFormsModule,
+    RadioButtonGroupComponent,
+    InputTextComponent,
+    TableModule,
+    ButtonModule,
+    TooltipModule,
+  ],
   template: `
     <div class="flex flex-col gap-4">
       <h1 class="text-2xl font-bold underline">Parámetros de simulación</h1>
@@ -46,6 +58,31 @@ type ParametersForm = {
         ngForm
         (ngSubmit)="onSubmit()"
       >
+        <gg-radio-button-group
+          class="sm:col-span-2 md:col-span-3 lg:col-span-3"
+          [label]="'Política'"
+          [list]="policyList"
+          [formControlName]="'policy'"
+          [formControl]="policy"
+          ngDefaultControl
+        />
+
+        @if(policy.value === policyEnum.FIXED_ORDER_AMOUNT) {
+        <gg-input-text
+          [label]="'Cantidad de pedidio'"
+          [formControlName]="'orderAmount'"
+          [formControl]="orderAmount"
+          ngDefaultControl
+        />
+        } @if(policy.value === policyEnum.VARIABLE_ORDER_AMOUNT) {
+        <gg-input-text
+          [label]="'Demanda inicial'"
+          [formControlName]="'initialDemand'"
+          [formControl]="initialDemand"
+          ngDefaultControl
+        />
+        }
+
         <gg-input-text [label]="'Cantidad de días (n)'" [formControlName]="'n'" [formControl]="n" ngDefaultControl />
 
         <gg-input-text
@@ -73,13 +110,6 @@ type ParametersForm = {
           [label]="'Precio devolución'"
           [formControlName]="'returnPrice'"
           [formControl]="returnPrice"
-          ngDefaultControl
-        />
-
-        <gg-input-text
-          [label]="'Demanda inicial'"
-          [formControlName]="'initialDemand'"
-          [formControl]="initialDemand"
           ngDefaultControl
         />
 
@@ -147,18 +177,34 @@ type ParametersForm = {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ParametersFormComponent {
+export class ParametersFormComponent implements OnInit {
   formGroupDirective = viewChild.required(FormGroupDirective);
 
   submitForm = output<MonteCarloSimulation>();
   resetForm = output();
   formError = output<string>();
 
+  policyList: ListItem[] = [
+    {
+      value: PolicyEnum.FIXED_ORDER_AMOUNT,
+      label: 'Política 1 (cantidad pedido constante)',
+    },
+    {
+      value: PolicyEnum.VARIABLE_ORDER_AMOUNT,
+      label: 'Política 2 (cantidad pedido igual a la demanda del día anterior)',
+    },
+  ];
+  policyEnum = PolicyEnum;
+
   #fb = inject(NonNullableFormBuilder);
+  #destroRef = inject(DestroyRef);
 
   getErrorMessage = getErrorMessage;
 
   form = this.#fb.group<ParametersForm>({
+    policy: this.#fb.control(PolicyEnum.FIXED_ORDER_AMOUNT),
+    orderAmount: this.#fb.control(''),
+    initialDemand: this.#fb.control(''),
     n: this.#fb.control('', [
       Validators.required,
       Validators.min(1),
@@ -173,17 +219,47 @@ export class ParametersFormComponent {
     sellingPrice: this.#fb.control('', [Validators.required, CustomValidators.number, CustomValidators.greaterThan(0)]),
     stockOutCost: this.#fb.control('', [Validators.required, CustomValidators.number, CustomValidators.greaterThan(0)]),
     returnPrice: this.#fb.control('', [Validators.required, CustomValidators.number, CustomValidators.greaterThan(0)]),
-    initialDemand: this.#fb.control('', [
-      Validators.required,
-      Validators.min(1),
-      CustomValidators.number,
-      CustomValidators.integer,
-    ]),
     demandDistribution: this.#fb.array<DemandDistributionForm>(
       [this.buildDemandDistributionForm()],
       [CustomValidators.sumOfProbabilities()]
     ),
   });
+
+  ngOnInit(): void {
+    this.subscribePolicyValueChanges();
+  }
+
+  private subscribePolicyValueChanges(): void {
+    this.policy.valueChanges
+      .pipe(takeUntilDestroyed(this.#destroRef), startWith(PolicyEnum.FIXED_ORDER_AMOUNT))
+      .subscribe((value) => {
+        switch (value) {
+          case PolicyEnum.FIXED_ORDER_AMOUNT: {
+            this.orderAmount.setValidators([
+              Validators.required,
+              Validators.min(1),
+              CustomValidators.number,
+              CustomValidators.integer,
+            ]);
+            this.initialDemand.clearValidators();
+
+            break;
+          }
+          case PolicyEnum.VARIABLE_ORDER_AMOUNT: {
+            this.orderAmount.clearValidators();
+            this.initialDemand.setValidators([
+              Validators.required,
+              Validators.min(1),
+              CustomValidators.number,
+              CustomValidators.integer,
+            ]);
+            break;
+          }
+        }
+        this.orderAmount.updateValueAndValidity();
+        this.initialDemand.updateValueAndValidity();
+      });
+  }
 
   private buildDemandDistributionForm(): DemandDistributionForm {
     return this.#fb.group({
@@ -204,13 +280,12 @@ export class ParametersFormComponent {
 
   onLoadDefaultValues(): void {
     this.buildDemandDistributionForms(6);
-    this.form.patchValue({
+    const formValue = {
       n: '120',
       purchasePrice: '1',
       sellingPrice: '1.2',
       stockOutCost: '0.6',
       returnPrice: '0.4',
-      initialDemand: '22',
       demandDistribution: [
         { demand: '30', probability: '0.05' },
         { demand: '31', probability: '0.15' },
@@ -219,7 +294,12 @@ export class ParametersFormComponent {
         { demand: '34', probability: '0.14' },
         { demand: '35', probability: '0.06' },
       ],
-    });
+    };
+    this.form.patchValue(
+      this.policy.value === PolicyEnum.FIXED_ORDER_AMOUNT
+        ? { ...formValue, orderAmount: '30' }
+        : { ...formValue, initialDemand: '22' }
+    );
   }
 
   private buildDemandDistributionForms(formQuantity = 1): void {
@@ -268,10 +348,21 @@ export class ParametersFormComponent {
       return;
     }
 
-    const { n, purchasePrice, sellingPrice, stockOutCost, returnPrice, initialDemand, demandDistribution } =
-      this.form.getRawValue();
+    const {
+      policy,
+      orderAmount,
+      n,
+      purchasePrice,
+      sellingPrice,
+      stockOutCost,
+      returnPrice,
+      initialDemand,
+      demandDistribution,
+    } = this.form.getRawValue();
 
     const payload: MonteCarloSimulation = {
+      policy,
+      orderAmount: Number(orderAmount),
       n: Number(n),
       purchasePrice: Number(purchasePrice),
       sellingPrice: Number(sellingPrice),
@@ -285,6 +376,18 @@ export class ParametersFormComponent {
     };
 
     this.submitForm.emit(payload);
+  }
+
+  get policy(): FormControl<number> {
+    return this.form.get('policy') as FormControl<number>;
+  }
+
+  get orderAmount(): FormControl<string> {
+    return this.form.get('orderAmount') as FormControl<string>;
+  }
+
+  get initialDemand(): FormControl<string> {
+    return this.form.get('initialDemand') as FormControl<string>;
   }
 
   get n(): FormControl<string> {
@@ -305,10 +408,6 @@ export class ParametersFormComponent {
 
   get returnPrice(): FormControl<string> {
     return this.form.get('returnPrice') as FormControl<string>;
-  }
-
-  get initialDemand(): FormControl<string> {
-    return this.form.get('initialDemand') as FormControl<string>;
   }
 
   get demandDistribution(): FormArray<DemandDistributionForm> {

@@ -1,6 +1,6 @@
 import { createFeature, createReducer, on } from '@ngrx/store';
 
-import { MonteCarloSimulation, MonteCarloSimulationRow } from '@grupog/libs/shared/models';
+import { MonteCarloSimulation, MonteCarloSimulationRow, PolicyEnum } from '@grupog/libs/shared/models';
 
 import { MonteCarloSimulationActions } from './monte-carlo-simulation.actions';
 
@@ -11,6 +11,8 @@ type State = MonteCarloSimulation & {
 };
 
 const initialState: State = {
+  policy: PolicyEnum.FIXED_ORDER_AMOUNT,
+  orderAmount: 0,
   n: 0,
   purchasePrice: 0,
   sellingPrice: 0,
