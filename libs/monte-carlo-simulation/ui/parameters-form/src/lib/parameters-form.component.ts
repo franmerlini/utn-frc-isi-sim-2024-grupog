@@ -257,6 +257,8 @@ export class ParametersFormComponent {
 
   onResetClick(): void {
     this.form.reset();
+    this.demandDistribution.clear();
+    this.buildDemandDistributionForms();
     this.resetForm.emit();
   }
 
