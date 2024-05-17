@@ -134,6 +134,13 @@ type ParametersForm = {
             severity="secondary"
             (click)="onResetClick()"
           ></p-button>
+          <p-button
+            type="button"
+            label="Cargar valores por defecto"
+            [outlined]="true"
+            severity="secondary"
+            (click)="onLoadDefaultValues()"
+          ></p-button>
           <p-button type="submit" label="Simular"></p-button>
         </div>
       </form>
@@ -194,6 +201,52 @@ export class ParametersFormComponent {
         CustomValidators.lessThan(1),
       ]),
     });
+  }
+
+  onLoadDefaultValues(): void {
+    this.buildDemandDistributionForms(6);
+
+    this.form.patchValue({
+      n: '120',
+      purchasePrice: '1',
+      sellingPrice: '1.2',
+      stockOutCost: '0.6',
+      returnPrice: '0.4',
+      initialDemand: '22',
+      demandDistribution: [
+        { demand: '30', probability: '0.05' },
+        { demand: '31', probability: '0.15' },
+        { demand: '32', probability: '0.22' },
+        { demand: '33', probability: '0.38' },
+        { demand: '34', probability: '0.14' },
+        { demand: '35', probability: '0.06' },
+      ],
+    });
+  }
+
+  private buildDemandDistributionForms(formQuantity = 1): void {
+    for (let i = 0; i < this.demandDistribution.length; i++) {
+      this.demandDistribution.removeAt(i);
+    }
+
+    for (let i = 0; i < formQuantity; i++) {
+      this.demandDistribution.push(
+        this.#fb.group({
+          demand: this.#fb.control('', [
+            Validators.required,
+            Validators.min(1),
+            CustomValidators.number,
+            CustomValidators.integer,
+          ]),
+          probability: this.#fb.control('', [
+            Validators.required,
+            CustomValidators.number,
+            CustomValidators.greaterThan(0),
+            CustomValidators.lessThan(1),
+          ]),
+        })
+      );
+    }
   }
 
   onAddClick(): void {
