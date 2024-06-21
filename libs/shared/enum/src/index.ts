@@ -1,1 +1,2 @@
-export * from './lib/shared-enum';
+export * from './lib/event.enum';
+export * from './lib/state.enum';
