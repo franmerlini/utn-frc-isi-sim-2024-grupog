@@ -1,7 +1,10 @@
 import { Route } from '@angular/router';
 
+import { QueueSimulationEffects, QueueSimulationFeature } from '@grupog/libs/queue-simulation/data-access/store';
 import { QueueSimulationService } from '@grupog/libs/shared/util';
 import { LayoutComponent } from '@grupog/libs/shell/ui/layout';
+import { provideEffects } from '@ngrx/effects';
+import { provideState } from '@ngrx/store';
 
 export const ROUTES: Route[] = [
   {
@@ -20,7 +23,11 @@ export const ROUTES: Route[] = [
       {
         path: 'simulacion',
         loadComponent: () => import('@grupog/libs/queue-simulation/feature').then((c) => c.QueueSimulationComponent),
-        providers: [QueueSimulationService],
+        providers: [
+          QueueSimulationService,
+          provideState(QueueSimulationFeature),
+          provideEffects(QueueSimulationEffects),
+        ],
       },
     ],
   },
