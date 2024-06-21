@@ -30,6 +30,7 @@
       ],
       "@grupog/libs/queue-simulation/feature": ["libs/queue-simulation/feature/src/index.ts"],
       "@grupog/libs/queue-simulation/ui/parameters-form": ["libs/queue-simulation/ui/parameters-form/src/index.ts"],
+      "@grupog/libs/queue-simulation/ui/simulation-table": ["libs/queue-simulation/ui/simulation-table/src/index.ts"],
       "@grupog/libs/shared/const": ["libs/shared/const/src/index.ts"],
       "@grupog/libs/shared/data-access/store": ["libs/shared/data-access/store/src/index.ts"],
       "@grupog/libs/shared/enum": ["libs/shared/enum/src/index.ts"],
