@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'lib-queue-simulation',
+  selector: 'gg-queue-simulation',
   standalone: true,
   imports: [],
   template: `<p>queue-simulation works!</p>`,

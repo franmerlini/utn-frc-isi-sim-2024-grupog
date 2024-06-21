@@ -2,7 +2,7 @@
   "name": "queue-simulation-feature",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/queue-simulation/feature/src",
-  "prefix": "lib",
+  "prefix": "gg",
   "projectType": "library",
   "tags": ["type:feature"],
   "targets": {
