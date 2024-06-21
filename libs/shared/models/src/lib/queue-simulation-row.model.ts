@@ -1,0 +1,73 @@
+import { Event } from './event.model';
+import { State } from './state.model';
+
+export type QueueSimulationRow = {
+  evento: Event;
+  reloj: number | null;
+
+  rnd1: number | null;
+  tiempoLlegadaMost: number | null;
+  proximaLlegadaMost: number | null;
+  rnd2: number | null;
+  tiempoLlegadaAuto: number | null;
+  proximaLlegadaAuto: number | null;
+  rnd3: number | null;
+  tiempoLlegadaOnline: number | null;
+  proximaLlegadaOnline: number | null;
+  rnd4: number | null;
+  tiempoLlegadaLlevar: number | null;
+  proximaLlegadaLlevar: number | null;
+  rnd5: number | null;
+  tiempoLlegadaDeli: number | null;
+  proximaLlegadaDeli: number | null;
+
+  rnd6: number | null;
+  tiempoFinMost: number | null;
+  proximoFinMost1: number | null;
+  proximoFinMost2: number | null;
+  proximoFinMost3: number | null;
+  proximoFinMost4: number | null;
+  proximoFinMost5: number | null;
+  rnd7: number | null;
+  tiempoFinAuto: number | null;
+  proximoFinAuto1: number | null;
+  proximoFinAuto2: number | null;
+  proximoFinAuto3: number | null;
+  rnd8: number | null;
+  tiempoFinOnline: number | null;
+  proximoFinOnline1: number | null;
+  proximoFinOnline2: number | null;
+  proximoFinOnline3: number | null;
+  rnd9: number | null;
+  tiempoFinLlevar: number | null;
+  proximoFinLlevar1: number | null;
+  proximoFinLlevar2: number | null;
+  rnd10: number | null;
+  tiempoFinDeli: number | null;
+  proximoFinDeli1: number | null;
+  proximoFinDeli2: number | null;
+  proximoFinDeli3: number | null;
+
+  estadoMost1: State;
+  estadoMost2: State;
+  estadoMost3: State;
+  estadoMost4: State;
+  estadoMost5: State;
+  estadoAuto1: State;
+  estadoAuto2: State;
+  estadoAuto3: State;
+  estadoOnline1: State;
+  estadoOnline2: State;
+  estadoOnline3: State;
+  estadoLlevar1: State;
+  estadoLlevar2: State;
+  estadoDeli1: State;
+  estadoDeli2: State;
+  estadoDeli3: State;
+
+  colaMost: number;
+  colaAuto: number;
+  colaOnline: number;
+  colaLlevar: number;
+  colaDeli: number;
+};
