@@ -1,0 +1,26 @@
+{
+  "name": "shared-enum",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/enum/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/shared/enum",
+        "main": "libs/shared/enum/src/index.ts",
+        "tsConfig": "libs/shared/enum/tsconfig.lib.json",
+        "assets": ["libs/shared/enum/*.md"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/shared/enum/jest.config.ts"
+      }
+    }
+  }
+}

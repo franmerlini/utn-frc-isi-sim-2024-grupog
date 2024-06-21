@@ -30,6 +30,7 @@
       ],
       "@grupog/libs/shared/const": ["libs/shared/const/src/index.ts"],
       "@grupog/libs/shared/data-access/store": ["libs/shared/data-access/store/src/index.ts"],
+      "@grupog/libs/shared/enum": ["libs/shared/enum/src/index.ts"],
       "@grupog/libs/shared/models": ["libs/shared/models/src/index.ts"],
       "@grupog/libs/shared/ui/form-controls": ["libs/shared/ui/form-controls/src/index.ts"],
       "@grupog/libs/shared/util": ["libs/shared/util/src/index.ts"],
