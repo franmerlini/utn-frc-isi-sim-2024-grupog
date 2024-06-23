@@ -1,7 +1,7 @@
-import { State } from './state.model';
+import { ClientState } from './client-state.model';
 
 export type Client = {
   id: number;
-  state: State | null;
+  state: ClientState | null;
   arrivalTime: number | null;
 };

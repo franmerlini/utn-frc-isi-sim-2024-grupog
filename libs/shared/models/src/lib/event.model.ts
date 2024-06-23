@@ -1,3 +1,5 @@
-import { EventEnum } from '@grupog/libs/shared/enum';
-
-export type Event = (typeof EventEnum)[keyof typeof EventEnum];
+export type Event = {
+  rnd: number | null;
+  time: number | null;
+  nextTime: number | null;
+};
