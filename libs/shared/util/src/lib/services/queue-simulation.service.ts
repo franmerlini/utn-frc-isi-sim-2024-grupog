@@ -137,7 +137,7 @@ export class QueueSimulationService {
           if (!idleServerId) {
             counterQueue++;
 
-            client = { id: clientsQuantity, state: ClientStateEnum.ESP_ATE_MOST, arrivalTime: clock };
+            client = { id: clientsQuantity, state: ClientStateEnum.WAITING_COUNTER, arrivalTime: clock };
             clients.push(client);
             break;
           }
@@ -148,35 +148,35 @@ export class QueueSimulationService {
             case 1: {
               counter1 = { ...counter1, state: ServerStateEnum.ACTIVE, nextEndOfService: counterEndOfService.nextTime };
 
-              client = { id: clientsQuantity, state: ClientStateEnum.SIE_ATE_MOST_1, arrivalTime: clock };
+              client = { id: clientsQuantity, state: ClientStateEnum.IN_COUNTER_1, arrivalTime: clock };
               clients.push(client);
               break;
             }
             case 2: {
               counter2 = { ...counter2, state: ServerStateEnum.ACTIVE, nextEndOfService: counterEndOfService.nextTime };
 
-              client = { id: clientsQuantity, state: ClientStateEnum.SIE_ATE_MOST_2, arrivalTime: clock };
+              client = { id: clientsQuantity, state: ClientStateEnum.IN_COUNTER_2, arrivalTime: clock };
               clients.push(client);
               break;
             }
             case 3: {
               counter3 = { ...counter3, state: ServerStateEnum.ACTIVE, nextEndOfService: counterEndOfService.nextTime };
 
-              client = { id: clientsQuantity, state: ClientStateEnum.SIE_ATE_MOST_3, arrivalTime: clock };
+              client = { id: clientsQuantity, state: ClientStateEnum.IN_COUNTER_3, arrivalTime: clock };
               clients.push(client);
               break;
             }
             case 4: {
               counter4 = { ...counter4, state: ServerStateEnum.ACTIVE, nextEndOfService: counterEndOfService.nextTime };
 
-              client = { id: clientsQuantity, state: ClientStateEnum.SIE_ATE_MOST_4, arrivalTime: clock };
+              client = { id: clientsQuantity, state: ClientStateEnum.IN_COUNTER_4, arrivalTime: clock };
               clients.push(client);
               break;
             }
             case 5: {
               counter5 = { ...counter5, state: ServerStateEnum.ACTIVE, nextEndOfService: counterEndOfService.nextTime };
 
-              client = { id: clientsQuantity, state: ClientStateEnum.SIE_ATE_MOST_5, arrivalTime: clock };
+              client = { id: clientsQuantity, state: ClientStateEnum.IN_COUNTER_5, arrivalTime: clock };
               clients.push(client);
               break;
             }
@@ -194,7 +194,7 @@ export class QueueSimulationService {
           if (!idleServerId) {
             selfserviceQueue++;
 
-            client = { id: clientsQuantity, state: ClientStateEnum.ESP_ATE_AUTO, arrivalTime: clock };
+            client = { id: clientsQuantity, state: ClientStateEnum.WAITING_SELFSERVICE, arrivalTime: clock };
             clients.push(client);
             break;
           }
@@ -209,7 +209,7 @@ export class QueueSimulationService {
                 nextEndOfService: selfserviceEndOfService.nextTime,
               };
 
-              client = { id: clientsQuantity, state: ClientStateEnum.SIE_ATE_AUTO_1, arrivalTime: clock };
+              client = { id: clientsQuantity, state: ClientStateEnum.IN_SELFSERVICE_1!, arrivalTime: clock };
               clients.push(client);
               break;
             }
@@ -220,7 +220,7 @@ export class QueueSimulationService {
                 nextEndOfService: selfserviceEndOfService.nextTime,
               };
 
-              client = { id: clientsQuantity, state: ClientStateEnum.SIE_ATE_AUTO_2, arrivalTime: clock };
+              client = { id: clientsQuantity, state: ClientStateEnum.IN_SELFSERVICE_2, arrivalTime: clock };
               clients.push(client);
               break;
             }
@@ -231,7 +231,7 @@ export class QueueSimulationService {
                 nextEndOfService: selfserviceEndOfService.nextTime,
               };
 
-              client = { id: clientsQuantity, state: ClientStateEnum.SIE_ATE_AUTO_3, arrivalTime: clock };
+              client = { id: clientsQuantity, state: ClientStateEnum.IN_SELFSERVICE_3, arrivalTime: clock };
               clients.push(client);
               break;
             }
@@ -249,7 +249,7 @@ export class QueueSimulationService {
           if (!idleServerId) {
             onlineQueue++;
 
-            client = { id: clientsQuantity, state: ClientStateEnum.ESP_ATE_ONLINE, arrivalTime: clock };
+            client = { id: clientsQuantity, state: ClientStateEnum.WAITING_ONLINE, arrivalTime: clock };
             clients.push(client);
             break;
           }
@@ -260,21 +260,21 @@ export class QueueSimulationService {
             case 1: {
               online1 = { ...online1, state: ServerStateEnum.ACTIVE, nextEndOfService: onlineEndOfService.nextTime };
 
-              client = { id: clientsQuantity, state: ClientStateEnum.SIE_ATE_ONLINE_1, arrivalTime: clock };
+              client = { id: clientsQuantity, state: ClientStateEnum.IN_ONLINE_1, arrivalTime: clock };
               clients.push(client);
               break;
             }
             case 2: {
               online2 = { ...online2, state: ServerStateEnum.ACTIVE, nextEndOfService: onlineEndOfService.nextTime };
 
-              client = { id: clientsQuantity, state: ClientStateEnum.SIE_ATE_ONLINE_2, arrivalTime: clock };
+              client = { id: clientsQuantity, state: ClientStateEnum.IN_ONLINE_2, arrivalTime: clock };
               clients.push(client);
               break;
             }
             case 3: {
               online3 = { ...online3, state: ServerStateEnum.ACTIVE, nextEndOfService: onlineEndOfService.nextTime };
 
-              client = { id: clientsQuantity, state: ClientStateEnum.SIE_ATE_ONLINE_3, arrivalTime: clock };
+              client = { id: clientsQuantity, state: ClientStateEnum.IN_ONLINE_3, arrivalTime: clock };
               clients.push(client);
               break;
             }
@@ -292,7 +292,7 @@ export class QueueSimulationService {
           if (!idleServerId) {
             takeawayQueue++;
 
-            client = { id: clientsQuantity, state: ClientStateEnum.ESP_ATE_LLEVAR, arrivalTime: clock };
+            client = { id: clientsQuantity, state: ClientStateEnum.WAITING_TAKEAWAY, arrivalTime: clock };
             clients.push(client);
             break;
           }
@@ -307,7 +307,7 @@ export class QueueSimulationService {
                 nextEndOfService: takeawayEndOfService.nextTime,
               };
 
-              client = { id: clientsQuantity, state: ClientStateEnum.SIE_ATE_LLEVAR_1, arrivalTime: clock };
+              client = { id: clientsQuantity, state: ClientStateEnum.IN_TAKEAWAY_1, arrivalTime: clock };
               clients.push(client);
               break;
             }
@@ -318,7 +318,7 @@ export class QueueSimulationService {
                 nextEndOfService: takeawayEndOfService.nextTime,
               };
 
-              client = { id: clientsQuantity, state: ClientStateEnum.SIE_ATE_LLEVAR_2, arrivalTime: clock };
+              client = { id: clientsQuantity, state: ClientStateEnum.IN_TAKEAWAY_2, arrivalTime: clock };
               clients.push(client);
               break;
             }
@@ -336,7 +336,7 @@ export class QueueSimulationService {
           if (!idleServerId) {
             deliveryQueue++;
 
-            client = { id: clientsQuantity, state: ClientStateEnum.ESP_ATE_DELI, arrivalTime: clock };
+            client = { id: clientsQuantity, state: ClientStateEnum.WAITING_DELIVERY, arrivalTime: clock };
             clients.push(client);
             break;
           }
@@ -351,7 +351,7 @@ export class QueueSimulationService {
                 nextEndOfService: deliveryEndOfService.nextTime,
               };
 
-              client = { id: clientsQuantity, state: ClientStateEnum.SIE_ATE_DELI_1, arrivalTime: clock };
+              client = { id: clientsQuantity, state: ClientStateEnum.IN_DELIVERY_1, arrivalTime: clock };
               clients.push(client);
               break;
             }
@@ -362,7 +362,7 @@ export class QueueSimulationService {
                 nextEndOfService: deliveryEndOfService.nextTime,
               };
 
-              client = { id: clientsQuantity, state: ClientStateEnum.SIE_ATE_DELI_2, arrivalTime: clock };
+              client = { id: clientsQuantity, state: ClientStateEnum.IN_DELIVERY_2, arrivalTime: clock };
               clients.push(client);
               break;
             }
@@ -373,7 +373,7 @@ export class QueueSimulationService {
                 nextEndOfService: deliveryEndOfService.nextTime,
               };
 
-              client = { id: clientsQuantity, state: ClientStateEnum.SIE_ATE_DELI_3, arrivalTime: clock };
+              client = { id: clientsQuantity, state: ClientStateEnum.IN_DELIVERY_3, arrivalTime: clock };
               clients.push(client);
               break;
             }
@@ -382,7 +382,7 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_MOST_1: {
-          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.SIE_ATE_MOST_1);
+          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.IN_COUNTER_1);
           clientToDestroy.state = null;
           clientToDestroy.arrivalTime = null;
 
@@ -392,8 +392,8 @@ export class QueueSimulationService {
             counterEndOfService = this.generateNextEvent(counterEndOfServiceFrecuency, clock);
             counter1 = { ...counter1, nextEndOfService: counterEndOfService.nextTime };
 
-            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.ESP_ATE_MOST);
-            clientToUpdate.state = ClientStateEnum.SIE_ATE_MOST_1;
+            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.WAITING_COUNTER);
+            clientToUpdate.state = ClientStateEnum.IN_COUNTER_1;
             break;
           }
 
@@ -401,7 +401,7 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_MOST_2: {
-          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.SIE_ATE_MOST_2);
+          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.IN_COUNTER_2);
           clientToDestroy.state = null;
           clientToDestroy.arrivalTime = null;
 
@@ -411,8 +411,8 @@ export class QueueSimulationService {
             counterEndOfService = this.generateNextEvent(counterEndOfServiceFrecuency, clock);
             counter2 = { ...counter2, nextEndOfService: counterEndOfService.nextTime };
 
-            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.ESP_ATE_MOST);
-            clientToUpdate.state = ClientStateEnum.SIE_ATE_MOST_2;
+            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.WAITING_COUNTER);
+            clientToUpdate.state = ClientStateEnum.IN_COUNTER_2;
             break;
           }
 
@@ -420,7 +420,7 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_MOST_3: {
-          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.SIE_ATE_MOST_3);
+          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.IN_COUNTER_3);
           clientToDestroy.state = null;
           clientToDestroy.arrivalTime = null;
 
@@ -430,8 +430,8 @@ export class QueueSimulationService {
             counterEndOfService = this.generateNextEvent(counterEndOfServiceFrecuency, clock);
             counter3 = { ...counter3, nextEndOfService: counterEndOfService.nextTime };
 
-            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.ESP_ATE_MOST);
-            clientToUpdate.state = ClientStateEnum.SIE_ATE_MOST_3;
+            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.WAITING_COUNTER);
+            clientToUpdate.state = ClientStateEnum.IN_COUNTER_3;
             break;
           }
 
@@ -439,7 +439,7 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_MOST_4: {
-          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.SIE_ATE_MOST_4);
+          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.IN_COUNTER_4);
           clientToDestroy.state = null;
           clientToDestroy.arrivalTime = null;
 
@@ -449,8 +449,8 @@ export class QueueSimulationService {
             counterEndOfService = this.generateNextEvent(counterEndOfServiceFrecuency, clock);
             counter4 = { ...counter4, nextEndOfService: counterEndOfService.nextTime };
 
-            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.ESP_ATE_MOST);
-            clientToUpdate.state = ClientStateEnum.SIE_ATE_MOST_4;
+            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.WAITING_COUNTER);
+            clientToUpdate.state = ClientStateEnum.IN_COUNTER_4;
             break;
           }
 
@@ -458,7 +458,7 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_MOST_5: {
-          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.SIE_ATE_MOST_5);
+          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.IN_COUNTER_5);
           clientToDestroy.state = null;
           clientToDestroy.arrivalTime = null;
 
@@ -468,8 +468,8 @@ export class QueueSimulationService {
             counterEndOfService = this.generateNextEvent(counterEndOfServiceFrecuency, clock);
             counter5 = { ...counter5, nextEndOfService: counterEndOfService.nextTime };
 
-            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.ESP_ATE_MOST);
-            clientToUpdate.state = ClientStateEnum.SIE_ATE_MOST_5;
+            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.WAITING_COUNTER);
+            clientToUpdate.state = ClientStateEnum.IN_COUNTER_5;
             break;
           }
 
@@ -477,7 +477,7 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_AUTO_1: {
-          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.SIE_ATE_AUTO_1);
+          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.IN_SELFSERVICE_1!);
           clientToDestroy.state = null;
           clientToDestroy.arrivalTime = null;
 
@@ -488,8 +488,8 @@ export class QueueSimulationService {
 
             selfservice1 = { ...selfservice1, nextEndOfService: selfserviceEndOfService.nextTime };
 
-            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.ESP_ATE_AUTO);
-            clientToUpdate.state = ClientStateEnum.SIE_ATE_AUTO_1;
+            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.WAITING_SELFSERVICE);
+            clientToUpdate.state = ClientStateEnum.IN_SELFSERVICE_1!;
             break;
           }
 
@@ -497,7 +497,7 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_AUTO_2: {
-          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.SIE_ATE_AUTO_2);
+          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.IN_SELFSERVICE_2);
           clientToDestroy.state = null;
           clientToDestroy.arrivalTime = null;
 
@@ -507,8 +507,8 @@ export class QueueSimulationService {
             selfserviceEndOfService = this.generateNextEvent(selfserviceEndOfServiceFrecuency, clock);
             selfservice2 = { ...selfservice2, nextEndOfService: selfserviceEndOfService.nextTime };
 
-            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.ESP_ATE_AUTO);
-            clientToUpdate.state = ClientStateEnum.SIE_ATE_AUTO_2;
+            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.WAITING_SELFSERVICE);
+            clientToUpdate.state = ClientStateEnum.IN_SELFSERVICE_2;
             break;
           }
 
@@ -516,7 +516,7 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_AUTO_3: {
-          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.SIE_ATE_AUTO_3);
+          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.IN_SELFSERVICE_3);
           clientToDestroy.state = null;
           clientToDestroy.arrivalTime = null;
 
@@ -526,8 +526,8 @@ export class QueueSimulationService {
             selfserviceEndOfService = this.generateNextEvent(selfserviceEndOfServiceFrecuency, clock);
             selfservice3 = { ...selfservice3, nextEndOfService: selfserviceEndOfService.nextTime };
 
-            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.ESP_ATE_AUTO);
-            clientToUpdate.state = ClientStateEnum.SIE_ATE_AUTO_3;
+            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.WAITING_SELFSERVICE);
+            clientToUpdate.state = ClientStateEnum.IN_SELFSERVICE_3;
             break;
           }
 
@@ -535,7 +535,7 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_ONLINE_1: {
-          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.SIE_ATE_ONLINE_1);
+          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.IN_ONLINE_1);
           clientToDestroy.state = null;
           clientToDestroy.arrivalTime = null;
 
@@ -545,8 +545,8 @@ export class QueueSimulationService {
             onlineEndOfService = this.generateNextEvent(onlineEndOfServiceFrecuency, clock);
             online1 = { ...online1, nextEndOfService: onlineEndOfService.nextTime };
 
-            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.ESP_ATE_ONLINE);
-            clientToUpdate.state = ClientStateEnum.SIE_ATE_ONLINE_1;
+            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.WAITING_ONLINE);
+            clientToUpdate.state = ClientStateEnum.IN_ONLINE_1;
             break;
           }
 
@@ -554,7 +554,7 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_ONLINE_2: {
-          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.SIE_ATE_ONLINE_2);
+          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.IN_ONLINE_2);
           clientToDestroy.state = null;
           clientToDestroy.arrivalTime = null;
 
@@ -564,8 +564,8 @@ export class QueueSimulationService {
             onlineEndOfService = this.generateNextEvent(onlineEndOfServiceFrecuency, clock);
             online2 = { ...online2, nextEndOfService: onlineEndOfService.nextTime };
 
-            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.ESP_ATE_ONLINE);
-            clientToUpdate.state = ClientStateEnum.SIE_ATE_ONLINE_2;
+            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.WAITING_ONLINE);
+            clientToUpdate.state = ClientStateEnum.IN_ONLINE_2;
             break;
           }
 
@@ -573,7 +573,7 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_ONLINE_3: {
-          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.SIE_ATE_ONLINE_3);
+          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.IN_ONLINE_3);
           clientToDestroy.state = null;
           clientToDestroy.arrivalTime = null;
 
@@ -583,8 +583,8 @@ export class QueueSimulationService {
             onlineEndOfService = this.generateNextEvent(onlineEndOfServiceFrecuency, clock);
             online3 = { ...online3, nextEndOfService: onlineEndOfService.nextTime };
 
-            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.ESP_ATE_ONLINE);
-            clientToUpdate.state = ClientStateEnum.SIE_ATE_ONLINE_3;
+            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.WAITING_ONLINE);
+            clientToUpdate.state = ClientStateEnum.IN_ONLINE_3;
             break;
           }
 
@@ -592,7 +592,7 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_LLEVAR_1: {
-          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.SIE_ATE_LLEVAR_1);
+          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.IN_TAKEAWAY_1);
           clientToDestroy.state = null;
           clientToDestroy.arrivalTime = null;
 
@@ -602,8 +602,8 @@ export class QueueSimulationService {
             takeawayEndOfService = this.generateNextEvent(takeawayEndOfServiceFrecuency, clock);
             takeaway1 = { ...takeaway1, nextEndOfService: takeawayEndOfService.nextTime };
 
-            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.ESP_ATE_LLEVAR);
-            clientToUpdate.state = ClientStateEnum.SIE_ATE_LLEVAR_1;
+            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.WAITING_TAKEAWAY);
+            clientToUpdate.state = ClientStateEnum.IN_TAKEAWAY_1;
             break;
           }
 
@@ -611,7 +611,7 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_LLEVAR_2: {
-          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.SIE_ATE_LLEVAR_2);
+          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.IN_TAKEAWAY_2);
           clientToDestroy.state = null;
           clientToDestroy.arrivalTime = null;
 
@@ -621,8 +621,8 @@ export class QueueSimulationService {
             takeawayEndOfService = this.generateNextEvent(takeawayEndOfServiceFrecuency, clock);
             takeaway2 = { ...takeaway2, nextEndOfService: takeawayEndOfService.nextTime };
 
-            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.ESP_ATE_LLEVAR);
-            clientToUpdate.state = ClientStateEnum.SIE_ATE_LLEVAR_2;
+            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.WAITING_TAKEAWAY);
+            clientToUpdate.state = ClientStateEnum.IN_TAKEAWAY_2;
             break;
           }
 
@@ -630,7 +630,7 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_DELI_1: {
-          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.SIE_ATE_DELI_1);
+          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.IN_DELIVERY_1);
           clientToDestroy.state = null;
           clientToDestroy.arrivalTime = null;
 
@@ -640,8 +640,8 @@ export class QueueSimulationService {
             deliveryEndOfService = this.generateNextEvent(deliveryEndOfServiceFrecuency, clock);
             delivery1 = { ...delivery1, nextEndOfService: deliveryEndOfService.nextTime };
 
-            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.ESP_ATE_DELI);
-            clientToUpdate.state = ClientStateEnum.SIE_ATE_DELI_1;
+            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.WAITING_DELIVERY);
+            clientToUpdate.state = ClientStateEnum.IN_DELIVERY_1;
             break;
           }
 
@@ -649,7 +649,7 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_DELI_2: {
-          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.SIE_ATE_DELI_2);
+          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.IN_DELIVERY_2);
           clientToDestroy.state = null;
           clientToDestroy.arrivalTime = null;
 
@@ -659,8 +659,8 @@ export class QueueSimulationService {
             deliveryEndOfService = this.generateNextEvent(deliveryEndOfServiceFrecuency, clock);
             delivery2 = { ...delivery2, nextEndOfService: deliveryEndOfService.nextTime };
 
-            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.ESP_ATE_DELI);
-            clientToUpdate.state = ClientStateEnum.SIE_ATE_DELI_2;
+            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.WAITING_DELIVERY);
+            clientToUpdate.state = ClientStateEnum.IN_DELIVERY_2;
             break;
           }
 
@@ -668,7 +668,7 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_DELI_3: {
-          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.SIE_ATE_DELI_3);
+          const clientToDestroy = this.getNextClient(clients, ClientStateEnum.IN_DELIVERY_3);
           clientToDestroy.state = null;
           clientToDestroy.arrivalTime = null;
 
@@ -678,8 +678,8 @@ export class QueueSimulationService {
             deliveryEndOfService = this.generateNextEvent(deliveryEndOfServiceFrecuency, clock);
             delivery3 = { ...delivery3, nextEndOfService: deliveryEndOfService.nextTime };
 
-            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.ESP_ATE_DELI);
-            clientToUpdate.state = ClientStateEnum.SIE_ATE_DELI_2;
+            const clientToUpdate = this.getNextClient(clients, ClientStateEnum.WAITING_DELIVERY);
+            clientToUpdate.state = ClientStateEnum.IN_DELIVERY_2;
             break;
           }
 
