@@ -746,10 +746,6 @@ export class QueueSimulationService {
         clients[clientToUpdate.id - 1] = clientToUpdate;
       }
 
-      if (i < 5) {
-        console.log([...queueSimulationRows]);
-      }
-
       queueSimulationRows.push({
         id,
         event,
