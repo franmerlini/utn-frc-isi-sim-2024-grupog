@@ -1,3 +1,4 @@
+import { Client } from './client.model';
 import { Event } from './event.model';
 import { QueueSimulationEvent } from './queue-simulation-event.model';
 import { Server } from './server.model';
@@ -41,4 +42,6 @@ export type QueueSimulationRow = {
   onlineQueue: number;
   takeawayQueue: number;
   deliveryQueue: number;
+
+  clients: Client[];
 };
