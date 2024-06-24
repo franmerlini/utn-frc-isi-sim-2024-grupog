@@ -23,9 +23,9 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
       >
         <ng-template pTemplate="header">
           <tr>
-            <th rowspan="3" pFrozenColumn>#</th>
-            <th rowspan="3" pFrozenColumn>Evento</th>
-            <th rowspan="3" pFrozenColumn>Reloj (horas)</th>
+            <th rowspan="3">#</th>
+            <th rowspan="3">Evento</th>
+            <th rowspan="3">Reloj (horas)</th>
             <th colspan="3">Llegada pedido en mostrador</th>
             <th colspan="3">Llegada pedido autoservicio</th>
             <th colspan="3">Llegada pedido online</th>
@@ -40,12 +40,13 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <th colspan="6">Estaciones autoservicio</th>
             <th colspan="6">Empleados pedidos online</th>
             <th colspan="4">Empleados pedidos para llevar</th>
-            <th colspan="6">Empleados pedidos online</th>
+            <th colspan="6">Empleados pedidos delivery</th>
             <th rowspan="3">Cola pedidos en mostrador</th>
             <th rowspan="3">Cola pedidos autoservicio</th>
             <th rowspan="3">Cola pedidos online</th>
             <th rowspan="3">Cola pedidos para llevar</th>
             <th rowspan="3">Cola pedidos delivery</th>
+            <th [colSpan]="getClientsQuantity() * 2">Clientes</th>
           </tr>
           <tr>
             <th rowspan="2">RND 1</th>
@@ -94,6 +95,9 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <th colspan="2">1</th>
             <th colspan="2">2</th>
             <th colspan="2">3</th>
+            @for(number of getNumberArray(); track number) {
+            <th colspan="2">{{ number }}</th>
+            }
           </tr>
           <tr>
             <th>Estado</th>
@@ -128,6 +132,10 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <th>Próximo fin</th>
             <th>Estado</th>
             <th>Próximo fin</th>
+            @for(number of getNumberArray(); track number) {
+            <th>Estado</th>
+            <th>Hora llegada</th>
+            }
           </tr>
         </ng-template>
 
@@ -203,6 +211,10 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <td>{{ row.onlineQueue }}</td>
             <td>{{ row.takeawayQueue }}</td>
             <td>{{ row.deliveryQueue }}</td>
+            @for(client of row.clients; track client.id) {
+            <td>{{ client.state }}</td>
+            <td>{{ client.arrivalTime }}</td>
+            }
           </tr>
         </ng-template>
       </p-table>
@@ -220,4 +232,12 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
 })
 export class SimulationTableComponent {
   queueSimulationRows = input.required<QueueSimulationRow[]>();
+
+  getClientsQuantity(): number {
+    return this.queueSimulationRows()[this.queueSimulationRows().length - 1]?.clients?.length ?? 0;
+  }
+
+  getNumberArray(): number[] {
+    return Array.from({ length: this.getClientsQuantity() }, (_, i) => i + 1);
+  }
 }
