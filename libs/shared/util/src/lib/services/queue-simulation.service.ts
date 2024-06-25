@@ -77,6 +77,11 @@ export class QueueSimulationService {
     let onlineWaitingTime = 0;
     let takeawayWaitingTime = 0;
     let deliveryWaitingTime = 0;
+    let counterAverageWaitingTime = 0;
+    let selfserviceAverageWaitingTime = 0;
+    let onlineAverageWaitingTime = 0;
+    let takeawayAverageWaitingTime = 0;
+    let deliveryAverageWaitingTime = 0;
 
     const clients: Client[] = [];
 
@@ -121,6 +126,11 @@ export class QueueSimulationService {
         onlineWaitingTime,
         takeawayWaitingTime,
         deliveryWaitingTime,
+        counterAverageWaitingTime,
+        selfserviceAverageWaitingTime,
+        onlineAverageWaitingTime,
+        takeawayAverageWaitingTime,
+        deliveryAverageWaitingTime,
         clients: [...clients],
       },
     ];
@@ -400,6 +410,8 @@ export class QueueSimulationService {
               counterWaitingTime + clock - (clientToUpdate.arrivalTime as number),
               2
             );
+            counterAverageWaitingTime =
+              counterWaitingTime === 0 ? 0 : truncateDecimals((clock / counterWaitingTime) * 100, 2);
             break;
           }
 
@@ -428,6 +440,7 @@ export class QueueSimulationService {
               counterWaitingTime + clock - (clientToUpdate.arrivalTime as number),
               2
             );
+
             break;
           }
 
@@ -456,6 +469,8 @@ export class QueueSimulationService {
               counterWaitingTime + clock - (clientToUpdate.arrivalTime as number),
               2
             );
+            counterAverageWaitingTime =
+              counterWaitingTime === 0 ? 0 : truncateDecimals((clock / counterWaitingTime) * 100, 2);
             break;
           }
 
@@ -484,6 +499,8 @@ export class QueueSimulationService {
               counterWaitingTime + clock - (clientToUpdate.arrivalTime as number),
               2
             );
+            counterAverageWaitingTime =
+              counterWaitingTime === 0 ? 0 : truncateDecimals((clock / counterWaitingTime) * 100, 2);
             break;
           }
 
@@ -512,6 +529,8 @@ export class QueueSimulationService {
               counterWaitingTime + clock - (clientToUpdate.arrivalTime as number),
               2
             );
+            counterAverageWaitingTime =
+              counterWaitingTime === 0 ? 0 : truncateDecimals((clock / counterWaitingTime) * 100, 2);
             break;
           }
 
@@ -541,6 +560,8 @@ export class QueueSimulationService {
               selfserviceWaitingTime + clock - (clientToUpdate.arrivalTime as number),
               2
             );
+            selfserviceAverageWaitingTime =
+              selfserviceWaitingTime === 0 ? 0 : truncateDecimals((clock / selfserviceWaitingTime) * 100, 2);
             break;
           }
 
@@ -569,6 +590,8 @@ export class QueueSimulationService {
               selfserviceWaitingTime + clock - (clientToUpdate.arrivalTime as number),
               2
             );
+            selfserviceAverageWaitingTime =
+              selfserviceWaitingTime === 0 ? 0 : truncateDecimals((clock / selfserviceWaitingTime) * 100, 2);
             break;
           }
 
@@ -597,6 +620,8 @@ export class QueueSimulationService {
               selfserviceWaitingTime + clock - (clientToUpdate.arrivalTime as number),
               2
             );
+            selfserviceAverageWaitingTime =
+              selfserviceWaitingTime === 0 ? 0 : truncateDecimals((clock / selfserviceWaitingTime) * 100, 2);
             break;
           }
 
@@ -622,6 +647,8 @@ export class QueueSimulationService {
             };
 
             onlineWaitingTime = truncateDecimals(onlineWaitingTime + clock - (clientToUpdate.arrivalTime as number), 2);
+            onlineAverageWaitingTime =
+              onlineWaitingTime === 0 ? 0 : truncateDecimals((clock / onlineWaitingTime) * 100, 2);
             break;
           }
 
@@ -647,6 +674,8 @@ export class QueueSimulationService {
             };
 
             onlineWaitingTime = truncateDecimals(onlineWaitingTime + clock - (clientToUpdate.arrivalTime as number), 2);
+            onlineAverageWaitingTime =
+              onlineWaitingTime === 0 ? 0 : truncateDecimals((clock / onlineWaitingTime) * 100, 2);
             break;
           }
 
@@ -672,6 +701,8 @@ export class QueueSimulationService {
             };
 
             onlineWaitingTime = truncateDecimals(onlineWaitingTime + clock - (clientToUpdate.arrivalTime as number), 2);
+            onlineAverageWaitingTime =
+              onlineWaitingTime === 0 ? 0 : truncateDecimals((clock / onlineWaitingTime) * 100, 2);
             break;
           }
 
@@ -700,6 +731,8 @@ export class QueueSimulationService {
               takeawayWaitingTime + clock - (clientToUpdate.arrivalTime as number),
               2
             );
+            takeawayAverageWaitingTime =
+              takeawayWaitingTime === 0 ? 0 : truncateDecimals((clock / takeawayWaitingTime) * 100, 2);
             break;
           }
 
@@ -728,6 +761,8 @@ export class QueueSimulationService {
               takeawayWaitingTime + clock - (clientToUpdate.arrivalTime as number),
               2
             );
+            takeawayAverageWaitingTime =
+              takeawayWaitingTime === 0 ? 0 : truncateDecimals((clock / takeawayWaitingTime) * 100, 2);
             break;
           }
 
@@ -756,6 +791,8 @@ export class QueueSimulationService {
               deliveryWaitingTime + clock - (clientToUpdate.arrivalTime as number),
               2
             );
+            deliveryAverageWaitingTime =
+              deliveryWaitingTime === 0 ? 0 : truncateDecimals((clock / deliveryWaitingTime) * 100, 2);
             break;
           }
 
@@ -784,6 +821,8 @@ export class QueueSimulationService {
               deliveryWaitingTime + clock - (clientToUpdate.arrivalTime as number),
               2
             );
+            deliveryAverageWaitingTime =
+              deliveryWaitingTime === 0 ? 0 : truncateDecimals((clock / deliveryWaitingTime) * 100, 2);
             break;
           }
 
@@ -812,6 +851,8 @@ export class QueueSimulationService {
               deliveryWaitingTime + clock - (clientToUpdate.arrivalTime as number),
               2
             );
+            deliveryAverageWaitingTime =
+              deliveryWaitingTime === 0 ? 0 : truncateDecimals((clock / deliveryWaitingTime) * 100, 2);
             break;
           }
 
@@ -868,6 +909,11 @@ export class QueueSimulationService {
         onlineWaitingTime,
         takeawayWaitingTime,
         deliveryWaitingTime,
+        counterAverageWaitingTime,
+        selfserviceAverageWaitingTime,
+        onlineAverageWaitingTime,
+        takeawayAverageWaitingTime,
+        deliveryAverageWaitingTime,
         clients: [...clients],
       });
     }

@@ -48,6 +48,11 @@ export type QueueSimulationRow = {
   onlineWaitingTime: number;
   takeawayWaitingTime: number;
   deliveryWaitingTime: number;
+  counterAverageWaitingTime: number;
+  selfserviceAverageWaitingTime: number;
+  onlineAverageWaitingTime: number;
+  takeawayAverageWaitingTime: number;
+  deliveryAverageWaitingTime: number;
 
   clients: Client[];
 };
