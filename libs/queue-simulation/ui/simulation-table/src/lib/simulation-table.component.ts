@@ -26,23 +26,23 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <th rowspan="3">#</th>
             <th rowspan="3">Evento</th>
             <th rowspan="3">Reloj (horas)</th>
-            <th colspan="3">Llegada pedido en mostrador</th>
-            <th colspan="3">Llegada pedido autoservicio</th>
-            <th colspan="3">Llegada pedido online</th>
-            <th colspan="3">Llegada pedido para llevar</th>
-            <th colspan="3">Llegada pedido delivery</th>
-            <th colspan="3">Fin atención pedido en mostrador</th>
-            <th colspan="3">Fin atención pedido autoservicio</th>
-            <th colspan="3">Fin atención pedido online</th>
-            <th colspan="3">Fin atención pedido para llevar</th>
-            <th colspan="3">Fin atención pedido delivery</th>
-            <th colspan="10">Empleados pedidos en mostrador</th>
+            <th colspan="3">Llegada mostrador</th>
+            <th colspan="3">Llegada autoservicio</th>
+            <th colspan="3">Llegada online</th>
+            <th colspan="3">Llegada para llevar</th>
+            <th colspan="3">Llegada delivery</th>
+            <th colspan="3">Fin atención mostrador</th>
+            <th colspan="3">Fin atención autoservicio</th>
+            <th colspan="3">Fin atención online</th>
+            <th colspan="3">Fin atención para llevar</th>
+            <th colspan="3">Fin atención delivery</th>
+            <th colspan="10">Empleados mostrador</th>
             <th colspan="6">Estaciones autoservicio</th>
-            <th colspan="6">Empleados pedidos online</th>
-            <th colspan="4">Empleados pedidos para llevar</th>
-            <th colspan="6">Empleados pedidos delivery</th>
+            <th colspan="6">Empleados online</th>
+            <th colspan="4">Empleados para llevar</th>
+            <th colspan="6">Empleados delivery</th>
             <th colspan="5">Colas</th>
-            <th colspan="5">Acumuladores tiempo espera</th>
+            <th colspan="10">Tiempo de espera promedio</th>
             <th [colSpan]="getClientsQuantity() * 2">Clientes</th>
           </tr>
           <tr>
@@ -97,11 +97,16 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <th rowspan="2">Online</th>
             <th rowspan="2">Para llevar</th>
             <th rowspan="2">Delivery</th>
-            <th rowspan="2">Mostrador</th>
-            <th rowspan="2">Autoservicio</th>
-            <th rowspan="2">Online</th>
-            <th rowspan="2">Para llevar</th>
-            <th rowspan="2">Delivery</th>
+            <th rowspan="2">Acum tiempo espera mostrador</th>
+            <th rowspan="2">Acum tiempo espera autoservicio</th>
+            <th rowspan="2">Acum tiempo espera online</th>
+            <th rowspan="2">Acum tiempo espera para llevar</th>
+            <th rowspan="2">Acum tiempo espera delivery</th>
+            <th rowspan="2">Porcentaje tiempo espera mostrador</th>
+            <th rowspan="2">Porcentaje tiempo espera autoservicio</th>
+            <th rowspan="2">Porcentaje tiempo espera online</th>
+            <th rowspan="2">Porcentaje tiempo espera para llevar</th>
+            <th rowspan="2">Porcentaje tiempo espera delivery</th>
             @for(number of getNumberArray(); track number) {
             <th colspan="2">{{ number }}</th>
             }
@@ -227,6 +232,11 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <td>{{ row.onlineWaitingTime }}</td>
             <td>{{ row.takeawayWaitingTime }}</td>
             <td>{{ row.deliveryWaitingTime }}</td>
+            <td>{{ row.counterAverageWaitingTime }}</td>
+            <td>{{ row.selfserviceAverageWaitingTime }}</td>
+            <td>{{ row.onlineAverageWaitingTime }}</td>
+            <td>{{ row.takeawayAverageWaitingTime }}</td>
+            <td>{{ row.deliveryAverageWaitingTime }}</td>
 
             @for(client of row.clients; track client.id) {
             <td>{{ client.state }}</td>
