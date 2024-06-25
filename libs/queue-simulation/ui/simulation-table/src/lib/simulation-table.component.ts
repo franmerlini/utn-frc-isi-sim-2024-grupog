@@ -36,13 +36,14 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <th colspan="3">Fin atención online</th>
             <th colspan="3">Fin atención para llevar</th>
             <th colspan="3">Fin atención delivery</th>
-            <th colspan="10">Empleados mostrador</th>
-            <th colspan="6">Estaciones autoservicio</th>
-            <th colspan="6">Empleados online</th>
-            <th colspan="4">Empleados para llevar</th>
-            <th colspan="6">Empleados delivery</th>
+            <th colspan="15">Empleados mostrador</th>
+            <th colspan="9">Estaciones autoservicio</th>
+            <th colspan="9">Empleados online</th>
+            <th colspan="6">Empleados para llevar</th>
+            <th colspan="9">Empleados delivery</th>
             <th colspan="5">Colas</th>
             <th colspan="10">Tiempo de espera promedio</th>
+            <th colspan="10">Tiempo de ocupación promedio</th>
             <th [colSpan]="getClientsQuantity() * 2">Clientes</th>
           </tr>
           <tr>
@@ -61,6 +62,7 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <th rowspan="2">RND 5</th>
             <th rowspan="2">Tiempo llegada</th>
             <th rowspan="2">Próxima llegada</th>
+
             <th rowspan="2">RND 6</th>
             <th rowspan="2">Tiempo fin</th>
             <th rowspan="2">Próximo fin</th>
@@ -76,27 +78,30 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <th rowspan="2">RND 10</th>
             <th rowspan="2">Tiempo fin</th>
             <th rowspan="2">Próximo fin</th>
-            <th colspan="2">1</th>
-            <th colspan="2">2</th>
-            <th colspan="2">3</th>
-            <th colspan="2">4</th>
-            <th colspan="2">5</th>
-            <th colspan="2">1</th>
-            <th colspan="2">2</th>
-            <th colspan="2">3</th>
-            <th colspan="2">1</th>
-            <th colspan="2">2</th>
-            <th colspan="2">3</th>
-            <th colspan="2">1</th>
-            <th colspan="2">2</th>
-            <th colspan="2">1</th>
-            <th colspan="2">2</th>
-            <th colspan="2">3</th>
+
+            <th colspan="3">1</th>
+            <th colspan="3">2</th>
+            <th colspan="3">3</th>
+            <th colspan="3">4</th>
+            <th colspan="3">5</th>
+            <th colspan="3">1</th>
+            <th colspan="3">2</th>
+            <th colspan="3">3</th>
+            <th colspan="3">1</th>
+            <th colspan="3">2</th>
+            <th colspan="3">3</th>
+            <th colspan="3">1</th>
+            <th colspan="3">2</th>
+            <th colspan="3">1</th>
+            <th colspan="3">2</th>
+            <th colspan="3">3</th>
+
             <th rowspan="2">Mostrador</th>
             <th rowspan="2">Autoservicio</th>
             <th rowspan="2">Online</th>
             <th rowspan="2">Para llevar</th>
             <th rowspan="2">Delivery</th>
+
             <th rowspan="2">Acum tiempo espera mostrador</th>
             <th rowspan="2">Acum tiempo espera autoservicio</th>
             <th rowspan="2">Acum tiempo espera online</th>
@@ -107,42 +112,68 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <th rowspan="2">Porcentaje tiempo espera online</th>
             <th rowspan="2">Porcentaje tiempo espera para llevar</th>
             <th rowspan="2">Porcentaje tiempo espera delivery</th>
+            <th rowspan="2">Acum tiempo ocupación mostrador</th>
+            <th rowspan="2">Acum tiempo ocupación autoservicio</th>
+            <th rowspan="2">Acum tiempo ocupación online</th>
+            <th rowspan="2">Acum tiempo ocupación para llevar</th>
+            <th rowspan="2">Acum tiempo ocupación delivery</th>
+            <th rowspan="2">Porcentaje tiempo ocupación mostrador</th>
+            <th rowspan="2">Porcentaje tiempo ocupación autoservicio</th>
+            <th rowspan="2">Porcentaje tiempo ocupación online</th>
+            <th rowspan="2">Porcentaje tiempo ocupación para llevar</th>
+            <th rowspan="2">Porcentaje tiempo ocupación delivery</th>
             @for(number of getNumberArray(); track number) {
             <th colspan="2">{{ number }}</th>
             }
           </tr>
           <tr>
             <th>Estado</th>
+            <th>Inicio ocupación</th>
             <th>Próximo fin</th>
             <th>Estado</th>
+            <th>Inicio ocupación</th>
             <th>Próximo fin</th>
             <th>Estado</th>
+            <th>Inicio ocupación</th>
             <th>Próximo fin</th>
             <th>Estado</th>
+            <th>Inicio ocupación</th>
             <th>Próximo fin</th>
             <th>Estado</th>
+            <th>Inicio ocupación</th>
             <th>Próximo fin</th>
             <th>Estado</th>
+            <th>Inicio ocupación</th>
             <th>Próximo fin</th>
             <th>Estado</th>
+            <th>Inicio ocupación</th>
             <th>Próximo fin</th>
             <th>Estado</th>
+            <th>Inicio ocupación</th>
             <th>Próximo fin</th>
             <th>Estado</th>
+            <th>Inicio ocupación</th>
             <th>Próximo fin</th>
             <th>Estado</th>
+            <th>Inicio ocupación</th>
             <th>Próximo fin</th>
             <th>Estado</th>
+            <th>Inicio ocupación</th>
             <th>Próximo fin</th>
             <th>Estado</th>
+            <th>Inicio ocupación</th>
             <th>Próximo fin</th>
             <th>Estado</th>
+            <th>Inicio ocupación</th>
             <th>Próximo fin</th>
             <th>Estado</th>
+            <th>Inicio ocupación</th>
             <th>Próximo fin</th>
             <th>Estado</th>
+            <th>Inicio ocupación</th>
             <th>Próximo fin</th>
             <th>Estado</th>
+            <th>Inicio ocupación</th>
             <th>Próximo fin</th>
             @for(number of getNumberArray(); track number) {
             <th>Estado</th>
@@ -189,36 +220,52 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <td>{{ row.deliveryEndOfService.time }}</td>
             <td>{{ row.deliveryEndOfService.nextTime }}</td>
             <td>{{ row.counter1.state }}</td>
+            <td>{{ row.counter1.beginOfService }}</td>
             <td>{{ row.counter1.nextEndOfService }}</td>
             <td>{{ row.counter2.state }}</td>
+            <td>{{ row.counter2.beginOfService }}</td>
             <td>{{ row.counter2.nextEndOfService }}</td>
             <td>{{ row.counter3.state }}</td>
+            <td>{{ row.counter3.beginOfService }}</td>
             <td>{{ row.counter3.nextEndOfService }}</td>
             <td>{{ row.counter4.state }}</td>
+            <td>{{ row.counter4.beginOfService }}</td>
             <td>{{ row.counter4.nextEndOfService }}</td>
             <td>{{ row.counter5.state }}</td>
+            <td>{{ row.counter5.beginOfService }}</td>
             <td>{{ row.counter5.nextEndOfService }}</td>
             <td>{{ row.selfservice1.state }}</td>
+            <td>{{ row.selfservice1.beginOfService }}</td>
             <td>{{ row.selfservice1.nextEndOfService }}</td>
             <td>{{ row.selfservice2.state }}</td>
+            <td>{{ row.selfservice2.beginOfService }}</td>
             <td>{{ row.selfservice2.nextEndOfService }}</td>
             <td>{{ row.selfservice3.state }}</td>
+            <td>{{ row.selfservice3.beginOfService }}</td>
             <td>{{ row.selfservice3.nextEndOfService }}</td>
             <td>{{ row.online1.state }}</td>
+            <td>{{ row.online1.beginOfService }}</td>
             <td>{{ row.online1.nextEndOfService }}</td>
             <td>{{ row.online2.state }}</td>
+            <td>{{ row.online2.beginOfService }}</td>
             <td>{{ row.online2.nextEndOfService }}</td>
             <td>{{ row.online3.state }}</td>
+            <td>{{ row.online3.beginOfService }}</td>
             <td>{{ row.online3.nextEndOfService }}</td>
             <td>{{ row.takeaway1.state }}</td>
+            <td>{{ row.takeaway1.beginOfService }}</td>
             <td>{{ row.takeaway1.nextEndOfService }}</td>
             <td>{{ row.takeaway2.state }}</td>
+            <td>{{ row.takeaway2.beginOfService }}</td>
             <td>{{ row.takeaway2.nextEndOfService }}</td>
             <td>{{ row.delivery1.state }}</td>
+            <td>{{ row.delivery1.beginOfService }}</td>
             <td>{{ row.delivery1.nextEndOfService }}</td>
             <td>{{ row.delivery2.state }}</td>
+            <td>{{ row.delivery2.beginOfService }}</td>
             <td>{{ row.delivery2.nextEndOfService }}</td>
             <td>{{ row.delivery3.state }}</td>
+            <td>{{ row.delivery3.beginOfService }}</td>
             <td>{{ row.delivery3.nextEndOfService }}</td>
 
             <td>{{ row.counterQueue }}</td>
@@ -237,6 +284,16 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <td>{{ row.onlineAverageWaitingTime }}</td>
             <td>{{ row.takeawayAverageWaitingTime }}</td>
             <td>{{ row.deliveryAverageWaitingTime }}</td>
+            <td>{{ row.counterUtilizationTime }}</td>
+            <td>{{ row.selfserviceUtilizationTime }}</td>
+            <td>{{ row.onlineUtilizationTime }}</td>
+            <td>{{ row.takeawayUtilizationTime }}</td>
+            <td>{{ row.deliveryUtilizationTime }}</td>
+            <td>{{ row.counterAverageUtilizationTime }}</td>
+            <td>{{ row.selfserviceAverageUtilizationTime }}</td>
+            <td>{{ row.onlineAverageUtilizationTime }}</td>
+            <td>{{ row.takeawayAverageUtilizationTime }}</td>
+            <td>{{ row.deliveryAverageUtilizationTime }}</td>
 
             @for(client of row.clients; track client.id) {
             <td>{{ client.state }}</td>
