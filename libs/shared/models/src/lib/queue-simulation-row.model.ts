@@ -43,5 +43,11 @@ export type QueueSimulationRow = {
   takeawayQueue: number;
   deliveryQueue: number;
 
+  counterWaitingTime: number;
+  selfserviceWaitingTime: number;
+  onlineWaitingTime: number;
+  takeawayWaitingTime: number;
+  deliveryWaitingTime: number;
+
   clients: Client[];
 };

@@ -72,6 +72,12 @@ export class QueueSimulationService {
     let takeawayQueue = 0;
     let deliveryQueue = 0;
 
+    let counterWaitingTime = 0;
+    let selfserviceWaitingTime = 0;
+    let onlineWaitingTime = 0;
+    let takeawayWaitingTime = 0;
+    let deliveryWaitingTime = 0;
+
     const clients: Client[] = [];
 
     const queueSimulationRows: QueueSimulationRow[] = [
@@ -110,6 +116,11 @@ export class QueueSimulationService {
         onlineQueue,
         takeawayQueue,
         deliveryQueue,
+        counterWaitingTime,
+        selfserviceWaitingTime,
+        onlineWaitingTime,
+        takeawayWaitingTime,
+        deliveryWaitingTime,
         clients: [...clients],
       },
     ];
@@ -384,6 +395,11 @@ export class QueueSimulationService {
               ...this.getNextClient(clients, ClientStateEnum.WAITING_COUNTER),
               state: ClientStateEnum.IN_COUNTER_1,
             };
+
+            counterWaitingTime = truncateDecimals(
+              counterWaitingTime + clock - (clientToUpdate.arrivalTime as number),
+              2
+            );
             break;
           }
 
@@ -407,6 +423,11 @@ export class QueueSimulationService {
               ...this.getNextClient(clients, ClientStateEnum.WAITING_COUNTER),
               state: ClientStateEnum.IN_COUNTER_2,
             };
+
+            counterWaitingTime = truncateDecimals(
+              counterWaitingTime + clock - (clientToUpdate.arrivalTime as number),
+              2
+            );
             break;
           }
 
@@ -430,6 +451,11 @@ export class QueueSimulationService {
               ...this.getNextClient(clients, ClientStateEnum.WAITING_COUNTER),
               state: ClientStateEnum.IN_COUNTER_3,
             };
+
+            counterWaitingTime = truncateDecimals(
+              counterWaitingTime + clock - (clientToUpdate.arrivalTime as number),
+              2
+            );
             break;
           }
 
@@ -453,6 +479,11 @@ export class QueueSimulationService {
               ...this.getNextClient(clients, ClientStateEnum.WAITING_COUNTER),
               state: ClientStateEnum.IN_COUNTER_4,
             };
+
+            counterWaitingTime = truncateDecimals(
+              counterWaitingTime + clock - (clientToUpdate.arrivalTime as number),
+              2
+            );
             break;
           }
 
@@ -476,6 +507,11 @@ export class QueueSimulationService {
               ...this.getNextClient(clients, ClientStateEnum.WAITING_COUNTER),
               state: ClientStateEnum.IN_COUNTER_5,
             };
+
+            counterWaitingTime = truncateDecimals(
+              counterWaitingTime + clock - (clientToUpdate.arrivalTime as number),
+              2
+            );
             break;
           }
 
@@ -500,6 +536,11 @@ export class QueueSimulationService {
               ...this.getNextClient(clients, ClientStateEnum.WAITING_SELFSERVICE),
               state: ClientStateEnum.IN_SELFSERVICE_1,
             };
+
+            selfserviceWaitingTime = truncateDecimals(
+              selfserviceWaitingTime + clock - (clientToUpdate.arrivalTime as number),
+              2
+            );
             break;
           }
 
@@ -523,6 +564,11 @@ export class QueueSimulationService {
               ...this.getNextClient(clients, ClientStateEnum.WAITING_SELFSERVICE),
               state: ClientStateEnum.IN_SELFSERVICE_2,
             };
+
+            selfserviceWaitingTime = truncateDecimals(
+              selfserviceWaitingTime + clock - (clientToUpdate.arrivalTime as number),
+              2
+            );
             break;
           }
 
@@ -546,6 +592,11 @@ export class QueueSimulationService {
               ...this.getNextClient(clients, ClientStateEnum.WAITING_SELFSERVICE),
               state: ClientStateEnum.IN_SELFSERVICE_3,
             };
+
+            selfserviceWaitingTime = truncateDecimals(
+              selfserviceWaitingTime + clock - (clientToUpdate.arrivalTime as number),
+              2
+            );
             break;
           }
 
@@ -569,6 +620,8 @@ export class QueueSimulationService {
               ...this.getNextClient(clients, ClientStateEnum.WAITING_ONLINE),
               state: ClientStateEnum.IN_ONLINE_1,
             };
+
+            onlineWaitingTime = truncateDecimals(onlineWaitingTime + clock - (clientToUpdate.arrivalTime as number), 2);
             break;
           }
 
@@ -592,6 +645,8 @@ export class QueueSimulationService {
               ...this.getNextClient(clients, ClientStateEnum.WAITING_ONLINE),
               state: ClientStateEnum.IN_ONLINE_2,
             };
+
+            onlineWaitingTime = truncateDecimals(onlineWaitingTime + clock - (clientToUpdate.arrivalTime as number), 2);
             break;
           }
 
@@ -615,6 +670,8 @@ export class QueueSimulationService {
               ...this.getNextClient(clients, ClientStateEnum.WAITING_ONLINE),
               state: ClientStateEnum.IN_ONLINE_3,
             };
+
+            onlineWaitingTime = truncateDecimals(onlineWaitingTime + clock - (clientToUpdate.arrivalTime as number), 2);
             break;
           }
 
@@ -638,6 +695,11 @@ export class QueueSimulationService {
               ...this.getNextClient(clients, ClientStateEnum.WAITING_TAKEAWAY),
               state: ClientStateEnum.IN_TAKEAWAY_1,
             };
+
+            takeawayWaitingTime = truncateDecimals(
+              takeawayWaitingTime + clock - (clientToUpdate.arrivalTime as number),
+              2
+            );
             break;
           }
 
@@ -661,6 +723,11 @@ export class QueueSimulationService {
               ...this.getNextClient(clients, ClientStateEnum.WAITING_TAKEAWAY),
               state: ClientStateEnum.IN_TAKEAWAY_2,
             };
+
+            takeawayWaitingTime = truncateDecimals(
+              takeawayWaitingTime + clock - (clientToUpdate.arrivalTime as number),
+              2
+            );
             break;
           }
 
@@ -684,6 +751,11 @@ export class QueueSimulationService {
               ...this.getNextClient(clients, ClientStateEnum.WAITING_DELIVERY),
               state: ClientStateEnum.IN_DELIVERY_1,
             };
+
+            deliveryWaitingTime = truncateDecimals(
+              deliveryWaitingTime + clock - (clientToUpdate.arrivalTime as number),
+              2
+            );
             break;
           }
 
@@ -707,6 +779,11 @@ export class QueueSimulationService {
               ...this.getNextClient(clients, ClientStateEnum.WAITING_DELIVERY),
               state: ClientStateEnum.IN_DELIVERY_2,
             };
+
+            deliveryWaitingTime = truncateDecimals(
+              deliveryWaitingTime + clock - (clientToUpdate.arrivalTime as number),
+              2
+            );
             break;
           }
 
@@ -730,6 +807,11 @@ export class QueueSimulationService {
               ...this.getNextClient(clients, ClientStateEnum.WAITING_DELIVERY),
               state: ClientStateEnum.IN_DELIVERY_3,
             };
+
+            deliveryWaitingTime = truncateDecimals(
+              deliveryWaitingTime + clock - (clientToUpdate.arrivalTime as number),
+              2
+            );
             break;
           }
 
@@ -781,6 +863,11 @@ export class QueueSimulationService {
         onlineQueue,
         takeawayQueue,
         deliveryQueue,
+        counterWaitingTime,
+        selfserviceWaitingTime,
+        onlineWaitingTime,
+        takeawayWaitingTime,
+        deliveryWaitingTime,
         clients: [...clients],
       });
     }
