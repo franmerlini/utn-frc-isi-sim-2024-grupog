@@ -41,11 +41,8 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <th colspan="6">Empleados pedidos online</th>
             <th colspan="4">Empleados pedidos para llevar</th>
             <th colspan="6">Empleados pedidos delivery</th>
-            <th rowspan="3">Cola pedidos en mostrador</th>
-            <th rowspan="3">Cola pedidos autoservicio</th>
-            <th rowspan="3">Cola pedidos online</th>
-            <th rowspan="3">Cola pedidos para llevar</th>
-            <th rowspan="3">Cola pedidos delivery</th>
+            <th colspan="5">Colas</th>
+            <th colspan="5">Acumuladores tiempo espera</th>
             <th [colSpan]="getClientsQuantity() * 2">Clientes</th>
           </tr>
           <tr>
@@ -95,6 +92,16 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <th colspan="2">1</th>
             <th colspan="2">2</th>
             <th colspan="2">3</th>
+            <th rowspan="2">Mostrador</th>
+            <th rowspan="2">Autoservicio</th>
+            <th rowspan="2">Online</th>
+            <th rowspan="2">Para llevar</th>
+            <th rowspan="2">Delivery</th>
+            <th rowspan="2">Mostrador</th>
+            <th rowspan="2">Autoservicio</th>
+            <th rowspan="2">Online</th>
+            <th rowspan="2">Para llevar</th>
+            <th rowspan="2">Delivery</th>
             @for(number of getNumberArray(); track number) {
             <th colspan="2">{{ number }}</th>
             }
@@ -144,6 +151,7 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <td>{{ row.id }}</td>
             <td>{{ row.event }}</td>
             <td>{{ row.clock }}</td>
+
             <td>{{ row.counterArrival.rnd }}</td>
             <td>{{ row.counterArrival.time }}</td>
             <td>{{ row.counterArrival.nextTime }}</td>
@@ -159,6 +167,7 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <td>{{ row.deliveryArrival.rnd }}</td>
             <td>{{ row.deliveryArrival.time }}</td>
             <td>{{ row.deliveryArrival.nextTime }}</td>
+
             <td>{{ row.counterEndOfService.rnd }}</td>
             <td>{{ row.counterEndOfService.time }}</td>
             <td>{{ row.counterEndOfService.nextTime }}</td>
@@ -206,11 +215,19 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <td>{{ row.delivery2.nextEndOfService }}</td>
             <td>{{ row.delivery3.state }}</td>
             <td>{{ row.delivery3.nextEndOfService }}</td>
+
             <td>{{ row.counterQueue }}</td>
             <td>{{ row.selfserviceQueue }}</td>
             <td>{{ row.onlineQueue }}</td>
             <td>{{ row.takeawayQueue }}</td>
             <td>{{ row.deliveryQueue }}</td>
+
+            <td>{{ row.counterWaitingTime }}</td>
+            <td>{{ row.selfserviceWaitingTime }}</td>
+            <td>{{ row.onlineWaitingTime }}</td>
+            <td>{{ row.takeawayWaitingTime }}</td>
+            <td>{{ row.deliveryWaitingTime }}</td>
+
             @for(client of row.clients; track client.id) {
             <td>{{ client.state }}</td>
             <td>{{ client.arrivalTime }}</td>
@@ -222,6 +239,10 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
   `,
   styles: [
     `
+      th {
+        border-width: 0 1px 1px 0;
+      }
+
       th,
       td {
         text-align: center;
