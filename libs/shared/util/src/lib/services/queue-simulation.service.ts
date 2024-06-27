@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 
 import { ClientStateEnum, EventEnum, ServerStateEnum } from '@grupog/libs/shared/enum';
 import {
+  BooleanProbability,
   Client,
   ClientState,
   Event,
@@ -26,11 +27,13 @@ export class QueueSimulationService {
       onlineArrivalFrecuency,
       takewayArrivalFrecuency,
       deliveryArrivalFrecuency,
+      dessertPercent,
       counterEndOfServiceFrecuency,
       selfserviceEndOfServiceFrecuency,
       onlineEndOfServiceFrecuency,
       takeawayEndOfServiceFrecuency,
       deliveryEndOfServiceFrecuency,
+      dessertEndOfServiceFrecuency,
     } = queueSimulation;
 
     let id = 1;
@@ -48,6 +51,8 @@ export class QueueSimulationService {
     let onlineEndOfService: Event = { rnd: null, time: null, nextTime: null };
     let takeawayEndOfService: Event = { rnd: null, time: null, nextTime: null };
     let deliveryEndOfService: Event = { rnd: null, time: null, nextTime: null };
+    let dessertProbability: BooleanProbability = { rnd: null, value: null };
+    let dessertEndOfService: Event = { rnd: null, time: null, nextTime: null };
 
     let counter1: Server = { id: 1, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
     let counter2: Server = { id: 2, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
@@ -65,12 +70,14 @@ export class QueueSimulationService {
     let delivery1: Server = { id: 1, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
     let delivery2: Server = { id: 2, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
     let delivery3: Server = { id: 3, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
+    let dessert: Server = { id: 1, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
 
     let counterQueue = 0;
     let selfserviceQueue = 0;
     let onlineQueue = 0;
     let takeawayQueue = 0;
     let deliveryQueue = 0;
+    let dessertQueue = 0;
 
     let counterWaitingTime = 0;
     let selfserviceWaitingTime = 0;
@@ -87,11 +94,13 @@ export class QueueSimulationService {
     let onlineUtilizationTime = 0;
     let takeawayUtilizationTime = 0;
     let deliveryUtilizationTime = 0;
+    let dessertUtilizationTime = 0;
     let counterAverageUtilizationTime = 0;
     let selfserviceAverageUtilizationTime = 0;
     let onlineAverageUtilizationTime = 0;
     let takeawayAverageUtilizationTime = 0;
     let deliveryAverageUtilizationTime = 0;
+    let dessertAverageUtilizationTime = 0;
 
     const clients: Client[] = [];
 
@@ -110,6 +119,8 @@ export class QueueSimulationService {
         onlineEndOfService,
         takeawayEndOfService,
         deliveryEndOfService,
+        dessertProbability,
+        dessertEndOfService,
         counter1,
         counter2,
         counter3,
@@ -126,11 +137,13 @@ export class QueueSimulationService {
         delivery1,
         delivery2,
         delivery3,
+        dessert,
         counterQueue,
         selfserviceQueue,
         onlineQueue,
         takeawayQueue,
         deliveryQueue,
+        dessertQueue,
         counterWaitingTime,
         selfserviceWaitingTime,
         onlineWaitingTime,
@@ -146,11 +159,13 @@ export class QueueSimulationService {
         onlineUtilizationTime,
         takeawayUtilizationTime,
         deliveryUtilizationTime,
+        dessertUtilizationTime,
         counterAverageUtilizationTime,
         selfserviceAverageUtilizationTime,
         onlineAverageUtilizationTime,
         takeawayAverageUtilizationTime,
         deliveryAverageUtilizationTime,
+        dessertAverageUtilizationTime,
         clients: [...clients],
       },
     ];
@@ -158,6 +173,7 @@ export class QueueSimulationService {
     let clientsQuantity = 0;
     let clientToDestroy: Client | null = null;
     let clientToUpdate: Client | null = null;
+    let clientToUpdate2: Client | null = null;
 
     for (let i = 1; i < n; i++) {
       id = i + 1;
@@ -168,11 +184,13 @@ export class QueueSimulationService {
       onlineArrival = { ...onlineArrival, rnd: null, time: null };
       takeawayArrival = { ...takeawayArrival, rnd: null, time: null };
       deliveryArrival = { ...deliveryArrival, rnd: null, time: null };
+      dessertProbability = { rnd: null, value: null };
       counterEndOfService = { rnd: null, time: null, nextTime: null };
       selfserviceEndOfService = { rnd: null, time: null, nextTime: null };
       onlineEndOfService = { rnd: null, time: null, nextTime: null };
       takeawayEndOfService = { rnd: null, time: null, nextTime: null };
       deliveryEndOfService = { rnd: null, time: null, nextTime: null };
+      dessertEndOfService = { rnd: null, time: null, nextTime: null };
 
       switch (event) {
         case EventEnum.LLEG_MOST: {
@@ -186,66 +204,65 @@ export class QueueSimulationService {
             counterQueue++;
 
             clients.push({ id: clientsQuantity, state: ClientStateEnum.WAITING_COUNTER, arrivalTime: clock });
-            break;
-          }
+          } else {
+            counterEndOfService = this.generateNextEvent(counterEndOfServiceFrecuency, clock);
 
-          counterEndOfService = this.generateNextEvent(counterEndOfServiceFrecuency, clock);
+            switch (idleServerId) {
+              case 1: {
+                counter1 = {
+                  ...counter1,
+                  state: ServerStateEnum.ACTIVE,
+                  beginOfService: clock,
+                  nextEndOfService: counterEndOfService.nextTime,
+                };
 
-          switch (idleServerId) {
-            case 1: {
-              counter1 = {
-                ...counter1,
-                state: ServerStateEnum.ACTIVE,
-                beginOfService: clock,
-                nextEndOfService: counterEndOfService.nextTime,
-              };
+                clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_COUNTER_1, arrivalTime: clock });
+                break;
+              }
+              case 2: {
+                counter2 = {
+                  ...counter2,
+                  state: ServerStateEnum.ACTIVE,
+                  beginOfService: clock,
+                  nextEndOfService: counterEndOfService.nextTime,
+                };
 
-              clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_COUNTER_1, arrivalTime: clock });
-              break;
-            }
-            case 2: {
-              counter2 = {
-                ...counter2,
-                state: ServerStateEnum.ACTIVE,
-                beginOfService: clock,
-                nextEndOfService: counterEndOfService.nextTime,
-              };
+                clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_COUNTER_2, arrivalTime: clock });
+                break;
+              }
+              case 3: {
+                counter3 = {
+                  ...counter3,
+                  state: ServerStateEnum.ACTIVE,
+                  beginOfService: clock,
+                  nextEndOfService: counterEndOfService.nextTime,
+                };
 
-              clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_COUNTER_2, arrivalTime: clock });
-              break;
-            }
-            case 3: {
-              counter3 = {
-                ...counter3,
-                state: ServerStateEnum.ACTIVE,
-                beginOfService: clock,
-                nextEndOfService: counterEndOfService.nextTime,
-              };
+                clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_COUNTER_3, arrivalTime: clock });
+                break;
+              }
+              case 4: {
+                counter4 = {
+                  ...counter4,
+                  state: ServerStateEnum.ACTIVE,
+                  beginOfService: clock,
+                  nextEndOfService: counterEndOfService.nextTime,
+                };
 
-              clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_COUNTER_3, arrivalTime: clock });
-              break;
-            }
-            case 4: {
-              counter4 = {
-                ...counter4,
-                state: ServerStateEnum.ACTIVE,
-                beginOfService: clock,
-                nextEndOfService: counterEndOfService.nextTime,
-              };
+                clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_COUNTER_4, arrivalTime: clock });
+                break;
+              }
+              case 5: {
+                counter5 = {
+                  ...counter5,
+                  state: ServerStateEnum.ACTIVE,
+                  beginOfService: clock,
+                  nextEndOfService: counterEndOfService.nextTime,
+                };
 
-              clients.push();
-              break;
-            }
-            case 5: {
-              counter5 = {
-                ...counter5,
-                state: ServerStateEnum.ACTIVE,
-                beginOfService: clock,
-                nextEndOfService: counterEndOfService.nextTime,
-              };
-
-              clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_COUNTER_5, arrivalTime: clock });
-              break;
+                clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_COUNTER_5, arrivalTime: clock });
+                break;
+              }
             }
           }
 
@@ -262,44 +279,43 @@ export class QueueSimulationService {
             selfserviceQueue++;
 
             clients.push({ id: clientsQuantity, state: ClientStateEnum.WAITING_SELFSERVICE, arrivalTime: clock });
-            break;
-          }
+          } else {
+            selfserviceEndOfService = this.generateNextEvent(selfserviceEndOfServiceFrecuency, clock);
 
-          selfserviceEndOfService = this.generateNextEvent(selfserviceEndOfServiceFrecuency, clock);
+            switch (idleServerId) {
+              case 1: {
+                selfservice1 = {
+                  ...selfservice1,
+                  state: ServerStateEnum.ACTIVE,
+                  beginOfService: clock,
+                  nextEndOfService: selfserviceEndOfService.nextTime,
+                };
 
-          switch (idleServerId) {
-            case 1: {
-              selfservice1 = {
-                ...selfservice1,
-                state: ServerStateEnum.ACTIVE,
-                beginOfService: clock,
-                nextEndOfService: selfserviceEndOfService.nextTime,
-              };
+                clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_SELFSERVICE_1, arrivalTime: clock });
+                break;
+              }
+              case 2: {
+                selfservice2 = {
+                  ...selfservice2,
+                  state: ServerStateEnum.ACTIVE,
+                  beginOfService: clock,
+                  nextEndOfService: selfserviceEndOfService.nextTime,
+                };
 
-              clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_SELFSERVICE_1, arrivalTime: clock });
-              break;
-            }
-            case 2: {
-              selfservice2 = {
-                ...selfservice2,
-                state: ServerStateEnum.ACTIVE,
-                beginOfService: clock,
-                nextEndOfService: selfserviceEndOfService.nextTime,
-              };
+                clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_SELFSERVICE_2, arrivalTime: clock });
+                break;
+              }
+              case 3: {
+                selfservice3 = {
+                  ...selfservice3,
+                  state: ServerStateEnum.ACTIVE,
+                  beginOfService: clock,
+                  nextEndOfService: selfserviceEndOfService.nextTime,
+                };
 
-              clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_SELFSERVICE_2, arrivalTime: clock });
-              break;
-            }
-            case 3: {
-              selfservice3 = {
-                ...selfservice3,
-                state: ServerStateEnum.ACTIVE,
-                beginOfService: clock,
-                nextEndOfService: selfserviceEndOfService.nextTime,
-              };
-
-              clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_SELFSERVICE_3, arrivalTime: clock });
-              break;
+                clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_SELFSERVICE_3, arrivalTime: clock });
+                break;
+              }
             }
           }
 
@@ -316,44 +332,43 @@ export class QueueSimulationService {
             onlineQueue++;
 
             clients.push({ id: clientsQuantity, state: ClientStateEnum.WAITING_ONLINE, arrivalTime: clock });
-            break;
-          }
+          } else {
+            onlineEndOfService = this.generateNextEvent(onlineEndOfServiceFrecuency, clock);
 
-          onlineEndOfService = this.generateNextEvent(onlineEndOfServiceFrecuency, clock);
+            switch (idleServerId) {
+              case 1: {
+                online1 = {
+                  ...online1,
+                  state: ServerStateEnum.ACTIVE,
+                  beginOfService: clock,
+                  nextEndOfService: onlineEndOfService.nextTime,
+                };
 
-          switch (idleServerId) {
-            case 1: {
-              online1 = {
-                ...online1,
-                state: ServerStateEnum.ACTIVE,
-                beginOfService: clock,
-                nextEndOfService: onlineEndOfService.nextTime,
-              };
+                clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_ONLINE_1, arrivalTime: clock });
+                break;
+              }
+              case 2: {
+                online2 = {
+                  ...online2,
+                  state: ServerStateEnum.ACTIVE,
+                  beginOfService: clock,
+                  nextEndOfService: onlineEndOfService.nextTime,
+                };
 
-              clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_ONLINE_1, arrivalTime: clock });
-              break;
-            }
-            case 2: {
-              online2 = {
-                ...online2,
-                state: ServerStateEnum.ACTIVE,
-                beginOfService: clock,
-                nextEndOfService: onlineEndOfService.nextTime,
-              };
+                clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_ONLINE_2, arrivalTime: clock });
+                break;
+              }
+              case 3: {
+                online3 = {
+                  ...online3,
+                  state: ServerStateEnum.ACTIVE,
+                  beginOfService: clock,
+                  nextEndOfService: onlineEndOfService.nextTime,
+                };
 
-              clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_ONLINE_2, arrivalTime: clock });
-              break;
-            }
-            case 3: {
-              online3 = {
-                ...online3,
-                state: ServerStateEnum.ACTIVE,
-                beginOfService: clock,
-                nextEndOfService: onlineEndOfService.nextTime,
-              };
-
-              clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_ONLINE_3, arrivalTime: clock });
-              break;
+                clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_ONLINE_3, arrivalTime: clock });
+                break;
+              }
             }
           }
 
@@ -370,33 +385,32 @@ export class QueueSimulationService {
             takeawayQueue++;
 
             clients.push({ id: clientsQuantity, state: ClientStateEnum.WAITING_TAKEAWAY, arrivalTime: clock });
-            break;
-          }
+          } else {
+            takeawayEndOfService = this.generateNextEvent(takeawayEndOfServiceFrecuency, clock);
 
-          takeawayEndOfService = this.generateNextEvent(takeawayEndOfServiceFrecuency, clock);
+            switch (idleServerId) {
+              case 1: {
+                takeaway1 = {
+                  ...takeaway1,
+                  state: ServerStateEnum.ACTIVE,
+                  beginOfService: clock,
+                  nextEndOfService: takeawayEndOfService.nextTime,
+                };
 
-          switch (idleServerId) {
-            case 1: {
-              takeaway1 = {
-                ...takeaway1,
-                state: ServerStateEnum.ACTIVE,
-                beginOfService: clock,
-                nextEndOfService: takeawayEndOfService.nextTime,
-              };
+                clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_TAKEAWAY_1, arrivalTime: clock });
+                break;
+              }
+              case 2: {
+                takeaway2 = {
+                  ...takeaway2,
+                  state: ServerStateEnum.ACTIVE,
+                  beginOfService: clock,
+                  nextEndOfService: takeawayEndOfService.nextTime,
+                };
 
-              clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_TAKEAWAY_1, arrivalTime: clock });
-              break;
-            }
-            case 2: {
-              takeaway2 = {
-                ...takeaway2,
-                state: ServerStateEnum.ACTIVE,
-                beginOfService: clock,
-                nextEndOfService: takeawayEndOfService.nextTime,
-              };
-
-              clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_TAKEAWAY_2, arrivalTime: clock });
-              break;
+                clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_TAKEAWAY_2, arrivalTime: clock });
+                break;
+              }
             }
           }
 
@@ -413,50 +427,61 @@ export class QueueSimulationService {
             deliveryQueue++;
 
             clients.push({ id: clientsQuantity, state: ClientStateEnum.WAITING_DELIVERY, arrivalTime: clock });
-            break;
-          }
+          } else {
+            deliveryEndOfService = this.generateNextEvent(deliveryEndOfServiceFrecuency, clock);
 
-          deliveryEndOfService = this.generateNextEvent(deliveryEndOfServiceFrecuency, clock);
+            switch (idleServerId) {
+              case 1: {
+                delivery1 = {
+                  ...delivery1,
+                  state: ServerStateEnum.ACTIVE,
+                  beginOfService: clock,
+                  nextEndOfService: deliveryEndOfService.nextTime,
+                };
 
-          switch (idleServerId) {
-            case 1: {
-              delivery1 = {
-                ...delivery1,
-                state: ServerStateEnum.ACTIVE,
-                beginOfService: clock,
-                nextEndOfService: deliveryEndOfService.nextTime,
-              };
+                clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_DELIVERY_1, arrivalTime: clock });
+                break;
+              }
+              case 2: {
+                delivery2 = {
+                  ...delivery2,
+                  state: ServerStateEnum.ACTIVE,
+                  beginOfService: clock,
+                  nextEndOfService: deliveryEndOfService.nextTime,
+                };
 
-              clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_DELIVERY_1, arrivalTime: clock });
-              break;
-            }
-            case 2: {
-              delivery2 = {
-                ...delivery2,
-                state: ServerStateEnum.ACTIVE,
-                beginOfService: clock,
-                nextEndOfService: deliveryEndOfService.nextTime,
-              };
+                clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_DELIVERY_2, arrivalTime: clock });
+                break;
+              }
+              case 3: {
+                delivery3 = {
+                  ...delivery3,
+                  state: ServerStateEnum.ACTIVE,
+                  beginOfService: clock,
+                  nextEndOfService: deliveryEndOfService.nextTime,
+                };
 
-              clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_DELIVERY_2, arrivalTime: clock });
-              break;
-            }
-            case 3: {
-              delivery3 = {
-                ...delivery3,
-                state: ServerStateEnum.ACTIVE,
-                beginOfService: clock,
-                nextEndOfService: deliveryEndOfService.nextTime,
-              };
-
-              clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_DELIVERY_3, arrivalTime: clock });
-              break;
+                clients.push({ id: clientsQuantity, state: ClientStateEnum.IN_DELIVERY_3, arrivalTime: clock });
+                break;
+              }
             }
           }
 
           break;
         }
         case EventEnum.FIN_MOST_1: {
+          const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_COUNTER_1);
+
+          clientToDestroy = {
+            ...currentClient,
+            state: null,
+            arrivalTime: null,
+          };
+
+          counterWaitingTime = truncateDecimals(counterWaitingTime + clock - (currentClient.arrivalTime as number), 2);
+          counterAverageWaitingTime =
+            counterWaitingTime === 0 ? 0 : truncateDecimals(((counterWaitingTime / clock) * 100) / 5, 2);
+
           if (counterQueue > 0) {
             counterQueue--;
 
@@ -464,20 +489,26 @@ export class QueueSimulationService {
             counter1 = { ...counter1, beginOfService: clock, nextEndOfService: counterEndOfService.nextTime };
 
             clientToUpdate = {
-              ...this.getNextClient(clients, ClientStateEnum.WAITING_COUNTER),
+              ...this.getCurrentClient(clients, ClientStateEnum.WAITING_COUNTER),
               state: ClientStateEnum.IN_COUNTER_1,
             };
+          } else {
+            if (this.areAllServersIdle([counter2, counter3, counter4, counter5])) {
+              counterUtilizationTime = truncateDecimals(
+                counterUtilizationTime + clock - (counter1.beginOfService as number),
+                2
+              );
+            }
+            counterAverageUtilizationTime =
+              counterUtilizationTime === 0 ? 0 : truncateDecimals(((counterUtilizationTime / clock) * 100) / 5, 2);
 
-            counterWaitingTime = truncateDecimals(
-              counterWaitingTime + clock - (clientToUpdate.arrivalTime as number),
-              2
-            );
-            counterAverageWaitingTime =
-              counterWaitingTime === 0 ? 0 : truncateDecimals((counterWaitingTime / clock) * 100, 2);
-            break;
+            counter1 = { ...counter1, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
           }
 
-          const currentClient = this.getNextClient(clients, ClientStateEnum.IN_COUNTER_1);
+          break;
+        }
+        case EventEnum.FIN_MOST_2: {
+          const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_COUNTER_2);
 
           clientToDestroy = {
             ...currentClient,
@@ -487,21 +518,8 @@ export class QueueSimulationService {
 
           counterWaitingTime = truncateDecimals(counterWaitingTime + clock - (currentClient.arrivalTime as number), 2);
           counterAverageWaitingTime =
-            counterWaitingTime === 0 ? 0 : truncateDecimals((counterWaitingTime / clock) * 100, 2);
+            counterWaitingTime === 0 ? 0 : truncateDecimals(((counterWaitingTime / clock) * 100) / 5, 2);
 
-          if (this.areAllServersIdle([counter2, counter3, counter4, counter5])) {
-            counterUtilizationTime = truncateDecimals(
-              counterUtilizationTime + clock - (counter1.beginOfService as number),
-              2
-            );
-          }
-          counterAverageUtilizationTime =
-            counterUtilizationTime === 0 ? 0 : truncateDecimals((counterUtilizationTime / clock) * 100, 2);
-
-          counter1 = { ...counter1, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-          break;
-        }
-        case EventEnum.FIN_MOST_2: {
           if (counterQueue > 0) {
             counterQueue--;
 
@@ -509,19 +527,26 @@ export class QueueSimulationService {
             counter2 = { ...counter2, beginOfService: clock, nextEndOfService: counterEndOfService.nextTime };
 
             clientToUpdate = {
-              ...this.getNextClient(clients, ClientStateEnum.WAITING_COUNTER),
+              ...this.getCurrentClient(clients, ClientStateEnum.WAITING_COUNTER),
               state: ClientStateEnum.IN_COUNTER_2,
             };
+          } else {
+            if (this.areAllServersIdle([counter1, counter3, counter4, counter5])) {
+              counterUtilizationTime = truncateDecimals(
+                counterUtilizationTime + clock - (counter2.beginOfService as number),
+                2
+              );
+            }
+            counterAverageUtilizationTime =
+              counterUtilizationTime === 0 ? 0 : truncateDecimals(((counterUtilizationTime / clock) * 100) / 5, 2);
 
-            counterWaitingTime = truncateDecimals(
-              counterWaitingTime + clock - (clientToUpdate.arrivalTime as number),
-              2
-            );
-
-            break;
+            counter2 = { ...counter2, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
           }
 
-          const currentClient = this.getNextClient(clients, ClientStateEnum.IN_COUNTER_2);
+          break;
+        }
+        case EventEnum.FIN_MOST_3: {
+          const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_COUNTER_3);
 
           clientToDestroy = {
             ...currentClient,
@@ -531,21 +556,8 @@ export class QueueSimulationService {
 
           counterWaitingTime = truncateDecimals(counterWaitingTime + clock - (currentClient.arrivalTime as number), 2);
           counterAverageWaitingTime =
-            counterWaitingTime === 0 ? 0 : truncateDecimals((counterWaitingTime / clock) * 100, 2);
+            counterWaitingTime === 0 ? 0 : truncateDecimals(((counterWaitingTime / clock) * 100) / 5, 2);
 
-          if (this.areAllServersIdle([counter1, counter3, counter4, counter5])) {
-            counterUtilizationTime = truncateDecimals(
-              counterUtilizationTime + clock - (counter2.beginOfService as number),
-              2
-            );
-          }
-          counterAverageUtilizationTime =
-            counterUtilizationTime === 0 ? 0 : truncateDecimals((counterUtilizationTime / clock) * 100, 2);
-
-          counter2 = { ...counter2, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-          break;
-        }
-        case EventEnum.FIN_MOST_3: {
           if (counterQueue > 0) {
             counterQueue--;
 
@@ -553,20 +565,31 @@ export class QueueSimulationService {
             counter3 = { ...counter3, beginOfService: clock, nextEndOfService: counterEndOfService.nextTime };
 
             clientToUpdate = {
-              ...this.getNextClient(clients, ClientStateEnum.WAITING_COUNTER),
+              ...this.getCurrentClient(clients, ClientStateEnum.WAITING_COUNTER),
               state: ClientStateEnum.IN_COUNTER_3,
             };
+          } else {
+            if (this.areAllServersIdle([counter1, counter2, counter4, counter5])) {
+              counterUtilizationTime = truncateDecimals(
+                counterUtilizationTime + clock - (counter3.beginOfService as number),
+                2
+              );
+            }
+            counterAverageUtilizationTime =
+              counterUtilizationTime === 0 ? 0 : truncateDecimals(((counterUtilizationTime / clock) * 100) / 5, 2);
 
-            counterWaitingTime = truncateDecimals(
-              counterWaitingTime + clock - (clientToUpdate.arrivalTime as number),
-              2
-            );
-            counterAverageWaitingTime =
-              counterWaitingTime === 0 ? 0 : truncateDecimals((counterWaitingTime / clock) * 100, 2);
-            break;
+            counter3 = {
+              ...counter3,
+              state: ServerStateEnum.IDLE,
+              beginOfService: null,
+              nextEndOfService: null,
+            };
           }
 
-          const currentClient = this.getNextClient(clients, ClientStateEnum.IN_COUNTER_3);
+          break;
+        }
+        case EventEnum.FIN_MOST_4: {
+          const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_COUNTER_4);
 
           clientToDestroy = {
             ...currentClient,
@@ -576,26 +599,8 @@ export class QueueSimulationService {
 
           counterWaitingTime = truncateDecimals(counterWaitingTime + clock - (currentClient.arrivalTime as number), 2);
           counterAverageWaitingTime =
-            counterWaitingTime === 0 ? 0 : truncateDecimals((counterWaitingTime / clock) * 100, 2);
+            counterWaitingTime === 0 ? 0 : truncateDecimals(((counterWaitingTime / clock) * 100) / 5, 2);
 
-          if (this.areAllServersIdle([counter1, counter2, counter4, counter5])) {
-            counterUtilizationTime = truncateDecimals(
-              counterUtilizationTime + clock - (counter3.beginOfService as number),
-              2
-            );
-          }
-          counterAverageUtilizationTime =
-            counterUtilizationTime === 0 ? 0 : truncateDecimals((counterUtilizationTime / clock) * 100, 2);
-
-          counter3 = {
-            ...counter3,
-            state: ServerStateEnum.IDLE,
-            beginOfService: null,
-            nextEndOfService: null,
-          };
-          break;
-        }
-        case EventEnum.FIN_MOST_4: {
           if (counterQueue > 0) {
             counterQueue--;
 
@@ -603,20 +608,26 @@ export class QueueSimulationService {
             counter4 = { ...counter4, beginOfService: clock, nextEndOfService: counterEndOfService.nextTime };
 
             clientToUpdate = {
-              ...this.getNextClient(clients, ClientStateEnum.WAITING_COUNTER),
+              ...this.getCurrentClient(clients, ClientStateEnum.WAITING_COUNTER),
               state: ClientStateEnum.IN_COUNTER_4,
             };
+          } else {
+            if (this.areAllServersIdle([counter1, counter2, counter3, counter5])) {
+              counterUtilizationTime = truncateDecimals(
+                counterUtilizationTime + clock - (counter4.beginOfService as number),
+                2
+              );
+            }
+            counterAverageUtilizationTime =
+              counterUtilizationTime === 0 ? 0 : truncateDecimals(((counterUtilizationTime / clock) * 100) / 5, 2);
 
-            counterWaitingTime = truncateDecimals(
-              counterWaitingTime + clock - (clientToUpdate.arrivalTime as number),
-              2
-            );
-            counterAverageWaitingTime =
-              counterWaitingTime === 0 ? 0 : truncateDecimals((counterWaitingTime / clock) * 100, 2);
-            break;
+            counter4 = { ...counter4, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
           }
 
-          const currentClient = this.getNextClient(clients, ClientStateEnum.IN_COUNTER_4);
+          break;
+        }
+        case EventEnum.FIN_MOST_5: {
+          const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_COUNTER_5);
 
           clientToDestroy = {
             ...currentClient,
@@ -626,21 +637,8 @@ export class QueueSimulationService {
 
           counterWaitingTime = truncateDecimals(counterWaitingTime + clock - (currentClient.arrivalTime as number), 2);
           counterAverageWaitingTime =
-            counterWaitingTime === 0 ? 0 : truncateDecimals((counterWaitingTime / clock) * 100, 2);
+            counterWaitingTime === 0 ? 0 : truncateDecimals(((counterWaitingTime / clock) * 100) / 5, 2);
 
-          if (this.areAllServersIdle([counter1, counter2, counter3, counter5])) {
-            counterUtilizationTime = truncateDecimals(
-              counterUtilizationTime + clock - (counter4.beginOfService as number),
-              2
-            );
-          }
-          counterAverageUtilizationTime =
-            counterUtilizationTime === 0 ? 0 : truncateDecimals((counterUtilizationTime / clock) * 100, 2);
-
-          counter4 = { ...counter4, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-          break;
-        }
-        case EventEnum.FIN_MOST_5: {
           if (counterQueue > 0) {
             counterQueue--;
 
@@ -648,44 +646,61 @@ export class QueueSimulationService {
             counter5 = { ...counter5, beginOfService: clock, nextEndOfService: counterEndOfService.nextTime };
 
             clientToUpdate = {
-              ...this.getNextClient(clients, ClientStateEnum.WAITING_COUNTER),
+              ...this.getCurrentClient(clients, ClientStateEnum.WAITING_COUNTER),
               state: ClientStateEnum.IN_COUNTER_5,
             };
+          } else {
+            if (this.areAllServersIdle([counter1, counter2, counter3, counter4])) {
+              counterUtilizationTime = truncateDecimals(
+                counterUtilizationTime + clock - (counter5.beginOfService as number),
+                2
+              );
+            }
+            counterAverageUtilizationTime =
+              counterUtilizationTime === 0 ? 0 : truncateDecimals(((counterUtilizationTime / clock) * 100) / 5, 2);
 
-            counterWaitingTime = truncateDecimals(
-              counterWaitingTime + clock - (clientToUpdate.arrivalTime as number),
-              2
-            );
-            counterAverageWaitingTime =
-              counterWaitingTime === 0 ? 0 : truncateDecimals((counterWaitingTime / clock) * 100, 2);
-            break;
+            counter5 = { ...counter5, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
           }
 
-          const currentClient = this.getNextClient(clients, ClientStateEnum.IN_COUNTER_5);
-
-          clientToDestroy = {
-            ...currentClient,
-            state: null,
-            arrivalTime: null,
-          };
-
-          counterWaitingTime = truncateDecimals(counterWaitingTime + clock - (currentClient.arrivalTime as number), 2);
-          counterAverageWaitingTime =
-            counterWaitingTime === 0 ? 0 : truncateDecimals((counterWaitingTime / clock) * 100, 2);
-
-          if (this.areAllServersIdle([counter1, counter2, counter3, counter4])) {
-            counterUtilizationTime = truncateDecimals(
-              counterUtilizationTime + clock - (counter5.beginOfService as number),
-              2
-            );
-          }
-          counterAverageUtilizationTime =
-            selfserviceUtilizationTime === 0 ? 0 : truncateDecimals((counterUtilizationTime / clock) * 100, 2);
-
-          counter5 = { ...counter5, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
           break;
         }
         case EventEnum.FIN_AUTO_1: {
+          const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_SELFSERVICE_1);
+
+          dessertProbability = this.generateBooleanProbability(dessertPercent);
+
+          if (dessertProbability.value === 'SI') {
+            if (dessert.state === ServerStateEnum.ACTIVE) {
+              dessertQueue++;
+            } else {
+              dessertEndOfService = this.generateNextEvent(dessertEndOfServiceFrecuency, clock);
+              dessert = {
+                ...dessert,
+                state: ServerStateEnum.ACTIVE,
+                beginOfService: clock,
+                nextEndOfService: dessertEndOfService.nextTime,
+              };
+            }
+
+            clientToUpdate2 = {
+              ...currentClient,
+              state: dessertQueue > 0 ? ClientStateEnum.WAITING_DESSERT : ClientStateEnum.IN_DESSERT,
+            };
+          } else {
+            clientToDestroy = {
+              ...currentClient,
+              state: null,
+              arrivalTime: null,
+            };
+
+            selfserviceWaitingTime = truncateDecimals(
+              selfserviceWaitingTime + clock - (currentClient.arrivalTime as number),
+              2
+            );
+            selfserviceAverageWaitingTime =
+              selfserviceWaitingTime === 0 ? 0 : truncateDecimals(((selfserviceWaitingTime / clock) * 100) / 3, 2);
+          }
+
           if (selfserviceQueue > 0) {
             selfserviceQueue--;
 
@@ -698,47 +713,68 @@ export class QueueSimulationService {
             };
 
             clientToUpdate = {
-              ...this.getNextClient(clients, ClientStateEnum.WAITING_SELFSERVICE),
+              ...this.getCurrentClient(clients, ClientStateEnum.WAITING_SELFSERVICE),
               state: ClientStateEnum.IN_SELFSERVICE_1,
             };
+          } else {
+            if (this.areAllServersIdle([selfservice2, selfservice3])) {
+              selfserviceUtilizationTime = truncateDecimals(
+                selfserviceUtilizationTime + clock - (selfservice1.beginOfService as number),
+                2
+              );
+            }
+            selfserviceAverageUtilizationTime =
+              selfserviceUtilizationTime === 0
+                ? 0
+                : truncateDecimals(((selfserviceUtilizationTime / clock) * 100) / 3, 2);
 
-            selfserviceWaitingTime = truncateDecimals(
-              selfserviceWaitingTime + clock - (clientToUpdate.arrivalTime as number),
-              2
-            );
-            selfserviceAverageWaitingTime =
-              selfserviceWaitingTime === 0 ? 0 : truncateDecimals((selfserviceWaitingTime / clock) * 100, 2);
-            break;
+            selfservice1 = {
+              ...selfservice1,
+              state: ServerStateEnum.IDLE,
+              beginOfService: null,
+              nextEndOfService: null,
+            };
           }
 
-          const currentClient = this.getNextClient(clients, ClientStateEnum.IN_SELFSERVICE_1);
-
-          clientToDestroy = {
-            ...currentClient,
-            state: null,
-            arrivalTime: null,
-          };
-
-          selfserviceWaitingTime = truncateDecimals(
-            selfserviceWaitingTime + clock - (currentClient.arrivalTime as number),
-            2
-          );
-          selfserviceAverageWaitingTime =
-            selfserviceWaitingTime === 0 ? 0 : truncateDecimals((selfserviceWaitingTime / clock) * 100, 2);
-
-          if (this.areAllServersIdle([selfservice2, selfservice3])) {
-            selfserviceUtilizationTime = truncateDecimals(
-              selfserviceUtilizationTime + clock - (selfservice1.beginOfService as number),
-              2
-            );
-          }
-          selfserviceAverageUtilizationTime =
-            selfserviceUtilizationTime === 0 ? 0 : truncateDecimals((selfserviceUtilizationTime / clock) * 100, 2);
-
-          selfservice1 = { ...selfservice1, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
           break;
         }
         case EventEnum.FIN_AUTO_2: {
+          const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_SELFSERVICE_2);
+
+          dessertProbability = this.generateBooleanProbability(dessertPercent);
+
+          if (dessertProbability.value === 'SI') {
+            if (dessert.state === ServerStateEnum.ACTIVE) {
+              dessertQueue++;
+            } else {
+              dessertEndOfService = this.generateNextEvent(dessertEndOfServiceFrecuency, clock);
+              dessert = {
+                ...dessert,
+                state: ServerStateEnum.ACTIVE,
+                beginOfService: clock,
+                nextEndOfService: dessertEndOfService.nextTime,
+              };
+            }
+
+            clientToUpdate2 = {
+              ...currentClient,
+              state: dessertQueue > 0 ? ClientStateEnum.WAITING_DESSERT : ClientStateEnum.IN_DESSERT,
+            };
+          } else {
+            clientToDestroy = {
+              ...currentClient,
+              state: null,
+              arrivalTime: null,
+            };
+
+            selfserviceWaitingTime = truncateDecimals(
+              selfserviceWaitingTime + clock - (currentClient.arrivalTime as number),
+              2
+            );
+            selfserviceAverageWaitingTime =
+              selfserviceWaitingTime === 0 ? 0 : truncateDecimals(((selfserviceWaitingTime / clock) * 100) / 3, 2);
+          }
+
           if (selfserviceQueue > 0) {
             selfserviceQueue--;
 
@@ -750,47 +786,68 @@ export class QueueSimulationService {
             };
 
             clientToUpdate = {
-              ...this.getNextClient(clients, ClientStateEnum.WAITING_SELFSERVICE),
+              ...this.getCurrentClient(clients, ClientStateEnum.WAITING_SELFSERVICE),
               state: ClientStateEnum.IN_SELFSERVICE_2,
             };
+          } else {
+            if (this.areAllServersIdle([selfservice1, selfservice3])) {
+              selfserviceUtilizationTime = truncateDecimals(
+                selfserviceUtilizationTime + clock - (selfservice2.beginOfService as number),
+                2
+              );
+            }
+            selfserviceAverageUtilizationTime =
+              selfserviceUtilizationTime === 0
+                ? 0
+                : truncateDecimals(((selfserviceUtilizationTime / clock) * 100) / 3, 2);
 
-            selfserviceWaitingTime = truncateDecimals(
-              selfserviceWaitingTime + clock - (clientToUpdate.arrivalTime as number),
-              2
-            );
-            selfserviceAverageWaitingTime =
-              selfserviceWaitingTime === 0 ? 0 : truncateDecimals((selfserviceWaitingTime / clock) * 100, 2);
-            break;
+            selfservice2 = {
+              ...selfservice2,
+              state: ServerStateEnum.IDLE,
+              beginOfService: null,
+              nextEndOfService: null,
+            };
           }
 
-          const currentClient = this.getNextClient(clients, ClientStateEnum.IN_SELFSERVICE_2);
-
-          clientToDestroy = {
-            ...currentClient,
-            state: null,
-            arrivalTime: null,
-          };
-
-          selfserviceWaitingTime = truncateDecimals(
-            selfserviceWaitingTime + clock - (currentClient.arrivalTime as number),
-            2
-          );
-          selfserviceAverageWaitingTime =
-            selfserviceWaitingTime === 0 ? 0 : truncateDecimals((selfserviceWaitingTime / clock) * 100, 2);
-
-          if (this.areAllServersIdle([selfservice1, selfservice3])) {
-            selfserviceUtilizationTime = truncateDecimals(
-              selfserviceUtilizationTime + clock - (selfservice2.beginOfService as number),
-              2
-            );
-          }
-          selfserviceAverageUtilizationTime =
-            selfserviceUtilizationTime === 0 ? 0 : truncateDecimals((selfserviceUtilizationTime / clock) * 100, 2);
-
-          selfservice2 = { ...selfservice2, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
           break;
         }
         case EventEnum.FIN_AUTO_3: {
+          const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_SELFSERVICE_3);
+
+          dessertProbability = this.generateBooleanProbability(dessertPercent);
+
+          if (dessertProbability.value === 'SI') {
+            if (dessert.state === ServerStateEnum.ACTIVE) {
+              dessertQueue++;
+            } else {
+              dessertEndOfService = this.generateNextEvent(dessertEndOfServiceFrecuency, clock);
+              dessert = {
+                ...dessert,
+                state: ServerStateEnum.ACTIVE,
+                beginOfService: clock,
+                nextEndOfService: dessertEndOfService.nextTime,
+              };
+            }
+
+            clientToUpdate2 = {
+              ...currentClient,
+              state: dessertQueue > 0 ? ClientStateEnum.WAITING_DESSERT : ClientStateEnum.IN_DESSERT,
+            };
+          } else {
+            clientToDestroy = {
+              ...currentClient,
+              state: null,
+              arrivalTime: null,
+            };
+
+            selfserviceWaitingTime = truncateDecimals(
+              selfserviceWaitingTime + clock - (currentClient.arrivalTime as number),
+              2
+            );
+            selfserviceAverageWaitingTime =
+              selfserviceWaitingTime === 0 ? 0 : truncateDecimals(((selfserviceWaitingTime / clock) * 100) / 3, 2);
+          }
+
           if (selfserviceQueue > 0) {
             selfserviceQueue--;
 
@@ -802,20 +859,31 @@ export class QueueSimulationService {
             };
 
             clientToUpdate = {
-              ...this.getNextClient(clients, ClientStateEnum.WAITING_SELFSERVICE),
+              ...this.getCurrentClient(clients, ClientStateEnum.WAITING_SELFSERVICE),
               state: ClientStateEnum.IN_SELFSERVICE_3,
             };
+          } else {
+            if (this.areAllServersIdle([selfservice1, selfservice2])) {
+              selfserviceUtilizationTime = truncateDecimals(
+                selfserviceUtilizationTime + clock - (selfservice3.beginOfService as number),
+                2
+              );
+            }
+            selfserviceAverageUtilizationTime =
+              selfserviceUtilizationTime === 0 ? 0 : truncateDecimals((selfserviceUtilizationTime / clock) * 100, 2);
 
-            selfserviceWaitingTime = truncateDecimals(
-              selfserviceWaitingTime + clock - (clientToUpdate.arrivalTime as number),
-              2
-            );
-            selfserviceAverageWaitingTime =
-              selfserviceWaitingTime === 0 ? 0 : truncateDecimals((selfserviceWaitingTime / clock) * 100, 2);
-            break;
+            selfservice3 = {
+              ...selfservice3,
+              state: ServerStateEnum.IDLE,
+              beginOfService: null,
+              nextEndOfService: null,
+            };
           }
 
-          const currentClient = this.getNextClient(clients, ClientStateEnum.IN_SELFSERVICE_3);
+          break;
+        }
+        case EventEnum.FIN_ONLINE_1: {
+          const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_ONLINE_1);
 
           clientToDestroy = {
             ...currentClient,
@@ -823,26 +891,10 @@ export class QueueSimulationService {
             arrivalTime: null,
           };
 
-          selfserviceWaitingTime = truncateDecimals(
-            selfserviceWaitingTime + clock - (currentClient.arrivalTime as number),
-            2
-          );
-          selfserviceAverageWaitingTime =
-            selfserviceWaitingTime === 0 ? 0 : truncateDecimals((selfserviceWaitingTime / clock) * 100, 2);
+          onlineWaitingTime = truncateDecimals(onlineWaitingTime + clock - (currentClient.arrivalTime as number), 2);
+          onlineAverageWaitingTime =
+            onlineWaitingTime === 0 ? 0 : truncateDecimals(((onlineWaitingTime / clock) * 100) / 3, 2);
 
-          if (this.areAllServersIdle([selfservice1, selfservice2])) {
-            selfserviceUtilizationTime = truncateDecimals(
-              selfserviceUtilizationTime + clock - (selfservice3.beginOfService as number),
-              2
-            );
-          }
-          selfserviceAverageUtilizationTime =
-            onlineUtilizationTime === 0 ? 0 : truncateDecimals((selfserviceUtilizationTime / clock) * 100, 2);
-
-          selfservice3 = { ...selfservice3, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-          break;
-        }
-        case EventEnum.FIN_ONLINE_1: {
           if (onlineQueue > 0) {
             onlineQueue--;
 
@@ -850,17 +902,26 @@ export class QueueSimulationService {
             online1 = { ...online1, beginOfService: clock, nextEndOfService: onlineEndOfService.nextTime };
 
             clientToUpdate = {
-              ...this.getNextClient(clients, ClientStateEnum.WAITING_ONLINE),
+              ...this.getCurrentClient(clients, ClientStateEnum.WAITING_ONLINE),
               state: ClientStateEnum.IN_ONLINE_1,
             };
+          } else {
+            if (this.areAllServersIdle([online2, online3])) {
+              onlineUtilizationTime = truncateDecimals(
+                onlineUtilizationTime + clock - (online1.beginOfService as number),
+                2
+              );
+            }
+            onlineAverageUtilizationTime =
+              onlineUtilizationTime === 0 ? 0 : truncateDecimals(((onlineUtilizationTime / clock) * 100) / 3, 2);
 
-            onlineWaitingTime = truncateDecimals(onlineWaitingTime + clock - (clientToUpdate.arrivalTime as number), 2);
-            onlineAverageWaitingTime =
-              onlineWaitingTime === 0 ? 0 : truncateDecimals((onlineWaitingTime / clock) * 100, 2);
-            break;
+            online1 = { ...online1, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
           }
 
-          const currentClient = this.getNextClient(clients, ClientStateEnum.IN_ONLINE_1);
+          break;
+        }
+        case EventEnum.FIN_ONLINE_2: {
+          const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_ONLINE_2);
 
           clientToDestroy = {
             ...currentClient,
@@ -870,21 +931,8 @@ export class QueueSimulationService {
 
           onlineWaitingTime = truncateDecimals(onlineWaitingTime + clock - (currentClient.arrivalTime as number), 2);
           onlineAverageWaitingTime =
-            onlineWaitingTime === 0 ? 0 : truncateDecimals((onlineWaitingTime / clock) * 100, 2);
+            onlineWaitingTime === 0 ? 0 : truncateDecimals(((onlineWaitingTime / clock) * 100) / 3, 2);
 
-          if (this.areAllServersIdle([online2, online3])) {
-            onlineUtilizationTime = truncateDecimals(
-              onlineUtilizationTime + clock - (online1.beginOfService as number),
-              2
-            );
-          }
-          onlineAverageUtilizationTime =
-            onlineUtilizationTime === 0 ? 0 : truncateDecimals((onlineUtilizationTime / clock) * 100, 2);
-
-          online1 = { ...online1, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-          break;
-        }
-        case EventEnum.FIN_ONLINE_2: {
           if (onlineQueue > 0) {
             onlineQueue--;
 
@@ -892,17 +940,26 @@ export class QueueSimulationService {
             online2 = { ...online2, beginOfService: clock, nextEndOfService: onlineEndOfService.nextTime };
 
             clientToUpdate = {
-              ...this.getNextClient(clients, ClientStateEnum.WAITING_ONLINE),
+              ...this.getCurrentClient(clients, ClientStateEnum.WAITING_ONLINE),
               state: ClientStateEnum.IN_ONLINE_2,
             };
+          } else {
+            if (this.areAllServersIdle([online1, online3])) {
+              onlineUtilizationTime = truncateDecimals(
+                onlineUtilizationTime + clock - (online2.beginOfService as number),
+                2
+              );
+            }
+            onlineAverageUtilizationTime =
+              onlineUtilizationTime === 0 ? 0 : truncateDecimals(((onlineUtilizationTime / clock) * 100) / 3, 2);
 
-            onlineWaitingTime = truncateDecimals(onlineWaitingTime + clock - (clientToUpdate.arrivalTime as number), 2);
-            onlineAverageWaitingTime =
-              onlineWaitingTime === 0 ? 0 : truncateDecimals((onlineWaitingTime / clock) * 100, 2);
-            break;
+            online2 = { ...online2, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
           }
 
-          const currentClient = this.getNextClient(clients, ClientStateEnum.IN_ONLINE_2);
+          break;
+        }
+        case EventEnum.FIN_ONLINE_3: {
+          const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_ONLINE_3);
 
           clientToDestroy = {
             ...currentClient,
@@ -912,21 +969,8 @@ export class QueueSimulationService {
 
           onlineWaitingTime = truncateDecimals(onlineWaitingTime + clock - (currentClient.arrivalTime as number), 2);
           onlineAverageWaitingTime =
-            onlineWaitingTime === 0 ? 0 : truncateDecimals((onlineWaitingTime / clock) * 100, 2);
+            onlineWaitingTime === 0 ? 0 : truncateDecimals(((onlineWaitingTime / clock) * 100) / 3, 2);
 
-          if (this.areAllServersIdle([online1, online3])) {
-            onlineUtilizationTime = truncateDecimals(
-              onlineUtilizationTime + clock - (online2.beginOfService as number),
-              2
-            );
-          }
-          onlineAverageUtilizationTime =
-            onlineUtilizationTime === 0 ? 0 : truncateDecimals((onlineUtilizationTime / clock) * 100, 2);
-
-          online2 = { ...online2, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-          break;
-        }
-        case EventEnum.FIN_ONLINE_3: {
           if (onlineQueue > 0) {
             onlineQueue--;
 
@@ -934,17 +978,26 @@ export class QueueSimulationService {
             online3 = { ...online3, beginOfService: clock, nextEndOfService: onlineEndOfService.nextTime };
 
             clientToUpdate = {
-              ...this.getNextClient(clients, ClientStateEnum.WAITING_ONLINE),
+              ...this.getCurrentClient(clients, ClientStateEnum.WAITING_ONLINE),
               state: ClientStateEnum.IN_ONLINE_3,
             };
+          } else {
+            if (this.areAllServersIdle([online1, online2])) {
+              onlineUtilizationTime = truncateDecimals(
+                onlineUtilizationTime + clock - (online3.beginOfService as number),
+                2
+              );
+            }
+            onlineAverageUtilizationTime =
+              onlineUtilizationTime === 0 ? 0 : truncateDecimals(((onlineUtilizationTime / clock) * 100) / 3, 2);
 
-            onlineWaitingTime = truncateDecimals(onlineWaitingTime + clock - (clientToUpdate.arrivalTime as number), 2);
-            onlineAverageWaitingTime =
-              onlineWaitingTime === 0 ? 0 : truncateDecimals((onlineWaitingTime / clock) * 100, 2);
-            break;
+            online3 = { ...online3, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
           }
 
-          const currentClient = this.getNextClient(clients, ClientStateEnum.IN_ONLINE_3);
+          break;
+        }
+        case EventEnum.FIN_LLEVAR_1: {
+          const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_TAKEAWAY_1);
 
           clientToDestroy = {
             ...currentClient,
@@ -952,23 +1005,13 @@ export class QueueSimulationService {
             arrivalTime: null,
           };
 
-          onlineWaitingTime = truncateDecimals(onlineWaitingTime + clock - (currentClient.arrivalTime as number), 2);
-          onlineAverageWaitingTime =
-            onlineWaitingTime === 0 ? 0 : truncateDecimals((onlineWaitingTime / clock) * 100, 2);
+          takeawayWaitingTime = truncateDecimals(
+            takeawayWaitingTime + clock - (currentClient.arrivalTime as number),
+            2
+          );
+          takeawayAverageWaitingTime =
+            takeawayWaitingTime === 0 ? 0 : truncateDecimals(((takeawayWaitingTime / clock) * 100) / 2, 2);
 
-          if (this.areAllServersIdle([online1, online2])) {
-            onlineUtilizationTime = truncateDecimals(
-              onlineUtilizationTime + clock - (online3.beginOfService as number),
-              2
-            );
-          }
-          onlineAverageUtilizationTime =
-            onlineUtilizationTime === 0 ? 0 : truncateDecimals((onlineUtilizationTime / clock) * 100, 2);
-
-          online3 = { ...online3, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-          break;
-        }
-        case EventEnum.FIN_LLEVAR_1: {
           if (takeawayQueue > 0) {
             takeawayQueue--;
 
@@ -976,20 +1019,26 @@ export class QueueSimulationService {
             takeaway1 = { ...takeaway1, beginOfService: clock, nextEndOfService: takeawayEndOfService.nextTime };
 
             clientToUpdate = {
-              ...this.getNextClient(clients, ClientStateEnum.WAITING_TAKEAWAY),
+              ...this.getCurrentClient(clients, ClientStateEnum.WAITING_TAKEAWAY),
               state: ClientStateEnum.IN_TAKEAWAY_1,
             };
+          } else {
+            if (this.areAllServersIdle([takeaway2])) {
+              takeawayUtilizationTime = truncateDecimals(
+                takeawayUtilizationTime + clock - (takeaway1.beginOfService as number),
+                2
+              );
+            }
+            takeawayAverageUtilizationTime =
+              takeawayUtilizationTime === 0 ? 0 : truncateDecimals(((takeawayUtilizationTime / clock) * 100) / 2, 2);
 
-            takeawayWaitingTime = truncateDecimals(
-              takeawayWaitingTime + clock - (clientToUpdate.arrivalTime as number),
-              2
-            );
-            takeawayAverageWaitingTime =
-              takeawayWaitingTime === 0 ? 0 : truncateDecimals((takeawayWaitingTime / clock) * 100, 2);
-            break;
+            takeaway1 = { ...takeaway1, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
           }
 
-          const currentClient = this.getNextClient(clients, ClientStateEnum.IN_TAKEAWAY_1);
+          break;
+        }
+        case EventEnum.FIN_LLEVAR_2: {
+          const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_TAKEAWAY_2);
 
           clientToDestroy = {
             ...currentClient,
@@ -1002,21 +1051,8 @@ export class QueueSimulationService {
             2
           );
           takeawayAverageWaitingTime =
-            takeawayWaitingTime === 0 ? 0 : truncateDecimals((takeawayWaitingTime / clock) * 100, 2);
+            takeawayWaitingTime === 0 ? 0 : truncateDecimals(((takeawayWaitingTime / clock) * 100) / 2, 2);
 
-          if (this.areAllServersIdle([takeaway2])) {
-            takeawayUtilizationTime = truncateDecimals(
-              takeawayUtilizationTime + clock - (takeaway1.beginOfService as number),
-              2
-            );
-          }
-          takeawayAverageUtilizationTime =
-            takeawayUtilizationTime === 0 ? 0 : truncateDecimals((takeawayUtilizationTime / clock) * 100, 2);
-
-          takeaway1 = { ...takeaway1, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-          break;
-        }
-        case EventEnum.FIN_LLEVAR_2: {
           if (takeawayQueue > 0) {
             takeawayQueue--;
 
@@ -1024,47 +1060,61 @@ export class QueueSimulationService {
             takeaway2 = { ...takeaway2, beginOfService: clock, nextEndOfService: takeawayEndOfService.nextTime };
 
             clientToUpdate = {
-              ...this.getNextClient(clients, ClientStateEnum.WAITING_TAKEAWAY),
+              ...this.getCurrentClient(clients, ClientStateEnum.WAITING_TAKEAWAY),
               state: ClientStateEnum.IN_TAKEAWAY_2,
             };
+          } else {
+            if (this.areAllServersIdle([takeaway1])) {
+              takeawayUtilizationTime = truncateDecimals(
+                takeawayUtilizationTime + clock - (takeaway2.beginOfService as number),
+                2
+              );
+            }
+            takeawayAverageUtilizationTime =
+              takeawayUtilizationTime === 0 ? 0 : truncateDecimals(((takeawayUtilizationTime / clock) * 100) / 2, 2);
 
-            takeawayWaitingTime = truncateDecimals(
-              takeawayWaitingTime + clock - (clientToUpdate.arrivalTime as number),
-              2
-            );
-            takeawayAverageWaitingTime =
-              takeawayWaitingTime === 0 ? 0 : truncateDecimals((takeawayWaitingTime / clock) * 100, 2);
-            break;
+            takeaway2 = { ...takeaway2, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
           }
 
-          const currentClient = this.getNextClient(clients, ClientStateEnum.IN_TAKEAWAY_2);
-
-          clientToDestroy = {
-            ...currentClient,
-            state: null,
-            arrivalTime: null,
-          };
-
-          takeawayWaitingTime = truncateDecimals(
-            takeawayWaitingTime + clock - (currentClient.arrivalTime as number),
-            2
-          );
-          takeawayAverageWaitingTime =
-            takeawayWaitingTime === 0 ? 0 : truncateDecimals((takeawayWaitingTime / clock) * 100, 2);
-
-          if (this.areAllServersIdle([takeaway1])) {
-            takeawayUtilizationTime = truncateDecimals(
-              takeawayUtilizationTime + clock - (takeaway2.beginOfService as number),
-              2
-            );
-          }
-          takeawayAverageUtilizationTime =
-            takeawayUtilizationTime === 0 ? 0 : truncateDecimals((takeawayUtilizationTime / clock) * 100, 2);
-
-          takeaway2 = { ...takeaway2, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
           break;
         }
         case EventEnum.FIN_DELI_1: {
+          const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_DELIVERY_1);
+
+          dessertProbability = this.generateBooleanProbability(dessertPercent);
+
+          if (dessertProbability.value === 'SI') {
+            if (dessert.state === ServerStateEnum.ACTIVE) {
+              dessertQueue++;
+            } else {
+              dessertEndOfService = this.generateNextEvent(dessertEndOfServiceFrecuency, clock);
+              dessert = {
+                ...dessert,
+                state: ServerStateEnum.ACTIVE,
+                beginOfService: clock,
+                nextEndOfService: dessertEndOfService.nextTime,
+              };
+            }
+
+            clientToUpdate2 = {
+              ...currentClient,
+              state: dessertQueue > 0 ? ClientStateEnum.WAITING_DESSERT : ClientStateEnum.IN_DESSERT,
+            };
+          } else {
+            clientToDestroy = {
+              ...currentClient,
+              state: null,
+              arrivalTime: null,
+            };
+
+            deliveryWaitingTime = truncateDecimals(
+              deliveryWaitingTime + clock - (currentClient.arrivalTime as number),
+              2
+            );
+            deliveryAverageWaitingTime =
+              deliveryWaitingTime === 0 ? 0 : truncateDecimals(((deliveryWaitingTime / clock) * 100) / 3, 2);
+          }
+
           if (deliveryQueue > 0) {
             deliveryQueue--;
 
@@ -1072,47 +1122,61 @@ export class QueueSimulationService {
             delivery1 = { ...delivery1, beginOfService: clock, nextEndOfService: deliveryEndOfService.nextTime };
 
             clientToUpdate = {
-              ...this.getNextClient(clients, ClientStateEnum.WAITING_DELIVERY),
+              ...this.getCurrentClient(clients, ClientStateEnum.WAITING_DELIVERY),
               state: ClientStateEnum.IN_DELIVERY_1,
             };
+          } else {
+            if (this.areAllServersIdle([delivery2, delivery3])) {
+              deliveryUtilizationTime = truncateDecimals(
+                deliveryUtilizationTime + clock - (delivery1.beginOfService as number),
+                2
+              );
+            }
+            deliveryAverageUtilizationTime =
+              deliveryUtilizationTime === 0 ? 0 : truncateDecimals(((deliveryUtilizationTime / clock) * 100) / 3, 2);
 
-            deliveryWaitingTime = truncateDecimals(
-              deliveryWaitingTime + clock - (clientToUpdate.arrivalTime as number),
-              2
-            );
-            deliveryAverageWaitingTime =
-              deliveryWaitingTime === 0 ? 0 : truncateDecimals((deliveryWaitingTime / clock) * 100, 2);
-            break;
+            delivery1 = { ...delivery1, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
           }
 
-          const currentClient = this.getNextClient(clients, ClientStateEnum.IN_DELIVERY_1);
-
-          clientToDestroy = {
-            ...currentClient,
-            state: null,
-            arrivalTime: null,
-          };
-
-          deliveryWaitingTime = truncateDecimals(
-            deliveryWaitingTime + clock - (currentClient.arrivalTime as number),
-            2
-          );
-          deliveryAverageWaitingTime =
-            deliveryWaitingTime === 0 ? 0 : truncateDecimals((deliveryWaitingTime / clock) * 100, 2);
-
-          if (this.areAllServersIdle([delivery2, delivery3])) {
-            deliveryUtilizationTime = truncateDecimals(
-              deliveryUtilizationTime + clock - (delivery1.beginOfService as number),
-              2
-            );
-          }
-          deliveryAverageUtilizationTime =
-            deliveryUtilizationTime === 0 ? 0 : truncateDecimals((deliveryUtilizationTime / clock) * 100, 2);
-
-          delivery1 = { ...delivery1, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
           break;
         }
         case EventEnum.FIN_DELI_2: {
+          const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_DELIVERY_2);
+
+          dessertProbability = this.generateBooleanProbability(dessertPercent);
+
+          if (dessertProbability.value === 'SI') {
+            if (dessert.state === ServerStateEnum.ACTIVE) {
+              dessertQueue++;
+            } else {
+              dessertEndOfService = this.generateNextEvent(dessertEndOfServiceFrecuency, clock);
+              dessert = {
+                ...dessert,
+                state: ServerStateEnum.ACTIVE,
+                beginOfService: clock,
+                nextEndOfService: dessertEndOfService.nextTime,
+              };
+            }
+
+            clientToUpdate2 = {
+              ...currentClient,
+              state: dessertQueue > 0 ? ClientStateEnum.WAITING_DESSERT : ClientStateEnum.IN_DESSERT,
+            };
+          } else {
+            clientToDestroy = {
+              ...currentClient,
+              state: null,
+              arrivalTime: null,
+            };
+
+            deliveryWaitingTime = truncateDecimals(
+              deliveryWaitingTime + clock - (currentClient.arrivalTime as number),
+              2
+            );
+            deliveryAverageWaitingTime =
+              deliveryWaitingTime === 0 ? 0 : truncateDecimals(((deliveryWaitingTime / clock) * 100) / 3, 2);
+          }
+
           if (deliveryQueue > 0) {
             deliveryQueue--;
 
@@ -1120,47 +1184,61 @@ export class QueueSimulationService {
             delivery2 = { ...delivery2, beginOfService: clock, nextEndOfService: deliveryEndOfService.nextTime };
 
             clientToUpdate = {
-              ...this.getNextClient(clients, ClientStateEnum.WAITING_DELIVERY),
+              ...this.getCurrentClient(clients, ClientStateEnum.WAITING_DELIVERY),
               state: ClientStateEnum.IN_DELIVERY_2,
             };
+          } else {
+            if (this.areAllServersIdle([delivery1, delivery3])) {
+              deliveryUtilizationTime = truncateDecimals(
+                deliveryUtilizationTime + clock - (delivery2.beginOfService as number),
+                2
+              );
+            }
+            deliveryAverageUtilizationTime =
+              deliveryUtilizationTime === 0 ? 0 : truncateDecimals(((deliveryUtilizationTime / clock) * 100) / 3, 2);
 
-            deliveryWaitingTime = truncateDecimals(
-              deliveryWaitingTime + clock - (clientToUpdate.arrivalTime as number),
-              2
-            );
-            deliveryAverageWaitingTime =
-              deliveryWaitingTime === 0 ? 0 : truncateDecimals((deliveryWaitingTime / clock) * 100, 2);
-            break;
+            delivery2 = { ...delivery2, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
           }
 
-          const currentClient = this.getNextClient(clients, ClientStateEnum.IN_DELIVERY_2);
-
-          clientToDestroy = {
-            ...currentClient,
-            state: null,
-            arrivalTime: null,
-          };
-
-          deliveryWaitingTime = truncateDecimals(
-            deliveryWaitingTime + clock - (currentClient.arrivalTime as number),
-            2
-          );
-          deliveryAverageWaitingTime =
-            deliveryWaitingTime === 0 ? 0 : truncateDecimals((deliveryWaitingTime / clock) * 100, 2);
-
-          if (this.areAllServersIdle([delivery1, delivery3])) {
-            deliveryUtilizationTime = truncateDecimals(
-              deliveryUtilizationTime + clock - (delivery2.beginOfService as number),
-              2
-            );
-          }
-          deliveryAverageUtilizationTime =
-            deliveryUtilizationTime === 0 ? 0 : truncateDecimals((deliveryUtilizationTime / clock) * 100, 2);
-
-          delivery2 = { ...delivery2, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
           break;
         }
         case EventEnum.FIN_DELI_3: {
+          const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_DELIVERY_3);
+
+          dessertProbability = this.generateBooleanProbability(dessertPercent);
+
+          if (dessertProbability.value === 'SI') {
+            if (dessert.state === ServerStateEnum.ACTIVE) {
+              dessertQueue++;
+            } else {
+              dessertEndOfService = this.generateNextEvent(dessertEndOfServiceFrecuency, clock);
+              dessert = {
+                ...dessert,
+                state: ServerStateEnum.ACTIVE,
+                beginOfService: clock,
+                nextEndOfService: dessertEndOfService.nextTime,
+              };
+            }
+
+            clientToUpdate2 = {
+              ...currentClient,
+              state: dessertQueue > 0 ? ClientStateEnum.WAITING_DESSERT : ClientStateEnum.IN_DESSERT,
+            };
+          } else {
+            clientToDestroy = {
+              ...currentClient,
+              state: null,
+              arrivalTime: null,
+            };
+
+            deliveryWaitingTime = truncateDecimals(
+              deliveryWaitingTime + clock - (currentClient.arrivalTime as number),
+              2
+            );
+            deliveryAverageWaitingTime =
+              deliveryWaitingTime === 0 ? 0 : truncateDecimals(((deliveryWaitingTime / clock) * 100) / 3, 2);
+          }
+
           if (deliveryQueue > 0) {
             deliveryQueue--;
 
@@ -1168,20 +1246,26 @@ export class QueueSimulationService {
             delivery3 = { ...delivery3, beginOfService: clock, nextEndOfService: deliveryEndOfService.nextTime };
 
             clientToUpdate = {
-              ...this.getNextClient(clients, ClientStateEnum.WAITING_DELIVERY),
+              ...this.getCurrentClient(clients, ClientStateEnum.WAITING_DELIVERY),
               state: ClientStateEnum.IN_DELIVERY_3,
             };
+          } else {
+            if (this.areAllServersIdle([delivery1, delivery2])) {
+              deliveryUtilizationTime = truncateDecimals(
+                deliveryUtilizationTime + clock - (delivery3.beginOfService as number),
+                2
+              );
+            }
+            deliveryAverageUtilizationTime =
+              deliveryUtilizationTime === 0 ? 0 : truncateDecimals(((deliveryUtilizationTime / clock) * 100) / 3, 2);
 
-            deliveryWaitingTime = truncateDecimals(
-              deliveryWaitingTime + clock - (clientToUpdate.arrivalTime as number),
-              2
-            );
-            deliveryAverageWaitingTime =
-              deliveryWaitingTime === 0 ? 0 : truncateDecimals((deliveryWaitingTime / clock) * 100, 2);
-            break;
+            delivery3 = { ...delivery3, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
           }
 
-          const currentClient = this.getNextClient(clients, ClientStateEnum.IN_DELIVERY_3);
+          break;
+        }
+        case EventEnum.FIN_POSTRE: {
+          const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_DESSERT);
 
           clientToDestroy = {
             ...currentClient,
@@ -1189,24 +1273,26 @@ export class QueueSimulationService {
             arrivalTime: null,
           };
 
-          deliveryWaitingTime = truncateDecimals(
-            deliveryWaitingTime + clock - (currentClient.arrivalTime as number),
-            2
-          );
-          deliveryAverageWaitingTime =
-            deliveryWaitingTime === 0 ? 0 : truncateDecimals((deliveryWaitingTime / clock) * 100, 2);
+          if (dessertQueue > 0) {
+            dessertQueue--;
 
-          if (this.areAllServersIdle([delivery1, delivery2])) {
-            deliveryUtilizationTime = truncateDecimals(
-              deliveryUtilizationTime + clock - (delivery3.beginOfService as number),
+            dessertEndOfService = this.generateNextEvent(dessertEndOfServiceFrecuency, clock);
+            dessert = { ...dessert, beginOfService: clock, nextEndOfService: dessertEndOfService.nextTime };
+
+            clientToUpdate = {
+              ...this.getCurrentClient(clients, ClientStateEnum.WAITING_DESSERT),
+              state: ClientStateEnum.IN_DESSERT,
+            };
+          } else {
+            dessertUtilizationTime = truncateDecimals(
+              dessertUtilizationTime + clock - (currentClient.arrivalTime as number),
               2
             );
-          }
-          deliveryAverageUtilizationTime =
-            deliveryUtilizationTime === 0 ? 0 : truncateDecimals((deliveryUtilizationTime / clock) * 100, 2);
+            dessertAverageUtilizationTime =
+              dessertUtilizationTime === 0 ? 0 : truncateDecimals((dessertUtilizationTime / clock) * 100, 2);
 
-          delivery3 = { ...delivery3, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-          break;
+            dessert = { ...dessert, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
+          }
         }
       }
 
@@ -1216,6 +1302,10 @@ export class QueueSimulationService {
 
       if (clientToUpdate) {
         clients[clientToUpdate.id - 1] = clientToUpdate;
+      }
+
+      if (clientToUpdate2) {
+        clients[clientToUpdate2.id - 1] = clientToUpdate2;
       }
 
       queueSimulationRows.push({
@@ -1232,6 +1322,8 @@ export class QueueSimulationService {
         onlineEndOfService,
         takeawayEndOfService,
         deliveryEndOfService,
+        dessertProbability,
+        dessertEndOfService,
         counter1,
         counter2,
         counter3,
@@ -1248,11 +1340,13 @@ export class QueueSimulationService {
         delivery1,
         delivery2,
         delivery3,
+        dessert,
         counterQueue,
         selfserviceQueue,
         onlineQueue,
         takeawayQueue,
         deliveryQueue,
+        dessertQueue,
         counterWaitingTime,
         selfserviceWaitingTime,
         onlineWaitingTime,
@@ -1268,11 +1362,13 @@ export class QueueSimulationService {
         onlineUtilizationTime,
         takeawayUtilizationTime,
         deliveryUtilizationTime,
+        dessertUtilizationTime,
         counterAverageUtilizationTime,
         selfserviceAverageUtilizationTime,
         onlineAverageUtilizationTime,
         takeawayAverageUtilizationTime,
         deliveryAverageUtilizationTime,
+        dessertAverageUtilizationTime,
         clients: [...clients],
       });
     }
@@ -1291,8 +1387,14 @@ export class QueueSimulationService {
     return of(splicedSimulationRows);
   }
 
+  private generateBooleanProbability(percent: number): BooleanProbability {
+    if (!percent || percent < 0 || percent > 100) throw new Error('Invalid percent value.');
+    const rnd = truncateDecimals(Math.random(), 2);
+    return { rnd, value: rnd < percent / 100 ? 'SI' : 'NO' };
+  }
+
   private generarRandomExponencialNegativa(frecuency: number, rnd: number): number {
-    return -frecuency * Math.log(1 - rnd);
+    return (-1 / (frecuency / 60)) * Math.log(1 - rnd);
   }
 
   private generateNextEvent(frequency: number, clock: number): Event {
@@ -1344,6 +1446,7 @@ export class QueueSimulationService {
       delivery1,
       delivery2,
       delivery3,
+      dessert,
     } = previousState;
     return [
       {
@@ -1430,12 +1533,16 @@ export class QueueSimulationService {
         event: EventEnum.FIN_DELI_3 as QueueSimulationEvent,
         time: delivery3.nextEndOfService ?? -1,
       },
+      {
+        event: EventEnum.FIN_POSTRE as QueueSimulationEvent,
+        time: dessert.nextEndOfService ?? -1,
+      },
     ].filter(({ time }) => time > -1);
   }
 
-  private getNextClient(clients: Client[], state: ClientState): Client {
+  private getCurrentClient(clients: Client[], state: ClientState): Client {
     return clients
-      .filter((client) => client.state === state && client.arrivalTime)
+      .filter((client) => client.state === state && client.arrivalTime !== null)
       .reduce((client, currentClient) =>
         currentClient.arrivalTime && client.arrivalTime && currentClient.arrivalTime < client.arrivalTime
           ? currentClient

@@ -1,3 +1,4 @@
+import { BooleanProbability } from './boolean-probability.model';
 import { Client } from './client.model';
 import { Event } from './event.model';
 import { QueueSimulationEvent } from './queue-simulation-event.model';
@@ -19,6 +20,8 @@ export type QueueSimulationRow = {
   onlineEndOfService: Event | null;
   takeawayEndOfService: Event | null;
   deliveryEndOfService: Event | null;
+  dessertProbability: BooleanProbability;
+  dessertEndOfService: Event | null;
 
   counter1: Server;
   counter2: Server;
@@ -36,12 +39,14 @@ export type QueueSimulationRow = {
   delivery1: Server;
   delivery2: Server;
   delivery3: Server;
+  dessert: Server;
 
   counterQueue: number;
   selfserviceQueue: number;
   onlineQueue: number;
   takeawayQueue: number;
   deliveryQueue: number;
+  dessertQueue: number;
 
   counterWaitingTime: number;
   selfserviceWaitingTime: number;
@@ -58,11 +63,13 @@ export type QueueSimulationRow = {
   onlineUtilizationTime: number;
   takeawayUtilizationTime: number;
   deliveryUtilizationTime: number;
+  dessertUtilizationTime: number;
   counterAverageUtilizationTime: number;
   selfserviceAverageUtilizationTime: number;
   onlineAverageUtilizationTime: number;
   takeawayAverageUtilizationTime: number;
   deliveryAverageUtilizationTime: number;
+  dessertAverageUtilizationTime: number;
 
   clients: Client[];
 };

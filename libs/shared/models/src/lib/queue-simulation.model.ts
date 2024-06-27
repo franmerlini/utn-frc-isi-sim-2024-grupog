@@ -7,9 +7,11 @@ export type QueueSimulation = {
   onlineArrivalFrecuency: number;
   takewayArrivalFrecuency: number;
   deliveryArrivalFrecuency: number;
+  dessertPercent: number;
   counterEndOfServiceFrecuency: number;
   selfserviceEndOfServiceFrecuency: number;
   onlineEndOfServiceFrecuency: number;
   takeawayEndOfServiceFrecuency: number;
   deliveryEndOfServiceFrecuency: number;
+  dessertEndOfServiceFrecuency: number;
 };

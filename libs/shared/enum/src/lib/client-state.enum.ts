@@ -4,6 +4,7 @@ export const ClientStateEnum = {
   WAITING_ONLINE: 'EAO',
   WAITING_TAKEAWAY: 'EAL',
   WAITING_DELIVERY: 'EAD',
+  WAITING_DESSERT: 'EAP',
   IN_COUNTER_1: 'SAM (1)',
   IN_COUNTER_2: 'SAM (2)',
   IN_COUNTER_3: 'SAM (3)',
@@ -20,4 +21,5 @@ export const ClientStateEnum = {
   IN_DELIVERY_1: 'SAD (1)',
   IN_DELIVERY_2: 'SAD (2)',
   IN_DELIVERY_3: 'SAD (3)',
+  IN_DESSERT: 'SAP',
 } as const;
