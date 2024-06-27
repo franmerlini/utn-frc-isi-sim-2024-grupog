@@ -18,11 +18,13 @@ type ParametersForm = {
   onlineArrivalFrecuency: FormControl<string>;
   takewayArrivalFrecuency: FormControl<string>;
   deliveryArrivalFrecuency: FormControl<string>;
+  dessertPercent: FormControl<string>;
   counterEndOfServiceFrecuency: FormControl<string>;
   selfserviceEndOfServiceFrecuency: FormControl<string>;
   onlineEndOfServiceFrecuency: FormControl<string>;
   takeawayEndOfServiceFrecuency: FormControl<string>;
   deliveryEndOfServiceFrecuency: FormControl<string>;
+  dessertEndOfServiceFrecuency: FormControl<string>;
 };
 
 @Component({
@@ -88,6 +90,13 @@ type ParametersForm = {
         />
 
         <gg-input-text
+          [label]="'Porcentaje postre'"
+          [formControlName]="'dessertPercent'"
+          [formControl]="dessertPercent"
+          ngDefaultControl
+        />
+
+        <gg-input-text
           [label]="'Frecuencia fin atención pedido en mostrador'"
           [formControlName]="'counterEndOfServiceFrecuency'"
           [formControl]="counterEndOfServiceFrecuency"
@@ -119,6 +128,13 @@ type ParametersForm = {
           [label]="'Frecuencia fin atención pedido delivery'"
           [formControlName]="'deliveryEndOfServiceFrecuency'"
           [formControl]="deliveryEndOfServiceFrecuency"
+          ngDefaultControl
+        />
+
+        <gg-input-text
+          [label]="'Frecuencia fin atención pedido postre'"
+          [formControlName]="'dessertEndOfServiceFrecuency'"
+          [formControl]="dessertEndOfServiceFrecuency"
           ngDefaultControl
         />
 
@@ -199,6 +215,12 @@ export class ParametersFormComponent {
       CustomValidators.number,
       CustomValidators.integer,
     ]),
+    dessertPercent: this.#fb.control('', [
+      Validators.required,
+      Validators.min(1),
+      CustomValidators.number,
+      CustomValidators.integer,
+    ]),
     counterEndOfServiceFrecuency: this.#fb.control('', [
       Validators.required,
       Validators.min(1),
@@ -229,6 +251,12 @@ export class ParametersFormComponent {
       CustomValidators.number,
       CustomValidators.integer,
     ]),
+    dessertEndOfServiceFrecuency: this.#fb.control('', [
+      Validators.required,
+      Validators.min(1),
+      CustomValidators.number,
+      CustomValidators.integer,
+    ]),
   });
 
   onResetClick(): void {
@@ -246,11 +274,13 @@ export class ParametersFormComponent {
       onlineArrivalFrecuency: '30',
       takewayArrivalFrecuency: '25',
       deliveryArrivalFrecuency: '20',
+      dessertPercent: '15',
       counterEndOfServiceFrecuency: '12',
       selfserviceEndOfServiceFrecuency: '15',
       onlineEndOfServiceFrecuency: '10',
       takeawayEndOfServiceFrecuency: '20',
       deliveryEndOfServiceFrecuency: '8',
+      dessertEndOfServiceFrecuency: '5',
     });
   }
 
@@ -270,11 +300,13 @@ export class ParametersFormComponent {
       onlineArrivalFrecuency,
       takewayArrivalFrecuency,
       deliveryArrivalFrecuency,
+      dessertPercent,
       counterEndOfServiceFrecuency,
       selfserviceEndOfServiceFrecuency,
       onlineEndOfServiceFrecuency,
       takeawayEndOfServiceFrecuency,
       deliveryEndOfServiceFrecuency,
+      dessertEndOfServiceFrecuency,
     } = this.form.getRawValue();
 
     const payload: QueueSimulation = {
@@ -286,11 +318,13 @@ export class ParametersFormComponent {
       onlineArrivalFrecuency: Number(onlineArrivalFrecuency),
       takewayArrivalFrecuency: Number(takewayArrivalFrecuency),
       deliveryArrivalFrecuency: Number(deliveryArrivalFrecuency),
+      dessertPercent: Number(dessertPercent),
       counterEndOfServiceFrecuency: Number(counterEndOfServiceFrecuency),
       selfserviceEndOfServiceFrecuency: Number(selfserviceEndOfServiceFrecuency),
       onlineEndOfServiceFrecuency: Number(onlineEndOfServiceFrecuency),
       takeawayEndOfServiceFrecuency: Number(takeawayEndOfServiceFrecuency),
       deliveryEndOfServiceFrecuency: Number(deliveryEndOfServiceFrecuency),
+      dessertEndOfServiceFrecuency: Number(dessertEndOfServiceFrecuency),
     };
 
     this.submitForm.emit(payload);
@@ -328,6 +362,10 @@ export class ParametersFormComponent {
     return this.form.get('deliveryArrivalFrecuency') as FormControl<string>;
   }
 
+  get dessertPercent(): FormControl<string> {
+    return this.form.get('dessertPercent') as FormControl<string>;
+  }
+
   get counterEndOfServiceFrecuency(): FormControl<string> {
     return this.form.get('counterEndOfServiceFrecuency') as FormControl<string>;
   }
@@ -346,5 +384,9 @@ export class ParametersFormComponent {
 
   get deliveryEndOfServiceFrecuency(): FormControl<string> {
     return this.form.get('deliveryEndOfServiceFrecuency') as FormControl<string>;
+  }
+
+  get dessertEndOfServiceFrecuency(): FormControl<string> {
+    return this.form.get('dessertEndOfServiceFrecuency') as FormControl<string>;
   }
 }

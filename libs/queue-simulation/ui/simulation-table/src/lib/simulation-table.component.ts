@@ -14,18 +14,22 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
 
       <p-table
         [value]="queueSimulationRows()"
+        [scrollable]="true"
+        scrollHeight="700px"
+        selectionMode="single"
+        dataKey="id"
         [paginator]="true"
-        [rows]="10"
+        [rows]="15"
         [showCurrentPageReport]="true"
         currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
-        [rowsPerPageOptions]="[10, 15, 20]"
+        [rowsPerPageOptions]="[15, 30, 50, 100]"
         styleClass="p-datatable-sm p-datatable-striped"
       >
         <ng-template pTemplate="header">
           <tr>
-            <th rowspan="3">#</th>
-            <th rowspan="3">Evento</th>
-            <th rowspan="3">Reloj (horas)</th>
+            <th rowspan="3" pFrozenColumn>#</th>
+            <th rowspan="3" pFrozenColumn>Evento</th>
+            <th rowspan="3" pFrozenColumn>Reloj (horas)</th>
             <th colspan="3">Llegada mostrador</th>
             <th colspan="3">Llegada autoservicio</th>
             <th colspan="3">Llegada online</th>
@@ -36,14 +40,17 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <th colspan="3">Fin atención online</th>
             <th colspan="3">Fin atención para llevar</th>
             <th colspan="3">Fin atención delivery</th>
+            <th colspan="2">Agrega postre</th>
+            <th colspan="3">Fin atención postre</th>
             <th colspan="15">Empleados mostrador</th>
             <th colspan="9">Estaciones autoservicio</th>
             <th colspan="9">Empleados online</th>
             <th colspan="6">Empleados para llevar</th>
             <th colspan="9">Empleados delivery</th>
-            <th colspan="5">Colas</th>
+            <th colspan="3">Empleado postre</th>
+            <th colspan="6">Colas</th>
             <th colspan="10">Tiempo de espera promedio</th>
-            <th colspan="10">Tiempo de ocupación promedio</th>
+            <th colspan="12">Tiempo de ocupación promedio</th>
             <th [colSpan]="getClientsQuantity() * 2">Clientes</th>
           </tr>
           <tr>
@@ -78,6 +85,11 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <th rowspan="2">RND 10</th>
             <th rowspan="2">Tiempo fin</th>
             <th rowspan="2">Próximo fin</th>
+            <th rowspan="2">RND 11</th>
+            <th rowspan="2">Agrega</th>
+            <th rowspan="2">RND 12</th>
+            <th rowspan="2">Tiempo fin</th>
+            <th rowspan="2">Próximo fin</th>
 
             <th colspan="3">1</th>
             <th colspan="3">2</th>
@@ -95,12 +107,16 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <th colspan="3">1</th>
             <th colspan="3">2</th>
             <th colspan="3">3</th>
+            <th rowspan="2">Estado</th>
+            <th rowspan="2">Inicio ocupación</th>
+            <th rowspan="2">Próximo fin</th>
 
             <th rowspan="2">Mostrador</th>
             <th rowspan="2">Autoservicio</th>
             <th rowspan="2">Online</th>
             <th rowspan="2">Para llevar</th>
             <th rowspan="2">Delivery</th>
+            <th rowspan="2">Postre</th>
 
             <th rowspan="2">Acum tiempo espera mostrador</th>
             <th rowspan="2">Acum tiempo espera autoservicio</th>
@@ -117,11 +133,13 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <th rowspan="2">Acum tiempo ocupación online</th>
             <th rowspan="2">Acum tiempo ocupación para llevar</th>
             <th rowspan="2">Acum tiempo ocupación delivery</th>
+            <th rowspan="2">Acum tiempo ocupación postre</th>
             <th rowspan="2">Porcentaje tiempo ocupación mostrador</th>
             <th rowspan="2">Porcentaje tiempo ocupación autoservicio</th>
             <th rowspan="2">Porcentaje tiempo ocupación online</th>
             <th rowspan="2">Porcentaje tiempo ocupación para llevar</th>
             <th rowspan="2">Porcentaje tiempo ocupación delivery</th>
+            <th rowspan="2">Porcentaje tiempo ocupación postre</th>
             @for(number of getNumberArray(); track number) {
             <th colspan="2">{{ number }}</th>
             }
@@ -175,6 +193,7 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <th>Estado</th>
             <th>Inicio ocupación</th>
             <th>Próximo fin</th>
+
             @for(number of getNumberArray(); track number) {
             <th>Estado</th>
             <th>Hora llegada</th>
@@ -183,10 +202,10 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
         </ng-template>
 
         <ng-template pTemplate="body" let-row>
-          <tr>
-            <td>{{ row.id }}</td>
-            <td>{{ row.event }}</td>
-            <td>{{ row.clock }}</td>
+          <tr [pSelectableRow]="row">
+            <td pFrozenColumn>{{ row.id }}</td>
+            <td pFrozenColumn>{{ row.event }}</td>
+            <td pFrozenColumn>{{ row.clock }}</td>
 
             <td>{{ row.counterArrival.rnd }}</td>
             <td>{{ row.counterArrival.time }}</td>
@@ -219,6 +238,12 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <td>{{ row.deliveryEndOfService.rnd }}</td>
             <td>{{ row.deliveryEndOfService.time }}</td>
             <td>{{ row.deliveryEndOfService.nextTime }}</td>
+            <td>{{ row.dessertProbability.rnd }}</td>
+            <td>{{ row.dessertProbability.value }}</td>
+            <td>{{ row.dessertEndOfService.rnd }}</td>
+            <td>{{ row.dessertEndOfService.time }}</td>
+            <td>{{ row.dessertEndOfService.nextTime }}</td>
+
             <td>{{ row.counter1.state }}</td>
             <td>{{ row.counter1.beginOfService }}</td>
             <td>{{ row.counter1.nextEndOfService }}</td>
@@ -267,12 +292,16 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <td>{{ row.delivery3.state }}</td>
             <td>{{ row.delivery3.beginOfService }}</td>
             <td>{{ row.delivery3.nextEndOfService }}</td>
+            <td>{{ row.dessert.state }}</td>
+            <td>{{ row.dessert.beginOfService }}</td>
+            <td>{{ row.dessert.nextEndOfService }}</td>
 
             <td>{{ row.counterQueue }}</td>
             <td>{{ row.selfserviceQueue }}</td>
             <td>{{ row.onlineQueue }}</td>
             <td>{{ row.takeawayQueue }}</td>
             <td>{{ row.deliveryQueue }}</td>
+            <td>{{ row.dessertQueue }}</td>
 
             <td>{{ row.counterWaitingTime }}</td>
             <td>{{ row.selfserviceWaitingTime }}</td>
@@ -289,11 +318,13 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
             <td>{{ row.onlineUtilizationTime }}</td>
             <td>{{ row.takeawayUtilizationTime }}</td>
             <td>{{ row.deliveryUtilizationTime }}</td>
+            <td>{{ row.dessertUtilizationTime }}</td>
             <td>{{ row.counterAverageUtilizationTime }}</td>
             <td>{{ row.selfserviceAverageUtilizationTime }}</td>
             <td>{{ row.onlineAverageUtilizationTime }}</td>
             <td>{{ row.takeawayAverageUtilizationTime }}</td>
             <td>{{ row.deliveryAverageUtilizationTime }}</td>
+            <td>{{ row.dessertAverageUtilizationTime }}</td>
 
             @for(client of row.clients; track client.id) {
             <td>{{ client.state }}</td>
@@ -306,10 +337,6 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
   `,
   styles: [
     `
-      th {
-        border-width: 0 1px 1px 0;
-      }
-
       th,
       td {
         text-align: center;
@@ -327,5 +354,20 @@ export class SimulationTableComponent {
 
   getNumberArray(): number[] {
     return Array.from({ length: this.getClientsQuantity() }, (_, i) => i + 1);
+  }
+
+  getLastRow(): QueueSimulationRow {
+    return this.queueSimulationRows()[this.queueSimulationRows().length - 1];
+  }
+
+  getFastestService(): string {
+    const services = [
+      { name: 'Mostrador', time: this.getLastRow().counterAverageWaitingTime },
+      { name: 'Autoservicio', time: this.getLastRow().selfserviceAverageWaitingTime },
+      { name: 'Online', time: this.getLastRow().onlineAverageWaitingTime },
+      { name: 'Para llevar', time: this.getLastRow().takeawayAverageWaitingTime },
+      { name: 'Delivery', time: this.getLastRow().deliveryAverageWaitingTime },
+    ];
+    return services.reduce((prev, current) => (prev.time < current.time ? prev : current)).name;
   }
 }

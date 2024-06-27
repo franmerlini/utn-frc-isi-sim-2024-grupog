@@ -19,11 +19,13 @@ const initialState: State = {
   onlineArrivalFrecuency: 0,
   takewayArrivalFrecuency: 0,
   deliveryArrivalFrecuency: 0,
+  dessertPercent: 0,
   counterEndOfServiceFrecuency: 0,
   selfserviceEndOfServiceFrecuency: 0,
   onlineEndOfServiceFrecuency: 0,
   takeawayEndOfServiceFrecuency: 0,
   deliveryEndOfServiceFrecuency: 0,
+  dessertEndOfServiceFrecuency: 0,
   queueSimulationRows: [],
 };
 
