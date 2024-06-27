@@ -1,3 +1,4 @@
+export * from './lib/boolean-probability.model';
 export * from './lib/chi-square-test-interval.model';
 export * from './lib/client-state.model';
 export * from './lib/client.model';
