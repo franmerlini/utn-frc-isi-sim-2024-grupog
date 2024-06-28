@@ -19,7 +19,7 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
       [rows]="15"
       [showCurrentPageReport]="true"
       currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
-      [rowsPerPageOptions]="[15, 30, 50, 100]"
+      [rowsPerPageOptions]="[15, 30, 50]"
       styleClass="p-datatable-sm p-datatable-striped"
     >
       <ng-template pTemplate="header">
