@@ -5,6 +5,7 @@ export const EventEnum = {
   LLEG_ONLINE: 'Llegada online',
   LLEG_LLEVAR: 'Llegada para llevar',
   LLEG_DELI: 'Llegada delivery',
+  CORTE_ELEC: 'Corte de electricidad',
   FIN_MOST_1: 'Fin atención mostrador 1',
   FIN_MOST_2: 'Fin atención mostrador 2',
   FIN_MOST_3: 'Fin atención mostrador 3',
@@ -22,4 +23,5 @@ export const EventEnum = {
   FIN_DELI_2: 'Fin atención delivery 2',
   FIN_DELI_3: 'Fin atención delivery 3',
   FIN_POSTRE: 'Fin atención postre',
+  FIN_CORTE_ELEC: 'Fin corte de electricidad',
 } as const;

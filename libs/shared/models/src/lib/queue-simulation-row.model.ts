@@ -14,6 +14,7 @@ export type QueueSimulationRow = {
   onlineArrival: Event | null;
   takeawayArrival: Event | null;
   deliveryArrival: Event | null;
+  electricityOutage: Event | null;
 
   counterEndOfService: Event | null;
   selfserviceEndOfService: Event | null;
@@ -22,6 +23,7 @@ export type QueueSimulationRow = {
   deliveryEndOfService: Event | null;
   dessertProbability: BooleanProbability;
   dessertEndOfService: Event | null;
+  electricityAvailability: Event | null;
 
   counter1: Server;
   counter2: Server;

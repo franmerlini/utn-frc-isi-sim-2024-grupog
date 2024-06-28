@@ -5,4 +5,5 @@ export type Server = {
   state: ServerState;
   beginOfService: number | null;
   nextEndOfService: number | null;
+  remainingTime: number | null;
 };
