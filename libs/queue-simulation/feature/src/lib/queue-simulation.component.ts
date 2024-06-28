@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { QueueSimulationActions, QueueSimulationFeature } from '@grupog/libs/queue-simulation/data-access/store';
 import { ParametersFormComponent } from '@grupog/libs/queue-simulation/ui/parameters-form';
+import { SimulationResultComponent } from '@grupog/libs/queue-simulation/ui/simulation-result';
 import { SimulationTableComponent } from '@grupog/libs/queue-simulation/ui/simulation-table';
 import { ToastActions } from '@grupog/libs/shared/data-access/store';
 import { QueueSimulation } from '@grupog/libs/shared/models';
@@ -12,7 +13,7 @@ import { QueueSimulation } from '@grupog/libs/shared/models';
 @Component({
   selector: 'gg-queue-simulation',
   standalone: true,
-  imports: [ParametersFormComponent, SimulationTableComponent],
+  imports: [ParametersFormComponent, SimulationResultComponent, SimulationTableComponent],
   template: `
     <div class="flex flex-col gap-8">
       <gg-parameters-form
@@ -22,7 +23,13 @@ import { QueueSimulation } from '@grupog/libs/shared/models';
       />
 
       @if(queueSimulationRows().length) {
-      <gg-simulation-table [queueSimulationRows]="queueSimulationRows()" />
+      <div class="flex flex-col gap-6">
+        <h1 class="text-2xl font-bold underline">Resultados de simulación</h1>
+
+        <gg-simulation-result [queueSimulationRows]="queueSimulationRows()" />
+
+        <gg-simulation-table [queueSimulationRows]="queueSimulationRows()" />
+      </div>
       }
     </div>
   `,
