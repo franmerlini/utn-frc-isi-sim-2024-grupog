@@ -206,6 +206,10 @@ export class QueueSimulationService {
       deliveryEndOfService = { rnd: null, time: null, nextTime: null };
       dessertEndOfService = { rnd: null, time: null, nextTime: null };
 
+      clientToDestroy = null;
+      clientToUpdate = null;
+      clientToUpdate2 = null;
+
       switch (event) {
         case EventEnum.LLEG_MOST: {
           clientsQuantity++;
