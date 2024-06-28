@@ -1475,7 +1475,10 @@ export class QueueSimulationService {
       return row;
     });
 
-    const splicedSimulationRows = completedQueueSimulationRows.splice(from - 1, to - from + 1).concat(lastRow);
+    const splicedSimulationRows =
+      n <= 10
+        ? completedQueueSimulationRows.splice(from - 1, to - from + 1)
+        : completedQueueSimulationRows.splice(from - 1, to - from + 1).concat(lastRow);
 
     return of(splicedSimulationRows);
   }
