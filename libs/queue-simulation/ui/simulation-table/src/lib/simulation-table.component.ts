@@ -13,8 +13,6 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
       [value]="queueSimulationRows()"
       [scrollable]="true"
       scrollHeight="700px"
-      selectionMode="single"
-      dataKey="id"
       [paginator]="true"
       [rows]="15"
       [showCurrentPageReport]="true"
@@ -33,6 +31,7 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
           <th colspan="3">Llegada online</th>
           <th colspan="3">Llegada para llevar</th>
           <th colspan="3">Llegada delivery</th>
+          <th colspan="3">Corte electricidad</th>
 
           <th colspan="3">Fin atención mostrador</th>
           <th colspan="3">Fin atención autoservicio</th>
@@ -41,11 +40,12 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
           <th colspan="3">Fin atención delivery</th>
           <th colspan="2">Agrega postre</th>
           <th colspan="3">Fin atención postre</th>
+          <th colspan="2">Fin corte electricidad</th>
 
           <th colspan="15">Empleados mostrador</th>
           <th colspan="9">Estaciones autoservicio</th>
           <th colspan="9">Empleados online</th>
-          <th colspan="6">Empleados para llevar</th>
+          <th colspan="7">Empleados para llevar</th>
           <th colspan="9">Empleados delivery</th>
           <th colspan="3">Empleado postre</th>
           <th colspan="6">Colas</th>
@@ -72,10 +72,10 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
           <th rowspan="2">RND 5</th>
           <th rowspan="2">Tiempo llegada</th>
           <th rowspan="2">Próxima llegada</th>
-
           <th rowspan="2">RND 6</th>
-          <th rowspan="2">Tiempo fin</th>
-          <th rowspan="2">Próximo fin</th>
+          <th rowspan="2">Tiempo corte</th>
+          <th rowspan="2">Próximo corte</th>
+
           <th rowspan="2">RND 7</th>
           <th rowspan="2">Tiempo fin</th>
           <th rowspan="2">Próximo fin</th>
@@ -89,8 +89,13 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
           <th rowspan="2">Tiempo fin</th>
           <th rowspan="2">Próximo fin</th>
           <th rowspan="2">RND 11</th>
-          <th rowspan="2">Agrega</th>
+          <th rowspan="2">Tiempo fin</th>
+          <th rowspan="2">Próximo fin</th>
           <th rowspan="2">RND 12</th>
+          <th rowspan="2">Agrega</th>
+          <th rowspan="2">RND 13</th>
+          <th rowspan="2">Tiempo fin</th>
+          <th rowspan="2">Próximo fin</th>
           <th rowspan="2">Tiempo fin</th>
           <th rowspan="2">Próximo fin</th>
 
@@ -105,7 +110,7 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
           <th colspan="3">1</th>
           <th colspan="3">2</th>
           <th colspan="3">3</th>
-          <th colspan="3">1</th>
+          <th colspan="4">1</th>
           <th colspan="3">2</th>
           <th colspan="3">1</th>
           <th colspan="3">2</th>
@@ -191,6 +196,7 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
           <th>Estado</th>
           <th>Inicio ocupación</th>
           <th>Próximo fin</th>
+          <th>Tiempo restante</th>
           <th>Estado</th>
           <th>Inicio ocupación</th>
           <th>Próximo fin</th>
@@ -212,7 +218,7 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
       </ng-template>
 
       <ng-template pTemplate="body" let-row>
-        <tr [pSelectableRow]="row">
+        <tr>
           <td pFrozenColumn>{{ row.id }}</td>
           <td pFrozenColumn>{{ row.event }}</td>
           <td pFrozenColumn>{{ row.clock }}</td>
@@ -232,6 +238,9 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
           <td>{{ row.deliveryArrival.rnd }}</td>
           <td>{{ row.deliveryArrival.time }}</td>
           <td>{{ row.deliveryArrival.nextTime }}</td>
+          <td>{{ row.electricityOutage.rnd }}</td>
+          <td>{{ row.electricityOutage.time }}</td>
+          <td>{{ row.electricityOutage.nextTime }}</td>
 
           <td>{{ row.counterEndOfService.rnd }}</td>
           <td>{{ row.counterEndOfService.time }}</td>
@@ -253,6 +262,8 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
           <td>{{ row.dessertEndOfService.rnd }}</td>
           <td>{{ row.dessertEndOfService.time }}</td>
           <td>{{ row.dessertEndOfService.nextTime }}</td>
+          <td>{{ row.electricityAvailability.time }}</td>
+          <td>{{ row.electricityAvailability.nextTime }}</td>
 
           <td>{{ row.counter1.state }}</td>
           <td>{{ row.counter1.beginOfService }}</td>
@@ -290,6 +301,7 @@ import { QueueSimulationRow } from '@grupog/libs/shared/models';
           <td>{{ row.takeaway1.state }}</td>
           <td>{{ row.takeaway1.beginOfService }}</td>
           <td>{{ row.takeaway1.nextEndOfService }}</td>
+          <td>{{ row.takeaway1.remainingTime }}</td>
           <td>{{ row.takeaway2.state }}</td>
           <td>{{ row.takeaway2.beginOfService }}</td>
           <td>{{ row.takeaway2.nextEndOfService }}</td>

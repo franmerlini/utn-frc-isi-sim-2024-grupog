@@ -45,6 +45,7 @@ export class QueueSimulationService {
     let onlineArrival = this.generateNextEvent(onlineArrivalFrecuency, clock);
     let takeawayArrival = this.generateNextEvent(takewayArrivalFrecuency, clock);
     let deliveryArrival = this.generateNextEvent(deliveryArrivalFrecuency, clock);
+    let electricityOutage = this.generateNextElectricityOutage(100, clock);
 
     let counterEndOfService: Event = { rnd: null, time: null, nextTime: null };
     let selfserviceEndOfService: Event = { rnd: null, time: null, nextTime: null };
@@ -53,24 +54,127 @@ export class QueueSimulationService {
     let deliveryEndOfService: Event = { rnd: null, time: null, nextTime: null };
     let dessertProbability: BooleanProbability = { rnd: null, value: null };
     let dessertEndOfService: Event = { rnd: null, time: null, nextTime: null };
+    let electricityAvailability: Event = { rnd: null, time: null, nextTime: null };
 
-    let counter1: Server = { id: 1, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-    let counter2: Server = { id: 2, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-    let counter3: Server = { id: 3, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-    let counter4: Server = { id: 4, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-    let counter5: Server = { id: 5, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-    let selfservice1: Server = { id: 1, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-    let selfservice2: Server = { id: 2, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-    let selfservice3: Server = { id: 3, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-    let online1: Server = { id: 1, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-    let online2: Server = { id: 2, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-    let online3: Server = { id: 3, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-    let takeaway1: Server = { id: 1, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-    let takeaway2: Server = { id: 2, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-    let delivery1: Server = { id: 1, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-    let delivery2: Server = { id: 2, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-    let delivery3: Server = { id: 3, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
-    let dessert: Server = { id: 1, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
+    let counter1: Server = {
+      id: 1,
+      state: ServerStateEnum.IDLE,
+      beginOfService: null,
+      nextEndOfService: null,
+      remainingTime: null,
+    };
+    let counter2: Server = {
+      id: 2,
+      state: ServerStateEnum.IDLE,
+      beginOfService: null,
+      nextEndOfService: null,
+      remainingTime: null,
+    };
+    let counter3: Server = {
+      id: 3,
+      state: ServerStateEnum.IDLE,
+      beginOfService: null,
+      nextEndOfService: null,
+      remainingTime: null,
+    };
+    let counter4: Server = {
+      id: 4,
+      state: ServerStateEnum.IDLE,
+      beginOfService: null,
+      nextEndOfService: null,
+      remainingTime: null,
+    };
+    let counter5: Server = {
+      id: 5,
+      state: ServerStateEnum.IDLE,
+      beginOfService: null,
+      nextEndOfService: null,
+      remainingTime: null,
+    };
+    let selfservice1: Server = {
+      id: 1,
+      state: ServerStateEnum.IDLE,
+      beginOfService: null,
+      nextEndOfService: null,
+      remainingTime: null,
+    };
+    let selfservice2: Server = {
+      id: 2,
+      state: ServerStateEnum.IDLE,
+      beginOfService: null,
+      nextEndOfService: null,
+      remainingTime: null,
+    };
+    let selfservice3: Server = {
+      id: 3,
+      state: ServerStateEnum.IDLE,
+      beginOfService: null,
+      nextEndOfService: null,
+      remainingTime: null,
+    };
+    let online1: Server = {
+      id: 1,
+      state: ServerStateEnum.IDLE,
+      beginOfService: null,
+      nextEndOfService: null,
+      remainingTime: null,
+    };
+    let online2: Server = {
+      id: 2,
+      state: ServerStateEnum.IDLE,
+      beginOfService: null,
+      nextEndOfService: null,
+      remainingTime: null,
+    };
+    let online3: Server = {
+      id: 3,
+      state: ServerStateEnum.IDLE,
+      beginOfService: null,
+      nextEndOfService: null,
+      remainingTime: null,
+    };
+    let takeaway1: Server = {
+      id: 1,
+      state: ServerStateEnum.IDLE,
+      beginOfService: null,
+      nextEndOfService: null,
+      remainingTime: null,
+    };
+    let takeaway2: Server = {
+      id: 2,
+      state: ServerStateEnum.IDLE,
+      beginOfService: null,
+      nextEndOfService: null,
+      remainingTime: null,
+    };
+    let delivery1: Server = {
+      id: 1,
+      state: ServerStateEnum.IDLE,
+      beginOfService: null,
+      nextEndOfService: null,
+      remainingTime: null,
+    };
+    let delivery2: Server = {
+      id: 2,
+      state: ServerStateEnum.IDLE,
+      beginOfService: null,
+      nextEndOfService: null,
+      remainingTime: null,
+    };
+    let delivery3: Server = {
+      id: 3,
+      state: ServerStateEnum.IDLE,
+      beginOfService: null,
+      nextEndOfService: null,
+      remainingTime: null,
+    };
+    let dessert: Server = {
+      id: 1,
+      state: ServerStateEnum.IDLE,
+      beginOfService: null,
+      nextEndOfService: null,
+      remainingTime: null,
+    };
 
     let counterQueue = 0;
     let selfserviceQueue = 0;
@@ -121,6 +225,8 @@ export class QueueSimulationService {
         onlineArrival,
         takeawayArrival,
         deliveryArrival,
+        electricityOutage,
+        electricityAvailability,
         counterEndOfService,
         selfserviceEndOfService,
         onlineEndOfService,
@@ -198,6 +304,7 @@ export class QueueSimulationService {
       onlineArrival = { ...onlineArrival, rnd: null, time: null };
       takeawayArrival = { ...takeawayArrival, rnd: null, time: null };
       deliveryArrival = { ...deliveryArrival, rnd: null, time: null };
+      electricityOutage = { ...electricityOutage, rnd: null, time: null };
       dessertProbability = { rnd: null, value: null };
       counterEndOfService = { rnd: null, time: null, nextTime: null };
       selfserviceEndOfService = { rnd: null, time: null, nextTime: null };
@@ -205,6 +312,7 @@ export class QueueSimulationService {
       takeawayEndOfService = { rnd: null, time: null, nextTime: null };
       deliveryEndOfService = { rnd: null, time: null, nextTime: null };
       dessertEndOfService = { rnd: null, time: null, nextTime: null };
+      electricityAvailability = { ...electricityAvailability, rnd: null, time: null };
 
       clientToDestroy = null;
       clientToUpdate = null;
@@ -484,6 +592,29 @@ export class QueueSimulationService {
               }
             }
           }
+
+          break;
+        }
+        case EventEnum.CORTE_ELEC: {
+          electricityOutage = { ...electricityOutage, nextTime: null };
+
+          electricityAvailability = this.generateNextelectricityAvailability(electricityOutage.rnd as number, clock);
+
+          const currentClient = clients.find((client) => client.state === ClientStateEnum.IN_TAKEAWAY_1);
+
+          if (currentClient) {
+            clientToUpdate = {
+              ...currentClient,
+              state: ClientStateEnum.WAITING_DISABLED_TAKEAWAY,
+            };
+          }
+
+          takeaway1 = {
+            ...takeaway1,
+            state: ServerStateEnum.DISABLED,
+            nextEndOfService: null,
+            remainingTime: currentClient ? truncateDecimals((takeaway1.nextEndOfService as number) - clock, 2) : null,
+          };
 
           break;
         }
@@ -1379,6 +1510,43 @@ export class QueueSimulationService {
 
             dessert = { ...dessert, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
           }
+
+          break;
+        }
+        case EventEnum.FIN_CORTE_ELEC: {
+          electricityOutage = this.generateNextElectricityOutage(100, clock);
+
+          electricityAvailability = { ...electricityAvailability, nextTime: null };
+
+          const currentClient = clients.find((client) => client.state === ClientStateEnum.WAITING_DISABLED_TAKEAWAY);
+
+          if (currentClient) {
+            takeaway1 = {
+              ...takeaway1,
+              state: ServerStateEnum.ACTIVE,
+              nextEndOfService: clock + (takeaway1.remainingTime as number),
+              remainingTime: null,
+            };
+
+            clientToUpdate = {
+              ...currentClient,
+              state: ClientStateEnum.IN_TAKEAWAY_1,
+            };
+          } else if (takeawayQueue > 0) {
+            takeawayQueue--;
+
+            takeawayEndOfService = this.generateNextEvent(takeawayEndOfServiceFrecuency, clock);
+            takeaway1 = { ...takeaway1, beginOfService: clock, nextEndOfService: takeawayEndOfService.nextTime };
+
+            clientToUpdate = {
+              ...this.getCurrentClient(clients, ClientStateEnum.WAITING_TAKEAWAY),
+              state: ClientStateEnum.IN_TAKEAWAY_1,
+            };
+          } else {
+            takeaway1 = { ...takeaway1, state: ServerStateEnum.IDLE, beginOfService: null, nextEndOfService: null };
+          }
+
+          break;
         }
       }
 
@@ -1403,6 +1571,8 @@ export class QueueSimulationService {
         onlineArrival,
         takeawayArrival,
         deliveryArrival,
+        electricityOutage,
+        electricityAvailability,
         counterEndOfService,
         selfserviceEndOfService,
         onlineEndOfService,
@@ -1526,6 +1696,8 @@ export class QueueSimulationService {
       onlineArrival,
       takeawayArrival,
       deliveryArrival,
+      electricityOutage,
+      electricityAvailability,
       counter1,
       counter2,
       counter3,
@@ -1564,6 +1736,14 @@ export class QueueSimulationService {
       {
         event: EventEnum.LLEG_DELI as QueueSimulationEvent,
         time: deliveryArrival?.nextTime ?? -1,
+      },
+      {
+        event: EventEnum.CORTE_ELEC as QueueSimulationEvent,
+        time: electricityOutage?.nextTime ?? -1,
+      },
+      {
+        event: EventEnum.FIN_CORTE_ELEC as QueueSimulationEvent,
+        time: electricityAvailability?.nextTime ?? -1,
       },
       {
         event: EventEnum.FIN_MOST_1 as QueueSimulationEvent,
@@ -1637,12 +1817,60 @@ export class QueueSimulationService {
   }
 
   private getCurrentClient(clients: Client[], state: ClientState): Client {
-    return clients
-      .filter((client) => client.state === state && client.arrivalTime !== null)
-      .reduce((client, currentClient) =>
-        currentClient.arrivalTime && client.arrivalTime && currentClient.arrivalTime < client.arrivalTime
-          ? currentClient
-          : client
-      );
+    try {
+      return clients
+        .filter((client) => client.state === state && client.arrivalTime !== null)
+        .reduce((client, currentClient) =>
+          currentClient.arrivalTime && client.arrivalTime && currentClient.arrivalTime < client.arrivalTime
+            ? currentClient
+            : client
+        );
+    } catch (error) {
+      console.log([...clients]);
+      throw error;
+    }
+  }
+
+  private generateNextElectricityOutage(t: number, clock: number): Event {
+    const values = [
+      {
+        accProb: 0.2,
+        time: truncateDecimals((4 * t) / 60, 2),
+      },
+      {
+        accProb: 0.8,
+        time: truncateDecimals((6 * t) / 60, 2),
+      },
+      {
+        accProb: 1,
+        time: truncateDecimals((8 * t) / 60, 2),
+      },
+    ];
+    const rnd = truncateDecimals(Math.random(), 2);
+    const time = values.find(({ accProb }) => rnd < accProb)?.time ?? 0;
+    const nextTime = truncateDecimals(clock + time, 2);
+
+    return { rnd, time, nextTime };
+  }
+
+  private generateNextelectricityAvailability(rnd: number, clock: number): Event {
+    const values = [
+      {
+        accProb: 0.2,
+        time: 5.6,
+      },
+      {
+        accProb: 0.8,
+        time: 7.2,
+      },
+      {
+        accProb: 1,
+        time: 11.5,
+      },
+    ];
+    const time = values.find(({ accProb }) => rnd < accProb)?.time ?? 0;
+    const nextTime = truncateDecimals(clock + time, 2);
+
+    return { rnd, time, nextTime };
   }
 }
