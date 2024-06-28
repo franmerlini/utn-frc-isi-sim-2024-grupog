@@ -101,6 +101,13 @@ export class QueueSimulationService {
     let takeawayAverageUtilizationTime = 0;
     let deliveryAverageUtilizationTime = 0;
     let dessertAverageUtilizationTime = 0;
+    let counterServedClients = 0;
+    let selfserviceServedClients = 0;
+    let onlineServedClients = 0;
+    let takeawayServedClients = 0;
+    let deliveryServedClients = 0;
+    let dessertServedClients = 0;
+    let servedClients = 0;
 
     const clients: Client[] = [];
 
@@ -166,6 +173,13 @@ export class QueueSimulationService {
         takeawayAverageUtilizationTime,
         deliveryAverageUtilizationTime,
         dessertAverageUtilizationTime,
+        counterServedClients,
+        selfserviceServedClients,
+        onlineServedClients,
+        takeawayServedClients,
+        deliveryServedClients,
+        dessertServedClients,
+        servedClients,
         clients: [...clients],
       },
     ];
@@ -470,6 +484,8 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_MOST_1: {
+          counterServedClients++;
+
           const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_COUNTER_1);
 
           clientToDestroy = {
@@ -477,6 +493,8 @@ export class QueueSimulationService {
             state: null,
             arrivalTime: null,
           };
+
+          servedClients++;
 
           counterWaitingTime = truncateDecimals(counterWaitingTime + clock - (currentClient.arrivalTime as number), 2);
           counterAverageWaitingTime =
@@ -508,6 +526,8 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_MOST_2: {
+          counterServedClients++;
+
           const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_COUNTER_2);
 
           clientToDestroy = {
@@ -515,6 +535,8 @@ export class QueueSimulationService {
             state: null,
             arrivalTime: null,
           };
+
+          servedClients++;
 
           counterWaitingTime = truncateDecimals(counterWaitingTime + clock - (currentClient.arrivalTime as number), 2);
           counterAverageWaitingTime =
@@ -546,6 +568,8 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_MOST_3: {
+          counterServedClients++;
+
           const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_COUNTER_3);
 
           clientToDestroy = {
@@ -553,6 +577,8 @@ export class QueueSimulationService {
             state: null,
             arrivalTime: null,
           };
+
+          servedClients++;
 
           counterWaitingTime = truncateDecimals(counterWaitingTime + clock - (currentClient.arrivalTime as number), 2);
           counterAverageWaitingTime =
@@ -589,6 +615,8 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_MOST_4: {
+          counterServedClients++;
+
           const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_COUNTER_4);
 
           clientToDestroy = {
@@ -596,6 +624,8 @@ export class QueueSimulationService {
             state: null,
             arrivalTime: null,
           };
+
+          servedClients++;
 
           counterWaitingTime = truncateDecimals(counterWaitingTime + clock - (currentClient.arrivalTime as number), 2);
           counterAverageWaitingTime =
@@ -627,6 +657,8 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_MOST_5: {
+          counterServedClients++;
+
           const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_COUNTER_5);
 
           clientToDestroy = {
@@ -634,6 +666,8 @@ export class QueueSimulationService {
             state: null,
             arrivalTime: null,
           };
+
+          servedClients++;
 
           counterWaitingTime = truncateDecimals(counterWaitingTime + clock - (currentClient.arrivalTime as number), 2);
           counterAverageWaitingTime =
@@ -665,6 +699,8 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_AUTO_1: {
+          selfserviceServedClients++;
+
           const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_SELFSERVICE_1);
 
           dessertProbability = this.generateBooleanProbability(dessertPercent);
@@ -692,6 +728,8 @@ export class QueueSimulationService {
               state: null,
               arrivalTime: null,
             };
+
+            servedClients++;
 
             selfserviceWaitingTime = truncateDecimals(
               selfserviceWaitingTime + clock - (currentClient.arrivalTime as number),
@@ -739,6 +777,8 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_AUTO_2: {
+          selfserviceServedClients++;
+
           const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_SELFSERVICE_2);
 
           dessertProbability = this.generateBooleanProbability(dessertPercent);
@@ -766,6 +806,8 @@ export class QueueSimulationService {
               state: null,
               arrivalTime: null,
             };
+
+            servedClients++;
 
             selfserviceWaitingTime = truncateDecimals(
               selfserviceWaitingTime + clock - (currentClient.arrivalTime as number),
@@ -812,6 +854,8 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_AUTO_3: {
+          selfserviceServedClients++;
+
           const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_SELFSERVICE_3);
 
           dessertProbability = this.generateBooleanProbability(dessertPercent);
@@ -839,6 +883,8 @@ export class QueueSimulationService {
               state: null,
               arrivalTime: null,
             };
+
+            servedClients++;
 
             selfserviceWaitingTime = truncateDecimals(
               selfserviceWaitingTime + clock - (currentClient.arrivalTime as number),
@@ -883,6 +929,8 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_ONLINE_1: {
+          onlineServedClients++;
+
           const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_ONLINE_1);
 
           clientToDestroy = {
@@ -890,6 +938,8 @@ export class QueueSimulationService {
             state: null,
             arrivalTime: null,
           };
+
+          servedClients++;
 
           onlineWaitingTime = truncateDecimals(onlineWaitingTime + clock - (currentClient.arrivalTime as number), 2);
           onlineAverageWaitingTime =
@@ -921,6 +971,8 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_ONLINE_2: {
+          onlineServedClients++;
+
           const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_ONLINE_2);
 
           clientToDestroy = {
@@ -928,6 +980,8 @@ export class QueueSimulationService {
             state: null,
             arrivalTime: null,
           };
+
+          servedClients++;
 
           onlineWaitingTime = truncateDecimals(onlineWaitingTime + clock - (currentClient.arrivalTime as number), 2);
           onlineAverageWaitingTime =
@@ -959,6 +1013,8 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_ONLINE_3: {
+          onlineServedClients++;
+
           const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_ONLINE_3);
 
           clientToDestroy = {
@@ -966,6 +1022,8 @@ export class QueueSimulationService {
             state: null,
             arrivalTime: null,
           };
+
+          servedClients++;
 
           onlineWaitingTime = truncateDecimals(onlineWaitingTime + clock - (currentClient.arrivalTime as number), 2);
           onlineAverageWaitingTime =
@@ -997,6 +1055,8 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_LLEVAR_1: {
+          takeawayServedClients++;
+
           const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_TAKEAWAY_1);
 
           clientToDestroy = {
@@ -1004,6 +1064,8 @@ export class QueueSimulationService {
             state: null,
             arrivalTime: null,
           };
+
+          servedClients++;
 
           takeawayWaitingTime = truncateDecimals(
             takeawayWaitingTime + clock - (currentClient.arrivalTime as number),
@@ -1038,6 +1100,8 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_LLEVAR_2: {
+          takeawayServedClients++;
+
           const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_TAKEAWAY_2);
 
           clientToDestroy = {
@@ -1045,6 +1109,8 @@ export class QueueSimulationService {
             state: null,
             arrivalTime: null,
           };
+
+          servedClients++;
 
           takeawayWaitingTime = truncateDecimals(
             takeawayWaitingTime + clock - (currentClient.arrivalTime as number),
@@ -1079,6 +1145,8 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_DELI_1: {
+          deliveryServedClients++;
+
           const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_DELIVERY_1);
 
           dessertProbability = this.generateBooleanProbability(dessertPercent);
@@ -1106,6 +1174,8 @@ export class QueueSimulationService {
               state: null,
               arrivalTime: null,
             };
+
+            servedClients++;
 
             deliveryWaitingTime = truncateDecimals(
               deliveryWaitingTime + clock - (currentClient.arrivalTime as number),
@@ -1141,6 +1211,8 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_DELI_2: {
+          deliveryServedClients++;
+
           const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_DELIVERY_2);
 
           dessertProbability = this.generateBooleanProbability(dessertPercent);
@@ -1168,6 +1240,8 @@ export class QueueSimulationService {
               state: null,
               arrivalTime: null,
             };
+
+            servedClients++;
 
             deliveryWaitingTime = truncateDecimals(
               deliveryWaitingTime + clock - (currentClient.arrivalTime as number),
@@ -1203,6 +1277,8 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_DELI_3: {
+          deliveryServedClients++;
+
           const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_DELIVERY_3);
 
           dessertProbability = this.generateBooleanProbability(dessertPercent);
@@ -1230,6 +1306,8 @@ export class QueueSimulationService {
               state: null,
               arrivalTime: null,
             };
+
+            servedClients++;
 
             deliveryWaitingTime = truncateDecimals(
               deliveryWaitingTime + clock - (currentClient.arrivalTime as number),
@@ -1265,6 +1343,8 @@ export class QueueSimulationService {
           break;
         }
         case EventEnum.FIN_POSTRE: {
+          dessertServedClients++;
+
           const currentClient = this.getCurrentClient(clients, ClientStateEnum.IN_DESSERT);
 
           clientToDestroy = {
@@ -1272,6 +1352,8 @@ export class QueueSimulationService {
             state: null,
             arrivalTime: null,
           };
+
+          servedClients++;
 
           if (dessertQueue > 0) {
             dessertQueue--;
@@ -1369,6 +1451,13 @@ export class QueueSimulationService {
         takeawayAverageUtilizationTime,
         deliveryAverageUtilizationTime,
         dessertAverageUtilizationTime,
+        counterServedClients,
+        selfserviceServedClients,
+        onlineServedClients,
+        takeawayServedClients,
+        deliveryServedClients,
+        dessertServedClients,
+        servedClients,
         clients: [...clients],
       });
     }
